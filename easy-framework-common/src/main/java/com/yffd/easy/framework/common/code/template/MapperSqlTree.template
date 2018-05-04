@@ -1,0 +1,126 @@
+<!-- 查询子节点列表 -->
+<select id="selectChildrenNodes" parameterType="java.util.Map" resultType="##model_full_name##">
+	select <include refid="table_columns" />
+	from <include refid="table_name"/> as t 
+	<where>
+		<if test="tenantCode != null and tenantCode != ''"> and t.TENANT_CODE = #{tenantCode} </if>
+		<if test="nodeLayer != null "><![CDATA[ and t.NODE_LAYER <= #{nodeLayer} ]]></if>
+		and t.TREE_ID = #{treeId}
+		and t.NODE_LEFT between #{nodeLeft} and #{nodeRight}
+	</where>
+	order by t.SEQ_NO asc
+</select>
+<!-- 查询父节点列表 -->
+<select id="selectParentNodes" parameterType="java.util.Map" resultType="##model_full_name##">
+	select <include refid="table_columns" />
+	from <include refid="table_name"/> as t 
+	<where>
+		<if test="tenantCode != null and tenantCode != ''"> and t.TENANT_CODE = #{tenantCode} </if>
+		and t.TREE_ID = #{treeId}
+		<![CDATA[ and t.NODE_LEFT < #{nodeLeft} ]]>
+		<![CDATA[ and t.NODE_RIGHT > #{nodeRight} ]]>
+	</where>
+	order by t.SEQ_NO asc
+</select>
+<!-- 查询节点的层号，即深度 -->
+<select id="countLayer" parameterType="java.util.Map" resultType="java.lang.Long">
+	select count(*)
+	from <include refid="table_name"/>
+	<where>
+	<if test="tenantCode != null and tenantCode != ''"> and TENANT_CODE = #{tenantCode} </if>
+	and TREE_ID = #{treeId}
+	<![CDATA[ and NODE_LEFT <= #{nodeLeft} ]]>
+	<![CDATA[ and NODE_RIGHT >= #{nodeRight} ]]>
+	</where>
+</select>
+<!-- 添加新节点时，修改节点的偏序号 -->
+<update id="updateLeftForAdd" parameterType="java.util.Map">
+	update <include refid="table_name" />
+	<set>
+	<if test="updateBy != null and updateBy != ''"> UPDATE_BY = #{updateBy}, </if>
+	<if test="updateTime != null "> UPDATE_TIME = #{updateTime}, </if>
+	VERSION = VERSION + 1, 
+	NODE_LEFT = NODE_LEFT + #{nodeStep},
+	</set>
+	<where>
+	<if test="tenantCode != null and tenantCode != ''"> and TENANT_CODE = #{tenantCode} </if>
+	and TREE_ID = #{treeId}
+	and NODE_LEFT >= #{nodeRight}
+	</where>
+</update>
+<!-- 添加新节点时，修改节点的偏序号 -->
+<update id="updateRightForAdd" parameterType="java.util.Map">
+	update <include refid="table_name" />
+	<set>
+	<if test="updateBy != null and updateBy != ''"> UPDATE_BY = #{updateBy}, </if>
+	<if test="updateTime != null "> UPDATE_TIME = #{updateTime}, </if>
+	VERSION = VERSION + 1, 
+	NODE_RIGHT = NODE_RIGHT + #{nodeStep},
+	</set>
+	<where>
+	<if test="tenantCode != null and tenantCode != ''"> and TENANT_CODE = #{tenantCode} </if>
+	and TREE_ID = #{treeId}
+	and NODE_RIGHT >= #{nodeRight}
+	</where>
+</update>
+<!-- 删除节点时，修改节点的偏序号 -->
+<update id="updateLeftForDel" parameterType="java.util.Map">
+	update <include refid="table_name" />
+	<set>
+	<if test="updateBy != null and updateBy != ''"> UPDATE_BY = #{updateBy}, </if>
+	<if test="updateTime != null "> UPDATE_TIME = #{updateTime}, </if>
+	VERSION = VERSION + 1, 
+	NODE_LEFT = NODE_LEFT - #{nodeStep},
+	</set>
+	<where>
+	<if test="tenantCode != null and tenantCode != ''"> and TENANT_CODE = #{tenantCode} </if>
+	and TREE_ID = #{treeId}
+	and NODE_LEFT > #{nodeLeft}
+	</where>
+</update>
+<!-- 删除节点时，修改节点的偏序号 -->
+<update id="updateRightForDel" parameterType="java.util.Map">
+	update <include refid="table_name" />
+	<set>
+	<if test="updateBy != null and updateBy != ''"> UPDATE_BY = #{updateBy}, </if>
+	<if test="updateTime != null "> UPDATE_TIME = #{updateTime}, </if>
+	VERSION = VERSION + 1, 
+	NODE_RIGHT = NODE_RIGHT - #{nodeStep},
+	</set>
+	<where>
+	<if test="tenantCode != null and tenantCode != ''"> and TENANT_CODE = #{tenantCode} </if>
+	and TREE_ID = #{treeId}
+	and NODE_RIGHT > #{nodeRight}
+	</where>
+</update>
+<!-- 更新节点，以及子孙节点 -->
+<update id="updateNodes" parameterType="java.util.Map">
+	update <include refid="table_name" />
+	<set>
+	<if test="model != null">
+		VERSION = VERSION + 1, 
+		<if test="model.updateBy != null and model.updateBy != ''"> UPDATE_BY = #{model.updateBy},  </if>
+		<if test="model.updateTime != null"> UPDATE_TIME = #{model.updateTime},  </if>
+	</if>
+	</set>
+	<where>
+	<if test="old != null">
+		<if test="old.tenantCode != null and old.tenantCode != ''"> and TENANT_CODE = #{old.tenantCode} </if>
+		and TREE_ID = #{old.treeId}
+		<![CDATA[ and NODE_LEFT >= #{old.nodeLeft} ]]>
+		<![CDATA[ and NODE_RIGHT <= #{old.nodeRight} ]]>
+	</if>
+	</where>
+</update>
+<!-- 删除节点，以及子孙节点 -->
+<delete id="deleteNodes" parameterType="java.util.Map">
+	delete from <include refid="table_name" />
+	<where>
+	<if test="model != null">
+		<if test="model.tenantCode != null and model.tenantCode != ''"> and TENANT_CODE = #{model.tenantCode} </if>
+		and TREE_ID = #{model.treeId}
+		<![CDATA[ and NODE_LEFT >= #{model.nodeLeft} ]]>
+		<![CDATA[ and NODE_RIGHT <= #{model.nodeRight} ]]>
+	</if>
+	</where>
+</delete>

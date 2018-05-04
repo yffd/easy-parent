@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+    http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-4.2.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+    ">
+    
+    <!-- 配置数据源 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close" >
+		<property name="url" value="${uupm.jdbc.url}" />  
+        <property name="username" value="${uupm.jdbc.username}" />  
+        <property name="password" value="${uupm.jdbc.password}" />  
+        <property name="initialSize" value="${uupm.jdbc.initialSize}" /> 	<!-- 初始化连接大小 -->
+        <property name="maxActive" value="${uupm.jdbc.maxActive}" /> 		<!-- 连接池最大使用连接数量 -->
+        <property name="maxIdle" value="${uupm.jdbc.maxIdle}" /> 			<!-- 连接池最大空闲 -->
+        <property name="minIdle" value="${uupm.jdbc.minIdle}" />			<!-- 连接池最小空闲 -->
+        <property name="maxWait" value="${uupm.jdbc.maxWait}" />			<!-- 获取连接最大等待时间 -->
+        <property name="timeBetweenEvictionRunsMillis" value="50400000" />	<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="25200000" />		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->   
+        <property name="validationQuery" value="SELECT 1 FROM DUAL" />  
+        <property name="testWhileIdle" value="true" />  
+        <property name="testOnBorrow" value="false" />  
+        <property name="testOnReturn" value="false" />
+        
+        <!-- mysql 不支持 poolPreparedStatements-->
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <!--<property name="poolPreparedStatements" value="true" />-->  
+        <!--<property name="maxPoolPreparedStatementPerConnectionSize" value="20" />-->  
+  
+  		<!-- 关闭长时间不使用的连接 -->
+  		<!-- 打开removeAbandoned功能 -->
+        <property name="removeAbandoned" value="true" />
+        <!-- 1200秒，也就是30分钟 -->
+        <property name="removeAbandonedTimeout" value="1800" />
+        <!-- 关闭abanded连接时输出错误日志 -->
+        <property name="logAbandoned" value="true" />
+        <!-- 配置监控统计拦截的filters -->
+        <property name="proxyFilters">
+	        <list>
+	            <ref bean="stat-filter" />
+	            <ref bean="wall-filter"/>
+	        </list>
+	    </property>
+	    <!-- 开启Druid的防止SQL注入功能 -->  
+        <property name="filters" value="wall" />
+	</bean>
+	
+	<bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter">
+        <!--慢SQL统计，如果SQL执行时间超过一定时间则记录为慢SQL  -->
+        <property name="slowSqlMillis" value="10000" />
+        <!--慢SQL统计日志输出  -->
+        <property name="logSlowSql" value="true" />
+        <!--合并SQL统计 例如select * from table t where t.id =1，会被变为select * from table t where t.id =？来统计  -->
+        <property name="mergeSql" value="true" />
+    </bean>
+    
+    <bean id="wall-filter" class="com.alibaba.druid.wall.WallFilter">  
+        <property name="config" ref="wall-config" />  
+    </bean>  
+      
+    <bean id="wall-config" class="com.alibaba.druid.wall.WallConfig">  
+        <property name="multiStatementAllow" value="true" />  
+    </bean> 
+    
+	<!-- 配置Spring和Jdbc的关联监控，让druid监控spring jdbc-->
+	<bean id="druid-stat-interceptor"
+		class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor">
+	</bean>
+	
+	<!-- 启动spring事务注解，开启事务行为, true代表基于类的代理将起作用，否则是基于接口的代理起作用 -->
+	<tx:annotation-driven transaction-manager="txManager" proxy-target-class="true" />
+	
+	<!-- 配置JDBC事务管理器 -->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager" 
+        p:dataSource-ref="dataSource" />
+    
+	<!-- 配置Jdbc模板 -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"
+		p:dataSource-ref="dataSource" />
+
+	<!-- 集成mybatis begin -->
+	<!-- 配置Session工厂 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:spring/uupm-mybatis.xml" />
+		<!-- 配置扫描Mapper XML的位置，当我们的Mapper文件跟对应的Mapper接口处于同一位置并且同名称的时候可以不用指定该属性的值 -->
+		<property name="mapperLocations" value="classpath:mybatis/mapper/**/*Mapper.xml" />
+	</bean>
+	<!-- 自动扫描Mapper接口文件 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 用来指定Mapper接口文件所在的包，多个包之间可以使用逗号或者分号进行分隔 -->
+		<property name="basePackage" value="com.yffd.easy.uupm.mapper"></property>
+	</bean>
+	<!-- 配置Mybatis模板 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="sqlSessionFactory"/>
+    </bean>
+    <!-- 集成mybatis end -->
+    
+</beans>

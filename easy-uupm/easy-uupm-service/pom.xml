@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.yffd.easy</groupId>
+    <artifactId>easy-uupm</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <groupId>com.yffd.easy</groupId>
+  <artifactId>easy-uupm-service</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>easy-uupm-service</name>
+  <url>http://maven.apache.org</url>
+  
+  <properties>
+    <easy.uupm.pojo.version>0.0.1-SNAPSHOT</easy.uupm.pojo.version>
+<!--     <easy.common.dubbo.version>0.0.1-SNAPSHOT</easy.common.dubbo.version> -->
+    <easy.framework.common.version>0.0.1-SNAPSHOT</easy.framework.common.version>
+  </properties>
+  
+  <dependencies>
+  	<dependency>
+	  	<groupId>com.yffd.easy</groupId>
+  		<artifactId>easy-uupm-pojo</artifactId>
+	    <version>${easy.uupm.pojo.version}</version>
+  	</dependency>
+<!--   	<dependency> -->
+<!--   		<groupId>com.yffd.easy</groupId> -->
+<!-- 	  	<artifactId>easy-common-dubbo</artifactId> -->
+<!-- 	  	<version>${easy.common.dubbo.version}</version> -->
+<!-- 	  	<type>pom</type> -->
+<!--   	</dependency> -->
+  	<dependency>
+  		<groupId>com.yffd.easy</groupId>
+  		<artifactId>easy-framework-common</artifactId>
+	  	<version>${easy.framework.common.version}</version>
+  	</dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

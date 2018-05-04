@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yffd.easy.uupm.mapper.IUupmMenuMapper">
+
+
+	<!-- ######################################################################### -->
+	<!-- #########################   common sql begin    ######################### -->
+	<!-- ######################################################################### -->
+	
+	<!-- 表名 -->
+	<sql id="table_name"> uupm_menu </sql>
+	<!-- 列名 -->
+	<sql id="table_columns">
+		t.VERSION as version, t.DEL_FLAG as delFlag, t.CREATE_BY as createBy, t.CREATE_TIME as createTime, t.UPDATE_BY as updateBy, 
+		t.UPDATE_TIME as updateTime, t.ID as id, t.TENANT_CODE as tenantCode, t.ACCESS_TYPE as accessType, t.MENU_CODE as menuCode, 
+		t.MENU_ICONS as menuIcons, t.MENU_NAME as menuName, t.MENU_SEQ_NO as menuSeqNo, t.MENU_TYPE as menuType, t.PARENT_CODE as parentCode
+	</sql>
+	<!-- 分页条件 -->
+	<sql id="conditions_limit"><if test="page != null"> limit #{page.startIndex}, #{page.pageLimit} </if></sql>
+	<!-- 排序条件 -->
+	<sql id="conditions_orderby"> ORDER BY t.CREATE_TIME desc </sql>
+	<!-- 动态组装复合查询条件 -->
+	<sql id="conditions_where">
+		<if test="model != null">
+			<!-- Equal query -->
+			<if test="model.version != null "> and t.VERSION = #{model.version} </if>
+			<if test="model.delFlag != null and model.delFlag != ''"> and t.DEL_FLAG = #{model.delFlag} </if>
+			<if test="model.createBy != null and model.createBy != ''"> and t.CREATE_BY = #{model.createBy} </if>
+			<if test="model.createTime != null "><![CDATA[ and t.CREATE_TIME = #{model.createTime}]]> </if>
+			<if test="model.updateBy != null and model.updateBy != ''"> and t.UPDATE_BY = #{model.updateBy} </if>
+			<if test="model.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{model.updateTime}]]> </if>
+			<if test="model.id != null and model.id != ''"> and t.ID = #{model.id} </if>
+			<if test="model.tenantCode != null and model.tenantCode != ''"> and t.TENANT_CODE = #{model.tenantCode} </if>
+			<if test="model.accessType != null and model.accessType != ''"> and t.ACCESS_TYPE = #{model.accessType} </if>
+			<if test="model.menuCode != null and model.menuCode != ''"> and t.MENU_CODE = #{model.menuCode} </if>
+			<if test="model.menuIcons != null and model.menuIcons != ''"> and t.MENU_ICONS = #{model.menuIcons} </if>
+			<if test="model.menuSeqNo != null "> and t.MENU_SEQ_NO = #{model.menuSeqNo} </if>
+			<if test="model.menuType != null and model.menuType != ''"> and t.MENU_TYPE = #{model.menuType} </if>
+			<if test="model.parentCode != null and model.parentCode != ''"> and t.PARENT_CODE = #{model.parentCode} </if>
+			<!-- Like query -->
+			<if test="model.menuName != null and model.menuName != ''"> and t.MENU_NAME like CONCAT(CONCAT('%', #{model.menuName}), '%') </if>
+		</if>
+		<if test="map != null">
+			<!-- Equal query -->
+			<if test="map.version != null "> and t.VERSION = #{map.version} </if>
+			<if test="map.delFlag != null and map.delFlag != ''"> and t.DEL_FLAG = #{map.delFlag} </if>
+			<if test="map.createBy != null and map.createBy != ''"> and t.CREATE_BY = #{map.createBy} </if>
+			<if test="map.createTime != null "><![CDATA[ and t.CREATE_TIME = #{map.createTime}]]> </if>
+			<if test="map.updateBy != null and map.updateBy != ''"> and t.UPDATE_BY = #{map.updateBy} </if>
+			<if test="map.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{map.updateTime}]]> </if>
+			<if test="map.id != null and map.id != ''"> and t.ID = #{map.id} </if>
+			<if test="map.tenantCode != null and map.tenantCode != ''"> and t.TENANT_CODE = #{map.tenantCode} </if>
+			<if test="map.accessType != null and map.accessType != ''"> and t.ACCESS_TYPE = #{map.accessType} </if>
+			<if test="map.menuCode != null and map.menuCode != ''"> and t.MENU_CODE = #{map.menuCode} </if>
+			<if test="map.menuIcons != null and map.menuIcons != ''"> and t.MENU_ICONS = #{map.menuIcons} </if>
+			<if test="map.menuName != null and map.menuName != ''"> and t.MENU_NAME = #{map.menuName} </if>
+			<if test="map.menuSeqNo != null "> and t.MENU_SEQ_NO = #{map.menuSeqNo} </if>
+			<if test="map.menuType != null and map.menuType != ''"> and t.MENU_TYPE = #{map.menuType} </if>
+			<if test="map.parentCode != null and map.parentCode != ''"> and t.PARENT_CODE = #{map.parentCode} </if>
+			<!-- In query -->
+			<if test="map.accessTypeList != null and map.accessTypeList.size()>0">
+			and t.ACCESS_TYPE in <foreach item="item" index="index" collection="map.accessTypeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.idList != null and map.idList.size()>0">
+			and t.ID in <foreach item="item" index="index" collection="map.idList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.menuCodeList != null and map.menuCodeList.size()>0">
+			and t.MENU_CODE in <foreach item="item" index="index" collection="map.menuCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.menuIconsList != null and map.menuIconsList.size()>0">
+			and t.MENU_ICONS in <foreach item="item" index="index" collection="map.menuIconsList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.menuNameList != null and map.menuNameList.size()>0">
+			and t.MENU_NAME in <foreach item="item" index="index" collection="map.menuNameList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.menuSeqNoList != null and map.menuSeqNoList.size()>0">
+			and t.MENU_SEQ_NO in <foreach item="item" index="index" collection="map.menuSeqNoList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.menuTypeList != null and map.menuTypeList.size()>0">
+			and t.MENU_TYPE in <foreach item="item" index="index" collection="map.menuTypeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.parentCodeList != null and map.parentCodeList.size()>0">
+			and t.PARENT_CODE in <foreach item="item" index="index" collection="map.parentCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.tenantCodeList != null and map.tenantCodeList.size()>0">
+			and t.TENANT_CODE in <foreach item="item" index="index" collection="map.tenantCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+		</if>
+	</sql>
+	<!-- 条件查询 -->
+	<select id="selectListBy" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.entity.UupmMenuEntity">
+		select <include refid="table_columns" />
+		from <include refid="table_name"/> as t 
+		<where>
+			<include refid="conditions_where" />
+		</where>
+		<include refid="conditions_orderby" />
+		<include refid="conditions_limit" />
+	</select>
+	<!-- 统计查询 -->
+	<select id="selectCountBy" parameterType="java.util.Map" resultType="long">
+		select count(1) from 
+		<include refid="table_name"/> as t 
+		<where>
+			<include refid="conditions_where" />
+		</where>
+	</select>
+	<!-- 单条查询 -->
+	<select id="selectOneBy" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.entity.UupmMenuEntity">
+		select <include refid="table_columns" /> 
+		from <include refid="table_name"/> as t 
+		<where>
+			<include refid="conditions_where" />
+		</where>
+	</select>
+	<!-- 单条插入 -->
+	<insert id="insertOne" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table_name" />
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, ACCESS_TYPE, MENU_CODE, MENU_ICONS, MENU_NAME, MENU_SEQ_NO, MENU_TYPE, PARENT_CODE)
+		values
+		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{tenantCode}, #{accessType}, #{menuCode}, #{menuIcons}, #{menuName}, #{menuSeqNo}, #{menuType}, #{parentCode})
+	</insert>
+	<!-- 批量插入 -->
+	<insert id="insertList" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="table_name" />
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, ACCESS_TYPE, MENU_CODE, MENU_ICONS, MENU_NAME, MENU_SEQ_NO, MENU_TYPE, PARENT_CODE)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+		(#{item.version},
+		#{item.delFlag},
+		#{item.createBy},
+		#{item.createTime},
+		#{item.updateBy},
+		#{item.updateTime},
+		#{item.tenantCode},
+		#{item.accessType},
+		#{item.menuCode},
+		#{item.menuIcons},
+		#{item.menuName},
+		#{item.menuSeqNo},
+		#{item.menuType},
+		#{item.parentCode})
+		</foreach>
+	</insert>
+	<!-- 更新 -->
+	<update id="updateBy" parameterType="java.util.Map">
+		update <include refid="table_name" />
+		<set>
+		<if test="model != null">
+			<if test="model.accessType != null and model.accessType != ''"> ACCESS_TYPE = #{model.accessType},  </if>
+			<if test="model.delFlag != null and model.delFlag != ''"> DEL_FLAG = #{model.delFlag},  </if>
+			<if test="model.menuCode != null and model.menuCode != ''"> MENU_CODE = #{model.menuCode},  </if>
+			<if test="model.menuIcons != null and model.menuIcons != ''"> MENU_ICONS = #{model.menuIcons},  </if>
+			<if test="model.menuName != null and model.menuName != ''"> MENU_NAME = #{model.menuName},  </if>
+			<if test="model.menuSeqNo != null"> MENU_SEQ_NO = #{model.menuSeqNo},  </if>
+			<if test="model.menuType != null and model.menuType != ''"> MENU_TYPE = #{model.menuType},  </if>
+			<if test="model.parentCode != null and model.parentCode != ''"> PARENT_CODE = #{model.parentCode},  </if>
+			<if test="model.tenantCode != null and model.tenantCode != ''"> TENANT_CODE = #{model.tenantCode},  </if>
+			<if test="model.updateBy != null and model.updateBy != ''"> UPDATE_BY = #{model.updateBy},  </if>
+			<if test="model.updateTime != null"> UPDATE_TIME = #{model.updateTime},  </if>
+			VERSION = VERSION + 1, 
+		</if>
+		</set>
+		<where>
+		<if test="old != null">
+			<!-- Equal query -->
+			<if test="old.version != null "> and VERSION = #{old.version} </if>
+			<if test="old.delFlag != null and old.delFlag != ''"> and DEL_FLAG = #{old.delFlag} </if>
+			<if test="old.createBy != null and old.createBy != ''"> and CREATE_BY = #{old.createBy} </if>
+			<if test="old.createTime != null "><![CDATA[ and CREATE_TIME = #{old.createTime}]]> </if>
+			<if test="old.updateBy != null and old.updateBy != ''"> and UPDATE_BY = #{old.updateBy} </if>
+			<if test="old.updateTime != null "><![CDATA[ and UPDATE_TIME = #{old.updateTime}]]> </if>
+			<if test="old.id != null and old.id != ''"> and ID = #{old.id} </if>
+			<if test="old.tenantCode != null and old.tenantCode != ''"> and TENANT_CODE = #{old.tenantCode} </if>
+			<if test="old.accessType != null and old.accessType != ''"> and ACCESS_TYPE = #{old.accessType} </if>
+			<if test="old.menuCode != null and old.menuCode != ''"> and MENU_CODE = #{old.menuCode} </if>
+			<if test="old.menuIcons != null and old.menuIcons != ''"> and MENU_ICONS = #{old.menuIcons} </if>
+			<if test="old.menuName != null and old.menuName != ''"> and MENU_NAME = #{old.menuName} </if>
+			<if test="old.menuSeqNo != null "> and MENU_SEQ_NO = #{old.menuSeqNo} </if>
+			<if test="old.menuType != null and old.menuType != ''"> and MENU_TYPE = #{old.menuType} </if>
+			<if test="old.parentCode != null and old.parentCode != ''"> and PARENT_CODE = #{old.parentCode} </if>
+		</if>
+		<if test="map != null">
+			<!-- Equal query -->
+			<if test="map.version != null "> and VERSION = #{map.version} </if>
+			<if test="map.delFlag != null and map.delFlag != ''"> and DEL_FLAG = #{map.delFlag} </if>
+			<if test="map.createBy != null and map.createBy != ''"> and CREATE_BY = #{map.createBy} </if>
+			<if test="map.createTime != null "><![CDATA[ and CREATE_TIME = #{map.createTime}]]> </if>
+			<if test="map.updateBy != null and map.updateBy != ''"> and UPDATE_BY = #{map.updateBy} </if>
+			<if test="map.updateTime != null "><![CDATA[ and UPDATE_TIME = #{map.updateTime}]]> </if>
+			<if test="map.id != null and map.id != ''"> and ID = #{map.id} </if>
+			<if test="map.tenantCode != null and map.tenantCode != ''"> and TENANT_CODE = #{map.tenantCode} </if>
+			<if test="map.accessType != null and map.accessType != ''"> and ACCESS_TYPE = #{map.accessType} </if>
+			<if test="map.menuCode != null and map.menuCode != ''"> and MENU_CODE = #{map.menuCode} </if>
+			<if test="map.menuIcons != null and map.menuIcons != ''"> and MENU_ICONS = #{map.menuIcons} </if>
+			<if test="map.menuName != null and map.menuName != ''"> and MENU_NAME = #{map.menuName} </if>
+			<if test="map.menuSeqNo != null "> and MENU_SEQ_NO = #{map.menuSeqNo} </if>
+			<if test="map.menuType != null and map.menuType != ''"> and MENU_TYPE = #{map.menuType} </if>
+			<if test="map.parentCode != null and map.parentCode != ''"> and PARENT_CODE = #{map.parentCode} </if>
+			<!-- In query -->
+			<if test="map.accessTypeList != null and map.accessTypeList.size()>0">
+			and ACCESS_TYPE in <foreach item="item" index="index" collection="map.accessTypeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.idList != null and map.idList.size()>0">
+			and ID in <foreach item="item" index="index" collection="map.idList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.menuCodeList != null and map.menuCodeList.size()>0">
+			and MENU_CODE in <foreach item="item" index="index" collection="map.menuCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.menuIconsList != null and map.menuIconsList.size()>0">
+			and MENU_ICONS in <foreach item="item" index="index" collection="map.menuIconsList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.menuNameList != null and map.menuNameList.size()>0">
+			and MENU_NAME in <foreach item="item" index="index" collection="map.menuNameList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.menuSeqNoList != null and map.menuSeqNoList.size()>0">
+			and MENU_SEQ_NO in <foreach item="item" index="index" collection="map.menuSeqNoList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.menuTypeList != null and map.menuTypeList.size()>0">
+			and MENU_TYPE in <foreach item="item" index="index" collection="map.menuTypeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.parentCodeList != null and map.parentCodeList.size()>0">
+			and PARENT_CODE in <foreach item="item" index="index" collection="map.parentCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.tenantCodeList != null and map.tenantCodeList.size()>0">
+			and TENANT_CODE in <foreach item="item" index="index" collection="map.tenantCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+		</if>
+		<!-- 防止没有参数传递，导致全部更新 -->
+		or 1=2
+		</where>
+	</update>
+	<!-- 删除 -->
+	<delete id="deleteBy" parameterType="java.util.Map">
+		delete from <include refid="table_name" />
+		<where>
+		<if test="model != null">
+			<!-- Equal query -->
+			<if test="model.version != null "> and VERSION = #{model.version} </if>
+			<if test="model.delFlag != null and model.delFlag != ''"> and DEL_FLAG = #{model.delFlag} </if>
+			<if test="model.createBy != null and model.createBy != ''"> and CREATE_BY = #{model.createBy} </if>
+			<if test="model.createTime != null "><![CDATA[ and CREATE_TIME = #{model.createTime}]]> </if>
+			<if test="model.updateBy != null and model.updateBy != ''"> and UPDATE_BY = #{model.updateBy} </if>
+			<if test="model.updateTime != null "><![CDATA[ and UPDATE_TIME = #{model.updateTime}]]> </if>
+			<if test="model.id != null and model.id != ''"> and ID = #{model.id} </if>
+			<if test="model.tenantCode != null and model.tenantCode != ''"> and TENANT_CODE = #{model.tenantCode} </if>
+			<if test="model.accessType != null and model.accessType != ''"> and ACCESS_TYPE = #{model.accessType} </if>
+			<if test="model.menuCode != null and model.menuCode != ''"> and MENU_CODE = #{model.menuCode} </if>
+			<if test="model.menuIcons != null and model.menuIcons != ''"> and MENU_ICONS = #{model.menuIcons} </if>
+			<if test="model.menuSeqNo != null "> and MENU_SEQ_NO = #{model.menuSeqNo} </if>
+			<if test="model.menuType != null and model.menuType != ''"> and MENU_TYPE = #{model.menuType} </if>
+			<if test="model.parentCode != null and model.parentCode != ''"> and PARENT_CODE = #{model.parentCode} </if>
+			<!-- Like query -->
+			<if test="model.menuName != null and model.menuName != ''"> and MENU_NAME like CONCAT(CONCAT('%', #{model.menuName}), '%') </if>
+		</if>
+		<if test="map != null">
+			<!-- Equal query -->
+			<if test="map.version != null "> and VERSION = #{map.version} </if>
+			<if test="map.delFlag != null and map.delFlag != ''"> and DEL_FLAG = #{map.delFlag} </if>
+			<if test="map.createBy != null and map.createBy != ''"> and CREATE_BY = #{map.createBy} </if>
+			<if test="map.createTime != null "><![CDATA[ and CREATE_TIME = #{map.createTime}]]> </if>
+			<if test="map.updateBy != null and map.updateBy != ''"> and UPDATE_BY = #{map.updateBy} </if>
+			<if test="map.updateTime != null "><![CDATA[ and UPDATE_TIME = #{map.updateTime}]]> </if>
+			<if test="map.id != null and map.id != ''"> and ID = #{map.id} </if>
+			<if test="map.tenantCode != null and map.tenantCode != ''"> and TENANT_CODE = #{map.tenantCode} </if>
+			<if test="map.accessType != null and map.accessType != ''"> and ACCESS_TYPE = #{map.accessType} </if>
+			<if test="map.menuCode != null and map.menuCode != ''"> and MENU_CODE = #{map.menuCode} </if>
+			<if test="map.menuIcons != null and map.menuIcons != ''"> and MENU_ICONS = #{map.menuIcons} </if>
+			<if test="map.menuName != null and map.menuName != ''"> and MENU_NAME = #{map.menuName} </if>
+			<if test="map.menuSeqNo != null "> and MENU_SEQ_NO = #{map.menuSeqNo} </if>
+			<if test="map.menuType != null and map.menuType != ''"> and MENU_TYPE = #{map.menuType} </if>
+			<if test="map.parentCode != null and map.parentCode != ''"> and PARENT_CODE = #{map.parentCode} </if>
+			<!-- In query -->
+			<if test="map.accessTypeList != null and map.accessTypeList.size()>0">
+			and ACCESS_TYPE in <foreach item="item" index="index" collection="map.accessTypeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.idList != null and map.idList.size()>0">
+			and ID in <foreach item="item" index="index" collection="map.idList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.menuCodeList != null and map.menuCodeList.size()>0">
+			and MENU_CODE in <foreach item="item" index="index" collection="map.menuCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.menuIconsList != null and map.menuIconsList.size()>0">
+			and MENU_ICONS in <foreach item="item" index="index" collection="map.menuIconsList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.menuNameList != null and map.menuNameList.size()>0">
+			and MENU_NAME in <foreach item="item" index="index" collection="map.menuNameList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.menuSeqNoList != null and map.menuSeqNoList.size()>0">
+			and MENU_SEQ_NO in <foreach item="item" index="index" collection="map.menuSeqNoList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.menuTypeList != null and map.menuTypeList.size()>0">
+			and MENU_TYPE in <foreach item="item" index="index" collection="map.menuTypeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.parentCodeList != null and map.parentCodeList.size()>0">
+			and PARENT_CODE in <foreach item="item" index="index" collection="map.parentCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.tenantCodeList != null and map.tenantCodeList.size()>0">
+			and TENANT_CODE in <foreach item="item" index="index" collection="map.tenantCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+		</if>
+		<!-- 防止没有参数传递，导致全部删除 -->
+		or 1=2
+		</where></delete>
+	<!-- ######################################################################### -->
+	<!-- ##########################   common sql end    ########################## -->
+	<!-- ######################################################################### -->
+
+	<select id="selectMenuInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+		t.ID as id, t.TENANT_CODE as tenantCode, t.ACCESS_TYPE as accessType, t.MENU_CODE as menuCode, 
+		t.MENU_ICONS as menuIcons, t.MENU_NAME as menuName, t.MENU_SEQ_NO as menuSeqNo, t.MENU_TYPE as menuType, t.PARENT_CODE as parentCode
+		, t1.SHORT_URL as menuUrl
+		, t2.APP_CONTEXT_PATH as appContextPath, t2.APP_DOMAIN as appDomain, t2.APP_PORT as appPort
+		from 
+		uupm_menu t left join uupm_resource t1 on t.MENU_CODE = t1.RS_CODE
+		left join uupm_application t2 on t.MENU_CODE = t2.APP_CODE
+		where t.TENANT_CODE=#{tenantCode}
+		<if test="parentCode != null and parentCode != ''"> and PARENT_CODE = #{parentCode} </if>
+	</select>
+	
+	<!-- 管理员租户-待生成的菜单 -->
+	<select id="selectMenuInfoForAdmin" parameterType="java.util.Map" resultType="java.util.Map">
+		select t.TREE_ID as treeId, t.RS_NAME as rsName, t.RS_CODE as rsCode, t.PARENT_CODE as parentCode, t.SEQ_NO as seqNo
+		, t1.menuCode 
+		from uupm_resource t
+		left join 
+		(select MENU_CODE as menuCode from uupm_menu where TENANT_CODE=#{tenantCode}) t1
+		on t.RS_CODE = t1.menuCode 
+		where t.RS_TYPE='M' and t1.menuCode is null
+	</select>
+	<!-- 非管理员租户-待生成的菜单 -->
+	<select id="selectMenuInfoForDefault" parameterType="java.util.Map" resultType="java.util.Map">
+		select t.TREE_ID as treeId, t.RS_NAME as rsName, t.RS_CODE as rsCode, t.PARENT_CODE as parentCode, t.SEQ_NO as seqNo
+		, t1.menuCode 
+		from uupm_tenant_resource t2 
+		left join uupm_resource t on t2.RS_CODE = t.RS_CODE
+		left join 
+		(select MENU_CODE as menuCode from uupm_menu where TENANT_CODE=#{tenantCode}) t1 on t.RS_CODE = t1.menuCode 
+		where t.RS_TYPE='M' and t1.menuCode is null
+	</select>
+	
+</mapper>

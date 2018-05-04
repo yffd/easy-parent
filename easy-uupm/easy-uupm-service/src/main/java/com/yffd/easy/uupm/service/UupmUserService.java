@@ -1,0 +1,59 @@
+package com.yffd.easy.uupm.service;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.yffd.easy.common.core.page.PageParam;
+import com.yffd.easy.common.core.page.PageResult;
+import com.yffd.easy.framework.common.dao.bak.BakICommonExtDao;
+import com.yffd.easy.framework.common.service.impl.CommonSimpleServiceImpl;
+import com.yffd.easy.framework.core.exception.BizException;
+import com.yffd.easy.uupm.dao.UupmUserDao;
+import com.yffd.easy.uupm.entity.UupmAccountEntity;
+import com.yffd.easy.uupm.entity.UupmUserEntity;
+
+/**
+ * @Description  简单描述该类的功能（可选）.
+ * @Date		2018年04月05日 17时24分03秒 <br/>
+ * @author		ZhangST
+ * @version		 1.0
+ * @since		 JDK 1.7+
+ * @see 	 
+ */
+@Service
+public class UupmUserService extends CommonSimpleServiceImpl<UupmUserEntity> {
+
+	@Autowired
+	private UupmAccountService uupmAccountService;
+	
+	@Autowired
+	private UupmUserDao uupmUserDao;
+
+	@Override
+	protected BakICommonExtDao<UupmUserEntity> getBindDao() {
+		return this.uupmUserDao;
+	}
+
+	public PageResult<Map<String, Object>> findUserInfo(Map<String, Object> paramMap, PageParam pageParam) {
+		return this.uupmUserDao.findUserInfo(paramMap, pageParam);
+	}
+	
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public int addUserWithAccount(UupmUserEntity model) {
+		if(null==model) throw BizException.BIZ_PARAMS_IS_EMPTY();
+		int num = this.uupmUserDao.save(model);
+		// 生成账号
+		UupmAccountEntity account = new UupmAccountEntity();
+		account.setAccountId(model.getUserCode());
+		account.setAccountPwd("123456");
+		account.setAccountStatus("active");
+		account.setAccountType("default");
+		this.uupmAccountService.save(account);
+		return num;
+	}
+	
+}

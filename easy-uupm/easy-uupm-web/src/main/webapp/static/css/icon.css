@@ -1,0 +1,63 @@
+.icon-easy{ background:url(../images/tabicons.png) no-repeat;width:18px; line-height:18px; display:inline-block;}
+.icon-easy-sys{ background-position:0px -200px;}
+.icon-easy-set{ background-position:-380px -200px;}
+.icon-easy-add{ background-position: -20px 0px;}
+.icon-easy-nav{ background-position: -100px -20px; }
+.icon-easy-users{ background-position: -100px -480px;}
+.icon-easy-role{ background-position: -360px -200px;}
+.icon-easy-set{ background-position: -380px -200px;}
+.icon-easy-log{ background-position: -380px -80px;}
+.icon-easy-delete{ background-position:-140px -120px;}
+.icon-easy-edit{ background-position:-380px -320px;}
+.icon-easy-magic{ background-position:0px -500px;}
+.icon-easy-database{ background-position:-20px -140px;}
+
+
+.icon-adds{
+	background:url('icons/add.png') no-repeat center center;
+}
+.icon-ok{
+	background:url('icons/ok.png') no-repeat center center;
+}
+.icon-tip{
+	background:url('icons/tip.png') no-repeat center center;
+}
+.icon-remove{
+	background:url('icons/edit_remove.png') no-repeat center center;
+}
+.icon-undo{
+	background:url('icons/undo.png') no-repeat center center;
+}
+.icon-cancel{
+	background:url('icons/cancel.png') no-repeat center center;
+}
+.icon-save{
+	background:url('icons/save.png') no-repeat center center;
+}
+.icon-config{
+	background:url('icons/config.png') no-repeat center center;
+}
+.icon-comp{
+	background:url('icons/company.png') no-repeat center center;
+}
+.icon-sys{
+	background:url('icons/sys.png') no-repeat center center;
+}
+.icon-db{
+	background:url('icons/db.png') no-repeat center center;
+}
+.icon-pro{
+	background:url('icons/pro.png') no-repeat center center;
+}
+.icon-role{
+	background:url('icons/role.png') no-repeat center center;
+}
+.icon-bug{
+	background:url('icons/bug.png') no-repeat center center;
+}
+.icon-time{
+	background:url('icons/time.png') no-repeat center center;
+}
+.icon-color{
+	background:url('icons/color.png') no-repeat center center;
+}

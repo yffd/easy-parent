@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yffd.easy.uupm.mapper.IUupmRoleMapper">
+
+
+	<!-- ######################################################################### -->
+	<!-- #########################   common sql begin    ######################### -->
+	<!-- ######################################################################### -->
+	
+	<!-- 表名 -->
+	<sql id="table_name"> uupm_role </sql>
+	<!-- 列名 -->
+	<sql id="table_columns">
+		t.VERSION as version, t.DEL_FLAG as delFlag, t.CREATE_BY as createBy, t.CREATE_TIME as createTime, t.UPDATE_BY as updateBy, 
+		t.UPDATE_TIME as updateTime, t.ID as id, t.TENANT_CODE as tenantCode, t.REMARK as remark, t.ROLE_CODE as roleCode, 
+		t.ROLE_NAME as roleName, t.ROLE_STATUS as roleStatus
+	</sql>
+	<!-- 分页条件 -->
+	<sql id="conditions_limit"><if test="page != null"> limit #{page.startIndex}, #{page.pageLimit} </if></sql>
+	<!-- 排序条件 -->
+	<sql id="conditions_orderby"> ORDER BY t.CREATE_TIME desc </sql>
+	<!-- 动态组装复合查询条件 -->
+	<sql id="conditions_where">
+		<if test="model != null">
+			<!-- Equal query -->
+			<if test="model.version != null "> and t.VERSION = #{model.version} </if>
+			<if test="model.delFlag != null and model.delFlag != ''"> and t.DEL_FLAG = #{model.delFlag} </if>
+			<if test="model.createBy != null and model.createBy != ''"> and t.CREATE_BY = #{model.createBy} </if>
+			<if test="model.createTime != null "><![CDATA[ and t.CREATE_TIME = #{model.createTime}]]> </if>
+			<if test="model.updateBy != null and model.updateBy != ''"> and t.UPDATE_BY = #{model.updateBy} </if>
+			<if test="model.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{model.updateTime}]]> </if>
+			<if test="model.id != null and model.id != ''"> and t.ID = #{model.id} </if>
+			<if test="model.tenantCode != null and model.tenantCode != ''"> and t.TENANT_CODE = #{model.tenantCode} </if>
+			<if test="model.roleCode != null and model.roleCode != ''"> and t.ROLE_CODE = #{model.roleCode} </if>
+			<if test="model.roleStatus != null and model.roleStatus != ''"> and t.ROLE_STATUS = #{model.roleStatus} </if>
+			<!-- Like query -->
+			<if test="model.roleName != null and model.roleName != ''"> and t.ROLE_NAME like CONCAT(CONCAT('%', #{model.roleName}), '%') </if>
+		</if>
+		<if test="map != null">
+			<!-- Equal query -->
+			<if test="map.version != null "> and t.VERSION = #{map.version} </if>
+			<if test="map.delFlag != null and map.delFlag != ''"> and t.DEL_FLAG = #{map.delFlag} </if>
+			<if test="map.createBy != null and map.createBy != ''"> and t.CREATE_BY = #{map.createBy} </if>
+			<if test="map.createTime != null "><![CDATA[ and t.CREATE_TIME = #{map.createTime}]]> </if>
+			<if test="map.updateBy != null and map.updateBy != ''"> and t.UPDATE_BY = #{map.updateBy} </if>
+			<if test="map.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{map.updateTime}]]> </if>
+			<if test="map.id != null and map.id != ''"> and t.ID = #{map.id} </if>
+			<if test="map.tenantCode != null and map.tenantCode != ''"> and t.TENANT_CODE = #{map.tenantCode} </if>
+			<if test="map.roleCode != null and map.roleCode != ''"> and t.ROLE_CODE = #{map.roleCode} </if>
+			<if test="map.roleName != null and map.roleName != ''"> and t.ROLE_NAME = #{map.roleName} </if>
+			<if test="map.roleStatus != null and map.roleStatus != ''"> and t.ROLE_STATUS = #{map.roleStatus} </if>
+			<!-- In query -->
+			<if test="map.idList != null and map.idList.size()>0">
+			and t.ID in <foreach item="item" index="index" collection="map.idList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.roleCodeList != null and map.roleCodeList.size()>0">
+			and t.ROLE_CODE in <foreach item="item" index="index" collection="map.roleCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.roleNameList != null and map.roleNameList.size()>0">
+			and t.ROLE_NAME in <foreach item="item" index="index" collection="map.roleNameList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.roleStatusList != null and map.roleStatusList.size()>0">
+			and t.ROLE_STATUS in <foreach item="item" index="index" collection="map.roleStatusList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.tenantCodeList != null and map.tenantCodeList.size()>0">
+			and t.TENANT_CODE in <foreach item="item" index="index" collection="map.tenantCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+		</if>
+	</sql>
+	<!-- 条件查询 -->
+	<select id="selectListBy" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.entity.UupmRoleEntity">
+		select <include refid="table_columns" />
+		from <include refid="table_name"/> as t 
+		<where>
+			<include refid="conditions_where" />
+		</where>
+		<include refid="conditions_orderby" />
+		<include refid="conditions_limit" />
+	</select>
+	<!-- 统计查询 -->
+	<select id="selectCountBy" parameterType="java.util.Map" resultType="long">
+		select count(1) from 
+		<include refid="table_name"/> as t 
+		<where>
+			<include refid="conditions_where" />
+		</where>
+	</select>
+	<!-- 单条查询 -->
+	<select id="selectOneBy" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.entity.UupmRoleEntity">
+		select <include refid="table_columns" /> 
+		from <include refid="table_name"/> as t 
+		<where>
+			<include refid="conditions_where" />
+		</where>
+	</select>
+	<!-- 单条插入 -->
+	<insert id="insertOne" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table_name" />
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, REMARK, ROLE_CODE, ROLE_NAME, ROLE_STATUS)
+		values
+		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{tenantCode}, #{remark}, #{roleCode}, #{roleName}, #{roleStatus})
+	</insert>
+	<!-- 批量插入 -->
+	<insert id="insertList" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="table_name" />
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, REMARK, ROLE_CODE, ROLE_NAME, ROLE_STATUS)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+		(#{item.version},
+		#{item.delFlag},
+		#{item.createBy},
+		#{item.createTime},
+		#{item.updateBy},
+		#{item.updateTime},
+		#{item.tenantCode},
+		#{item.remark},
+		#{item.roleCode},
+		#{item.roleName},
+		#{item.roleStatus})
+		</foreach>
+	</insert>
+	<!-- 更新 -->
+	<update id="updateBy" parameterType="java.util.Map">
+		update <include refid="table_name" />
+		<set>
+		<if test="model != null">
+			<if test="model.delFlag != null and model.delFlag != ''"> DEL_FLAG = #{model.delFlag},  </if>
+			<if test="model.remark != null and model.remark != ''"> REMARK = #{model.remark},  </if>
+			<if test="model.roleCode != null and model.roleCode != ''"> ROLE_CODE = #{model.roleCode},  </if>
+			<if test="model.roleName != null and model.roleName != ''"> ROLE_NAME = #{model.roleName},  </if>
+			<if test="model.roleStatus != null and model.roleStatus != ''"> ROLE_STATUS = #{model.roleStatus},  </if>
+			<if test="model.tenantCode != null and model.tenantCode != ''"> TENANT_CODE = #{model.tenantCode},  </if>
+			<if test="model.updateBy != null and model.updateBy != ''"> UPDATE_BY = #{model.updateBy},  </if>
+			<if test="model.updateTime != null"> UPDATE_TIME = #{model.updateTime},  </if>
+			VERSION = VERSION + 1, 
+		</if>
+		</set>
+		<where>
+		<if test="old != null">
+			<!-- Equal query -->
+			<if test="old.version != null "> and VERSION = #{old.version} </if>
+			<if test="old.delFlag != null and old.delFlag != ''"> and DEL_FLAG = #{old.delFlag} </if>
+			<if test="old.createBy != null and old.createBy != ''"> and CREATE_BY = #{old.createBy} </if>
+			<if test="old.createTime != null "><![CDATA[ and CREATE_TIME = #{old.createTime}]]> </if>
+			<if test="old.updateBy != null and old.updateBy != ''"> and UPDATE_BY = #{old.updateBy} </if>
+			<if test="old.updateTime != null "><![CDATA[ and UPDATE_TIME = #{old.updateTime}]]> </if>
+			<if test="old.id != null and old.id != ''"> and ID = #{old.id} </if>
+			<if test="old.tenantCode != null and old.tenantCode != ''"> and TENANT_CODE = #{old.tenantCode} </if>
+			<if test="old.roleCode != null and old.roleCode != ''"> and ROLE_CODE = #{old.roleCode} </if>
+			<if test="old.roleName != null and old.roleName != ''"> and ROLE_NAME = #{old.roleName} </if>
+			<if test="old.roleStatus != null and old.roleStatus != ''"> and ROLE_STATUS = #{old.roleStatus} </if>
+		</if>
+		<if test="map != null">
+			<!-- Equal query -->
+			<if test="map.version != null "> and VERSION = #{map.version} </if>
+			<if test="map.delFlag != null and map.delFlag != ''"> and DEL_FLAG = #{map.delFlag} </if>
+			<if test="map.createBy != null and map.createBy != ''"> and CREATE_BY = #{map.createBy} </if>
+			<if test="map.createTime != null "><![CDATA[ and CREATE_TIME = #{map.createTime}]]> </if>
+			<if test="map.updateBy != null and map.updateBy != ''"> and UPDATE_BY = #{map.updateBy} </if>
+			<if test="map.updateTime != null "><![CDATA[ and UPDATE_TIME = #{map.updateTime}]]> </if>
+			<if test="map.id != null and map.id != ''"> and ID = #{map.id} </if>
+			<if test="map.tenantCode != null and map.tenantCode != ''"> and TENANT_CODE = #{map.tenantCode} </if>
+			<if test="map.roleCode != null and map.roleCode != ''"> and ROLE_CODE = #{map.roleCode} </if>
+			<if test="map.roleName != null and map.roleName != ''"> and ROLE_NAME = #{map.roleName} </if>
+			<if test="map.roleStatus != null and map.roleStatus != ''"> and ROLE_STATUS = #{map.roleStatus} </if>
+			<!-- In query -->
+			<if test="map.idList != null and map.idList.size()>0">
+			and ID in <foreach item="item" index="index" collection="map.idList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.roleCodeList != null and map.roleCodeList.size()>0">
+			and ROLE_CODE in <foreach item="item" index="index" collection="map.roleCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.roleNameList != null and map.roleNameList.size()>0">
+			and ROLE_NAME in <foreach item="item" index="index" collection="map.roleNameList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.roleStatusList != null and map.roleStatusList.size()>0">
+			and ROLE_STATUS in <foreach item="item" index="index" collection="map.roleStatusList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.tenantCodeList != null and map.tenantCodeList.size()>0">
+			and TENANT_CODE in <foreach item="item" index="index" collection="map.tenantCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+		</if>
+		<!-- 防止没有参数传递，导致全部更新 -->
+		or 1=2
+		</where>
+	</update>
+	<!-- 删除 -->
+	<delete id="deleteBy" parameterType="java.util.Map">
+		delete from <include refid="table_name" />
+		<where>
+		<if test="model != null">
+			<!-- Equal query -->
+			<if test="model.version != null "> and VERSION = #{model.version} </if>
+			<if test="model.delFlag != null and model.delFlag != ''"> and DEL_FLAG = #{model.delFlag} </if>
+			<if test="model.createBy != null and model.createBy != ''"> and CREATE_BY = #{model.createBy} </if>
+			<if test="model.createTime != null "><![CDATA[ and CREATE_TIME = #{model.createTime}]]> </if>
+			<if test="model.updateBy != null and model.updateBy != ''"> and UPDATE_BY = #{model.updateBy} </if>
+			<if test="model.updateTime != null "><![CDATA[ and UPDATE_TIME = #{model.updateTime}]]> </if>
+			<if test="model.id != null and model.id != ''"> and ID = #{model.id} </if>
+			<if test="model.tenantCode != null and model.tenantCode != ''"> and TENANT_CODE = #{model.tenantCode} </if>
+			<if test="model.roleCode != null and model.roleCode != ''"> and ROLE_CODE = #{model.roleCode} </if>
+			<if test="model.roleStatus != null and model.roleStatus != ''"> and ROLE_STATUS = #{model.roleStatus} </if>
+			<!-- Like query -->
+			<if test="model.roleName != null and model.roleName != ''"> and ROLE_NAME like CONCAT(CONCAT('%', #{model.roleName}), '%') </if>
+		</if>
+		<if test="map != null">
+			<!-- Equal query -->
+			<if test="map.version != null "> and VERSION = #{map.version} </if>
+			<if test="map.delFlag != null and map.delFlag != ''"> and DEL_FLAG = #{map.delFlag} </if>
+			<if test="map.createBy != null and map.createBy != ''"> and CREATE_BY = #{map.createBy} </if>
+			<if test="map.createTime != null "><![CDATA[ and CREATE_TIME = #{map.createTime}]]> </if>
+			<if test="map.updateBy != null and map.updateBy != ''"> and UPDATE_BY = #{map.updateBy} </if>
+			<if test="map.updateTime != null "><![CDATA[ and UPDATE_TIME = #{map.updateTime}]]> </if>
+			<if test="map.id != null and map.id != ''"> and ID = #{map.id} </if>
+			<if test="map.tenantCode != null and map.tenantCode != ''"> and TENANT_CODE = #{map.tenantCode} </if>
+			<if test="map.roleCode != null and map.roleCode != ''"> and ROLE_CODE = #{map.roleCode} </if>
+			<if test="map.roleName != null and map.roleName != ''"> and ROLE_NAME = #{map.roleName} </if>
+			<if test="map.roleStatus != null and map.roleStatus != ''"> and ROLE_STATUS = #{map.roleStatus} </if>
+			<!-- In query -->
+			<if test="map.idList != null and map.idList.size()>0">
+			and ID in <foreach item="item" index="index" collection="map.idList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.roleCodeList != null and map.roleCodeList.size()>0">
+			and ROLE_CODE in <foreach item="item" index="index" collection="map.roleCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.roleNameList != null and map.roleNameList.size()>0">
+			and ROLE_NAME in <foreach item="item" index="index" collection="map.roleNameList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.roleStatusList != null and map.roleStatusList.size()>0">
+			and ROLE_STATUS in <foreach item="item" index="index" collection="map.roleStatusList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="map.tenantCodeList != null and map.tenantCodeList.size()>0">
+			and TENANT_CODE in <foreach item="item" index="index" collection="map.tenantCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+		</if>
+		<!-- 防止没有参数传递，导致全部删除 -->
+		or 1=2
+		</where></delete>
+	<!-- ######################################################################### -->
+	<!-- ##########################   common sql end    ########################## -->
+	<!-- ######################################################################### -->
+
+</mapper>
