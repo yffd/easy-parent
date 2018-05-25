@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yffd.easy.uupm.mapper.IUupmOrganizationMapper">
+<mapper namespace="com.yffd.easy.uupm.dao.UupmOrganizationDao">
 
 
 	<!-- ######################################################################### -->
@@ -12,73 +12,53 @@
 	<!-- 列名 -->
 	<sql id="table_columns">
 		t.VERSION as version, t.DEL_FLAG as delFlag, t.CREATE_BY as createBy, t.CREATE_TIME as createTime, t.UPDATE_BY as updateBy, 
-		t.UPDATE_TIME as updateTime, t.ID as id, t.TENANT_CODE as tenantCode, t.DATA_PATH as dataPath, t.ORG_CODE as orgCode, 
-		t.ORG_NAME as orgName, t.PARENT_CODE as parentCode, t.PARENT_NAME as parentName, t.REMARK as remark, t.SEQ_NO as seqNo
+		t.UPDATE_TIME as updateTime, t.TENANT_CODE as tenantCode, t.ID as id, t.ORG_CODE as orgCode, t.ORG_NAME as orgName, 
+		t.PARENT_CODE as parentCode, t.SEQ_NO as seqNo, t.TREE_ID as treeId
 	</sql>
 	<!-- 分页条件 -->
 	<sql id="conditions_limit"><if test="page != null"> limit #{page.startIndex}, #{page.pageLimit} </if></sql>
 	<!-- 排序条件 -->
-	<sql id="conditions_orderby"> ORDER BY t.CREATE_TIME desc </sql>
+	<sql id="conditions_orderby">
+		<choose>
+			<when test="orderBy != null and orderBy !=''"> ORDER BY #{orderBy} </when>
+			<otherwise> ORDER BY seqNo ASC </otherwise>
+		</choose>
+	</sql>
 	<!-- 动态组装复合查询条件 -->
 	<sql id="conditions_where">
-		<if test="model != null">
+		<if test="entity != null">
 			<!-- Equal query -->
-			<if test="model.version != null "> and t.VERSION = #{model.version} </if>
-			<if test="model.delFlag != null and model.delFlag != ''"> and t.DEL_FLAG = #{model.delFlag} </if>
-			<if test="model.createBy != null and model.createBy != ''"> and t.CREATE_BY = #{model.createBy} </if>
-			<if test="model.createTime != null "><![CDATA[ and t.CREATE_TIME = #{model.createTime}]]> </if>
-			<if test="model.updateBy != null and model.updateBy != ''"> and t.UPDATE_BY = #{model.updateBy} </if>
-			<if test="model.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{model.updateTime}]]> </if>
-			<if test="model.id != null and model.id != ''"> and t.ID = #{model.id} </if>
-			<if test="model.tenantCode != null and model.tenantCode != ''"> and t.TENANT_CODE = #{model.tenantCode} </if>
-			<if test="model.dataPath != null and model.dataPath != ''"> and t.DATA_PATH = #{model.dataPath} </if>
-			<if test="model.orgCode != null and model.orgCode != ''"> and t.ORG_CODE = #{model.orgCode} </if>
-			<if test="model.parentCode != null and model.parentCode != ''"> and t.PARENT_CODE = #{model.parentCode} </if>
-			<if test="model.seqNo != null "> and t.SEQ_NO = #{model.seqNo} </if>
+			<if test="entity.version != null "> and t.VERSION = #{entity.version} </if>
+			<if test="entity.delFlag != null and entity.delFlag != ''"> and t.DEL_FLAG = #{entity.delFlag} </if>
+			<if test="entity.createBy != null and entity.createBy != ''"> and t.CREATE_BY = #{entity.createBy} </if>
+			<if test="entity.createTime != null "><![CDATA[ and t.CREATE_TIME = #{entity.createTime}]]> </if>
+			<if test="entity.updateBy != null and entity.updateBy != ''"> and t.UPDATE_BY = #{entity.updateBy} </if>
+			<if test="entity.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{entity.updateTime}]]> </if>
+			<if test="entity.tenantCode != null and entity.tenantCode != ''"> and t.TENANT_CODE = #{entity.tenantCode} </if>
+			<if test="entity.id != null and entity.id != ''"> and t.ID = #{entity.id} </if>
+			<if test="entity.orgCode != null and entity.orgCode != ''"> and t.ORG_CODE = #{entity.orgCode} </if>
+			<if test="entity.parentCode != null and entity.parentCode != ''"> and t.PARENT_CODE = #{entity.parentCode} </if>
+			<if test="entity.seqNo != null "> and t.SEQ_NO = #{entity.seqNo} </if>
+			<if test="entity.treeId != null and entity.treeId != ''"> and t.TREE_ID = #{entity.treeId} </if>
 			<!-- Like query -->
-			<if test="model.orgName != null and model.orgName != ''"> and t.ORG_NAME like CONCAT(CONCAT('%', #{model.orgName}), '%') </if>
-			<if test="model.parentName != null and model.parentName != ''"> and t.PARENT_NAME like CONCAT(CONCAT('%', #{model.parentName}), '%') </if>
+			<if test="entity.orgName != null and entity.orgName != ''"> and t.ORG_NAME like CONCAT(CONCAT('%', #{entity.orgName}), '%') </if>
 		</if>
-		<if test="map != null">
-			<!-- Equal query -->
-			<if test="map.version != null "> and t.VERSION = #{map.version} </if>
-			<if test="map.delFlag != null and map.delFlag != ''"> and t.DEL_FLAG = #{map.delFlag} </if>
-			<if test="map.createBy != null and map.createBy != ''"> and t.CREATE_BY = #{map.createBy} </if>
-			<if test="map.createTime != null "><![CDATA[ and t.CREATE_TIME = #{map.createTime}]]> </if>
-			<if test="map.updateBy != null and map.updateBy != ''"> and t.UPDATE_BY = #{map.updateBy} </if>
-			<if test="map.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{map.updateTime}]]> </if>
-			<if test="map.id != null and map.id != ''"> and t.ID = #{map.id} </if>
-			<if test="map.tenantCode != null and map.tenantCode != ''"> and t.TENANT_CODE = #{map.tenantCode} </if>
-			<if test="map.dataPath != null and map.dataPath != ''"> and t.DATA_PATH = #{map.dataPath} </if>
-			<if test="map.orgCode != null and map.orgCode != ''"> and t.ORG_CODE = #{map.orgCode} </if>
-			<if test="map.orgName != null and map.orgName != ''"> and t.ORG_NAME = #{map.orgName} </if>
-			<if test="map.parentCode != null and map.parentCode != ''"> and t.PARENT_CODE = #{map.parentCode} </if>
-			<if test="map.parentName != null and map.parentName != ''"> and t.PARENT_NAME = #{map.parentName} </if>
-			<if test="map.seqNo != null "> and t.SEQ_NO = #{map.seqNo} </if>
+		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="map.dataPathList != null and map.dataPathList.size()>0">
-			and t.DATA_PATH in <foreach item="item" index="index" collection="map.dataPathList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
+			and t.TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.idList != null and map.idList.size()>0">
-			and t.ID in <foreach item="item" index="index" collection="map.idList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
+			and t.ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.orgCodeList != null and map.orgCodeList.size()>0">
-			and t.ORG_CODE in <foreach item="item" index="index" collection="map.orgCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.orgCodeIter != null and propsMap.orgCodeIter.size()>0">
+			and t.ORG_CODE in <foreach item="item" index="index" collection="propsMap.orgCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.orgNameList != null and map.orgNameList.size()>0">
-			and t.ORG_NAME in <foreach item="item" index="index" collection="map.orgNameList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.parentCodeIter != null and propsMap.parentCodeIter.size()>0">
+			and t.PARENT_CODE in <foreach item="item" index="index" collection="propsMap.parentCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.parentCodeList != null and map.parentCodeList.size()>0">
-			and t.PARENT_CODE in <foreach item="item" index="index" collection="map.parentCodeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.parentNameList != null and map.parentNameList.size()>0">
-			and t.PARENT_NAME in <foreach item="item" index="index" collection="map.parentNameList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.seqNoList != null and map.seqNoList.size()>0">
-			and t.SEQ_NO in <foreach item="item" index="index" collection="map.seqNoList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.tenantCodeList != null and map.tenantCodeList.size()>0">
-			and t.TENANT_CODE in <foreach item="item" index="index" collection="map.tenantCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.treeIdIter != null and propsMap.treeIdIter.size()>0">
+			and t.TREE_ID in <foreach item="item" index="index" collection="propsMap.treeIdIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
 	</sql>
@@ -93,7 +73,7 @@
 		<include refid="conditions_limit" />
 	</select>
 	<!-- 统计查询 -->
-	<select id="selectCountBy" parameterType="java.util.Map" resultType="long">
+	<select id="selectCountBy" parameterType="java.util.Map" resultType="java.lang.Integer">
 		select count(1) from 
 		<include refid="table_name"/> as t 
 		<where>
@@ -109,185 +89,134 @@
 		</where>
 	</select>
 	<!-- 单条插入 -->
-	<insert id="insertOne" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
+	<insert id="insertOneBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into
 		<include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, DATA_PATH, ORG_CODE, ORG_NAME, PARENT_CODE, PARENT_NAME, REMARK, SEQ_NO)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, ORG_CODE, ORG_NAME, PARENT_CODE, SEQ_NO, TREE_ID)
 		values
-		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{tenantCode}, #{dataPath}, #{orgCode}, #{orgName}, #{parentCode}, #{parentName}, #{remark}, #{seqNo})
+		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{tenantCode}, #{orgCode}, #{orgName}, #{parentCode}, #{seqNo}, #{treeId})
 	</insert>
 	<!-- 批量插入 -->
-	<insert id="insertList" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
+	<insert id="insertListBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into <include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, DATA_PATH, ORG_CODE, ORG_NAME, PARENT_CODE, PARENT_NAME, REMARK, SEQ_NO)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, ORG_CODE, ORG_NAME, PARENT_CODE, SEQ_NO, TREE_ID)
 		values
 		<foreach collection="list" item="item" index="index" separator=",">
-		(#{item.version},
-		#{item.delFlag},
-		#{item.createBy},
-		#{item.createTime},
-		#{item.updateBy},
-		#{item.updateTime},
-		#{item.tenantCode},
-		#{item.dataPath},
-		#{item.orgCode},
-		#{item.orgName},
-		#{item.parentCode},
-		#{item.parentName},
-		#{item.remark},
-		#{item.seqNo})
+		(#{item.version},#{item.delFlag},#{item.createBy},#{item.createTime},#{item.updateBy},
+		#{item.updateTime},#{item.tenantCode},#{item.orgCode},#{item.orgName},#{item.parentCode},
+		#{item.seqNo},#{item.treeId})
 		</foreach>
 	</insert>
 	<!-- 更新 -->
 	<update id="updateBy" parameterType="java.util.Map">
 		update <include refid="table_name" />
 		<set>
-		<if test="model != null">
-			<if test="model.dataPath != null and model.dataPath != ''"> DATA_PATH = #{model.dataPath},  </if>
-			<if test="model.delFlag != null and model.delFlag != ''"> DEL_FLAG = #{model.delFlag},  </if>
-			<if test="model.orgCode != null and model.orgCode != ''"> ORG_CODE = #{model.orgCode},  </if>
-			<if test="model.orgName != null and model.orgName != ''"> ORG_NAME = #{model.orgName},  </if>
-			<if test="model.parentCode != null and model.parentCode != ''"> PARENT_CODE = #{model.parentCode},  </if>
-			<if test="model.parentName != null and model.parentName != ''"> PARENT_NAME = #{model.parentName},  </if>
-			<if test="model.remark != null and model.remark != ''"> REMARK = #{model.remark},  </if>
-			<if test="model.seqNo != null"> SEQ_NO = #{model.seqNo},  </if>
-			<if test="model.tenantCode != null and model.tenantCode != ''"> TENANT_CODE = #{model.tenantCode},  </if>
-			<if test="model.updateBy != null and model.updateBy != ''"> UPDATE_BY = #{model.updateBy},  </if>
-			<if test="model.updateTime != null"> UPDATE_TIME = #{model.updateTime},  </if>
+		<if test="entity != null">
 			VERSION = VERSION + 1, 
+			<if test="entity.delFlag != null and entity.delFlag != ''"> DEL_FLAG = #{entity.delFlag},  </if>
+			<if test="entity.updateBy != null and entity.updateBy != ''"> UPDATE_BY = #{entity.updateBy},  </if>
+			<if test="entity.updateTime != null"> UPDATE_TIME = #{entity.updateTime},  </if>
+			<if test="entity.tenantCode != null and entity.tenantCode != ''"> TENANT_CODE = #{entity.tenantCode},  </if>
+			<if test="entity.orgCode != null and entity.orgCode != ''"> ORG_CODE = #{entity.orgCode},  </if>
+			<if test="entity.orgName != null and entity.orgName != ''"> ORG_NAME = #{entity.orgName},  </if>
+			<if test="entity.parentCode != null and entity.parentCode != ''"> PARENT_CODE = #{entity.parentCode},  </if>
+			<if test="entity.seqNo != null"> SEQ_NO = #{entity.seqNo},  </if>
+			<if test="entity.treeId != null and entity.treeId != ''"> TREE_ID = #{entity.treeId},  </if>
 		</if>
 		</set>
 		<where>
-		<if test="old != null">
+		<choose>
+		<when test="entityOld != null or propsMap != null">
+		<if test="entityOld != null">
 			<!-- Equal query -->
-			<if test="old.version != null "> and VERSION = #{old.version} </if>
-			<if test="old.delFlag != null and old.delFlag != ''"> and DEL_FLAG = #{old.delFlag} </if>
-			<if test="old.createBy != null and old.createBy != ''"> and CREATE_BY = #{old.createBy} </if>
-			<if test="old.createTime != null "><![CDATA[ and CREATE_TIME = #{old.createTime}]]> </if>
-			<if test="old.updateBy != null and old.updateBy != ''"> and UPDATE_BY = #{old.updateBy} </if>
-			<if test="old.updateTime != null "><![CDATA[ and UPDATE_TIME = #{old.updateTime}]]> </if>
-			<if test="old.id != null and old.id != ''"> and ID = #{old.id} </if>
-			<if test="old.tenantCode != null and old.tenantCode != ''"> and TENANT_CODE = #{old.tenantCode} </if>
-			<if test="old.dataPath != null and old.dataPath != ''"> and DATA_PATH = #{old.dataPath} </if>
-			<if test="old.orgCode != null and old.orgCode != ''"> and ORG_CODE = #{old.orgCode} </if>
-			<if test="old.orgName != null and old.orgName != ''"> and ORG_NAME = #{old.orgName} </if>
-			<if test="old.parentCode != null and old.parentCode != ''"> and PARENT_CODE = #{old.parentCode} </if>
-			<if test="old.parentName != null and old.parentName != ''"> and PARENT_NAME = #{old.parentName} </if>
-			<if test="old.seqNo != null "> and SEQ_NO = #{old.seqNo} </if>
+			<if test="entityOld.version != null "> and VERSION = #{entityOld.version} </if>
+			<if test="entityOld.delFlag != null and entityOld.delFlag != ''"> and DEL_FLAG = #{entityOld.delFlag} </if>
+			<if test="entityOld.createBy != null and entityOld.createBy != ''"> and CREATE_BY = #{entityOld.createBy} </if>
+			<if test="entityOld.createTime != null "><![CDATA[ and CREATE_TIME = #{entityOld.createTime}]]> </if>
+			<if test="entityOld.updateBy != null and entityOld.updateBy != ''"> and UPDATE_BY = #{entityOld.updateBy} </if>
+			<if test="entityOld.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entityOld.updateTime}]]> </if>
+			<if test="entityOld.tenantCode != null and entityOld.tenantCode != ''"> and TENANT_CODE = #{entityOld.tenantCode} </if>
+			<if test="entityOld.id != null and entityOld.id != ''"> and ID = #{entityOld.id} </if>
+			<if test="entityOld.orgCode != null and entityOld.orgCode != ''"> and ORG_CODE = #{entityOld.orgCode} </if>
+			<if test="entityOld.orgName != null and entityOld.orgName != ''"> and ORG_NAME = #{entityOld.orgName} </if>
+			<if test="entityOld.parentCode != null and entityOld.parentCode != ''"> and PARENT_CODE = #{entityOld.parentCode} </if>
+			<if test="entityOld.seqNo != null "> and SEQ_NO = #{entityOld.seqNo} </if>
+			<if test="entityOld.treeId != null and entityOld.treeId != ''"> and TREE_ID = #{entityOld.treeId} </if>
 		</if>
-		<if test="map != null">
-			<!-- Equal query -->
-			<if test="map.version != null "> and VERSION = #{map.version} </if>
-			<if test="map.delFlag != null and map.delFlag != ''"> and DEL_FLAG = #{map.delFlag} </if>
-			<if test="map.createBy != null and map.createBy != ''"> and CREATE_BY = #{map.createBy} </if>
-			<if test="map.createTime != null "><![CDATA[ and CREATE_TIME = #{map.createTime}]]> </if>
-			<if test="map.updateBy != null and map.updateBy != ''"> and UPDATE_BY = #{map.updateBy} </if>
-			<if test="map.updateTime != null "><![CDATA[ and UPDATE_TIME = #{map.updateTime}]]> </if>
-			<if test="map.id != null and map.id != ''"> and ID = #{map.id} </if>
-			<if test="map.tenantCode != null and map.tenantCode != ''"> and TENANT_CODE = #{map.tenantCode} </if>
-			<if test="map.dataPath != null and map.dataPath != ''"> and DATA_PATH = #{map.dataPath} </if>
-			<if test="map.orgCode != null and map.orgCode != ''"> and ORG_CODE = #{map.orgCode} </if>
-			<if test="map.orgName != null and map.orgName != ''"> and ORG_NAME = #{map.orgName} </if>
-			<if test="map.parentCode != null and map.parentCode != ''"> and PARENT_CODE = #{map.parentCode} </if>
-			<if test="map.parentName != null and map.parentName != ''"> and PARENT_NAME = #{map.parentName} </if>
-			<if test="map.seqNo != null "> and SEQ_NO = #{map.seqNo} </if>
+		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="map.dataPathList != null and map.dataPathList.size()>0">
-			and DATA_PATH in <foreach item="item" index="index" collection="map.dataPathList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
+			and TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.idList != null and map.idList.size()>0">
-			and ID in <foreach item="item" index="index" collection="map.idList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
+			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.orgCodeList != null and map.orgCodeList.size()>0">
-			and ORG_CODE in <foreach item="item" index="index" collection="map.orgCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.orgCodeIter != null and propsMap.orgCodeIter.size()>0">
+			and ORG_CODE in <foreach item="item" index="index" collection="propsMap.orgCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.orgNameList != null and map.orgNameList.size()>0">
-			and ORG_NAME in <foreach item="item" index="index" collection="map.orgNameList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.parentCodeIter != null and propsMap.parentCodeIter.size()>0">
+			and PARENT_CODE in <foreach item="item" index="index" collection="propsMap.parentCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.parentCodeList != null and map.parentCodeList.size()>0">
-			and PARENT_CODE in <foreach item="item" index="index" collection="map.parentCodeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.parentNameList != null and map.parentNameList.size()>0">
-			and PARENT_NAME in <foreach item="item" index="index" collection="map.parentNameList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.seqNoList != null and map.seqNoList.size()>0">
-			and SEQ_NO in <foreach item="item" index="index" collection="map.seqNoList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.tenantCodeList != null and map.tenantCodeList.size()>0">
-			and TENANT_CODE in <foreach item="item" index="index" collection="map.tenantCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.treeIdIter != null and propsMap.treeIdIter.size()>0">
+			and TREE_ID in <foreach item="item" index="index" collection="propsMap.treeIdIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
+		</when>
+		<otherwise>
 		<!-- 防止没有参数传递，导致全部更新 -->
-		or 1=2
+		and 1=2
+		</otherwise>
+		</choose>
 		</where>
 	</update>
 	<!-- 删除 -->
 	<delete id="deleteBy" parameterType="java.util.Map">
 		delete from <include refid="table_name" />
 		<where>
-		<if test="model != null">
+		<choose>
+		<when test="entity != null or propsMap != null">
+		<if test="entity != null">
 			<!-- Equal query -->
-			<if test="model.version != null "> and VERSION = #{model.version} </if>
-			<if test="model.delFlag != null and model.delFlag != ''"> and DEL_FLAG = #{model.delFlag} </if>
-			<if test="model.createBy != null and model.createBy != ''"> and CREATE_BY = #{model.createBy} </if>
-			<if test="model.createTime != null "><![CDATA[ and CREATE_TIME = #{model.createTime}]]> </if>
-			<if test="model.updateBy != null and model.updateBy != ''"> and UPDATE_BY = #{model.updateBy} </if>
-			<if test="model.updateTime != null "><![CDATA[ and UPDATE_TIME = #{model.updateTime}]]> </if>
-			<if test="model.id != null and model.id != ''"> and ID = #{model.id} </if>
-			<if test="model.tenantCode != null and model.tenantCode != ''"> and TENANT_CODE = #{model.tenantCode} </if>
-			<if test="model.dataPath != null and model.dataPath != ''"> and DATA_PATH = #{model.dataPath} </if>
-			<if test="model.orgCode != null and model.orgCode != ''"> and ORG_CODE = #{model.orgCode} </if>
-			<if test="model.parentCode != null and model.parentCode != ''"> and PARENT_CODE = #{model.parentCode} </if>
-			<if test="model.seqNo != null "> and SEQ_NO = #{model.seqNo} </if>
-			<!-- Like query -->
-			<if test="model.orgName != null and model.orgName != ''"> and ORG_NAME like CONCAT(CONCAT('%', #{model.orgName}), '%') </if>
-			<if test="model.parentName != null and model.parentName != ''"> and PARENT_NAME like CONCAT(CONCAT('%', #{model.parentName}), '%') </if>
+			<if test="entity.version != null "> and VERSION = #{entity.version} </if>
+			<if test="entity.delFlag != null and entity.delFlag != ''"> and DEL_FLAG = #{entity.delFlag} </if>
+			<if test="entity.createBy != null and entity.createBy != ''"> and CREATE_BY = #{entity.createBy} </if>
+			<if test="entity.createTime != null "><![CDATA[ and CREATE_TIME = #{entity.createTime}]]> </if>
+			<if test="entity.updateBy != null and entity.updateBy != ''"> and UPDATE_BY = #{entity.updateBy} </if>
+			<if test="entity.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entity.updateTime}]]> </if>
+			<if test="entity.tenantCode != null and entity.tenantCode != ''"> and TENANT_CODE = #{entity.tenantCode} </if>
+			<if test="entity.id != null and entity.id != ''"> and ID = #{entity.id} </if>
+			<if test="entity.orgCode != null and entity.orgCode != ''"> and ORG_CODE = #{entity.orgCode} </if>
+			<if test="entity.orgName != null and entity.orgName != ''"> and ORG_NAME = #{entity.orgName} </if>
+			<if test="entity.parentCode != null and entity.parentCode != ''"> and PARENT_CODE = #{entity.parentCode} </if>
+			<if test="entity.seqNo != null "> and SEQ_NO = #{entity.seqNo} </if>
+			<if test="entity.treeId != null and entity.treeId != ''"> and TREE_ID = #{entity.treeId} </if>
 		</if>
-		<if test="map != null">
-			<!-- Equal query -->
-			<if test="map.version != null "> and VERSION = #{map.version} </if>
-			<if test="map.delFlag != null and map.delFlag != ''"> and DEL_FLAG = #{map.delFlag} </if>
-			<if test="map.createBy != null and map.createBy != ''"> and CREATE_BY = #{map.createBy} </if>
-			<if test="map.createTime != null "><![CDATA[ and CREATE_TIME = #{map.createTime}]]> </if>
-			<if test="map.updateBy != null and map.updateBy != ''"> and UPDATE_BY = #{map.updateBy} </if>
-			<if test="map.updateTime != null "><![CDATA[ and UPDATE_TIME = #{map.updateTime}]]> </if>
-			<if test="map.id != null and map.id != ''"> and ID = #{map.id} </if>
-			<if test="map.tenantCode != null and map.tenantCode != ''"> and TENANT_CODE = #{map.tenantCode} </if>
-			<if test="map.dataPath != null and map.dataPath != ''"> and DATA_PATH = #{map.dataPath} </if>
-			<if test="map.orgCode != null and map.orgCode != ''"> and ORG_CODE = #{map.orgCode} </if>
-			<if test="map.orgName != null and map.orgName != ''"> and ORG_NAME = #{map.orgName} </if>
-			<if test="map.parentCode != null and map.parentCode != ''"> and PARENT_CODE = #{map.parentCode} </if>
-			<if test="map.parentName != null and map.parentName != ''"> and PARENT_NAME = #{map.parentName} </if>
-			<if test="map.seqNo != null "> and SEQ_NO = #{map.seqNo} </if>
+		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="map.dataPathList != null and map.dataPathList.size()>0">
-			and DATA_PATH in <foreach item="item" index="index" collection="map.dataPathList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
+			and TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.idList != null and map.idList.size()>0">
-			and ID in <foreach item="item" index="index" collection="map.idList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
+			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.orgCodeList != null and map.orgCodeList.size()>0">
-			and ORG_CODE in <foreach item="item" index="index" collection="map.orgCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.orgCodeIter != null and propsMap.orgCodeIter.size()>0">
+			and ORG_CODE in <foreach item="item" index="index" collection="propsMap.orgCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.orgNameList != null and map.orgNameList.size()>0">
-			and ORG_NAME in <foreach item="item" index="index" collection="map.orgNameList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.parentCodeIter != null and propsMap.parentCodeIter.size()>0">
+			and PARENT_CODE in <foreach item="item" index="index" collection="propsMap.parentCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.parentCodeList != null and map.parentCodeList.size()>0">
-			and PARENT_CODE in <foreach item="item" index="index" collection="map.parentCodeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.parentNameList != null and map.parentNameList.size()>0">
-			and PARENT_NAME in <foreach item="item" index="index" collection="map.parentNameList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.seqNoList != null and map.seqNoList.size()>0">
-			and SEQ_NO in <foreach item="item" index="index" collection="map.seqNoList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.tenantCodeList != null and map.tenantCodeList.size()>0">
-			and TENANT_CODE in <foreach item="item" index="index" collection="map.tenantCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.treeIdIter != null and propsMap.treeIdIter.size()>0">
+			and TREE_ID in <foreach item="item" index="index" collection="propsMap.treeIdIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
+		</when>
+		<otherwise>
 		<!-- 防止没有参数传递，导致全部删除 -->
-		or 1=2
-		</where></delete>
+		and 1=2
+		</otherwise>
+		</choose>
+		</where>
+	</delete>
 	<!-- ######################################################################### -->
 	<!-- ##########################   common sql end    ########################## -->
 	<!-- ######################################################################### -->

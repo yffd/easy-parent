@@ -6,6 +6,8 @@
 
 package com.yffd.easy.uupm.entity;
 
+import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
+
 /**
  * 
  * @Description  字典信息.
@@ -15,45 +17,43 @@ package com.yffd.easy.uupm.entity;
  * @since		 JDK 1.7+
  * @see
  */
-public class UupmDictionaryEntity extends UupmCommonTreeEntity {
-	private static final long serialVersionUID = -1776588479450143490L;
-	private String tenantCode = "dft";	//租户编号
-	private String keyCode;
+public class UupmDictionaryEntity extends UupmBasePojo {
+	private static final long serialVersionUID = 1L;
 	private String keyName;
-	private String valueContent;
-	private String valueStatus;
+	private String keyCode;
+	private String parentCode;
+	private String category;
+	private String keyValue;
 	private Integer seqNo;
-	
-	public String getTenantCode() {
-		return tenantCode;
-	}
-	public void setTenantCode(String tenantCode) {
-		this.tenantCode = tenantCode;
-	}
-	public String getKeyCode() {
-		return keyCode;
-	}
-	public void setKeyCode(String keyCode) {
-		this.setNodeCode(keyCode);	// 设置nodeCode=keyCode
-		this.keyCode = keyCode;
-	}
 	public String getKeyName() {
 		return keyName;
 	}
 	public void setKeyName(String keyName) {
 		this.keyName = keyName;
 	}
-	public String getValueContent() {
-		return valueContent;
+	public String getKeyCode() {
+		return keyCode;
 	}
-	public void setValueContent(String valueContent) {
-		this.valueContent = valueContent;
+	public void setKeyCode(String keyCode) {
+		this.keyCode = keyCode;
 	}
-	public String getValueStatus() {
-		return valueStatus;
+	public String getParentCode() {
+		return parentCode;
 	}
-	public void setValueStatus(String valueStatus) {
-		this.valueStatus = valueStatus;
+	public void setParentCode(String parentCode) {
+		this.parentCode = parentCode;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	public String getKeyValue() {
+		return keyValue;
+	}
+	public void setKeyValue(String keyValue) {
+		this.keyValue = keyValue;
 	}
 	public Integer getSeqNo() {
 		return seqNo;
@@ -61,10 +61,5 @@ public class UupmDictionaryEntity extends UupmCommonTreeEntity {
 	public void setSeqNo(Integer seqNo) {
 		this.seqNo = seqNo;
 	}
-//	@Override
-//	public String getNodeCode() {
-//		return keyCode;
-//	}
-	
 	
 }

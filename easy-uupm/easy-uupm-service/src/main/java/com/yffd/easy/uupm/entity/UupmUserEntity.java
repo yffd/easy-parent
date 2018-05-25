@@ -6,6 +6,8 @@
 
 package com.yffd.easy.uupm.entity;
 
+import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
+
 /**
  * 
  * @Description  用户信息.
@@ -15,21 +17,14 @@ package com.yffd.easy.uupm.entity;
  * @since		 JDK 1.7+
  * @see
  */
-public class UupmUserEntity extends UupmCommonEntity {
+public class UupmUserEntity extends UupmBasePojo {
 	
-	private static final long serialVersionUID = 7097872211031842341L;
+	private static final long serialVersionUID = 1L;
 	
-	private String tenantCode;		//租户编号
 	private String userCode;		//用户编号
 	private String userName;		//用户名称
 	private String orgCode;			//机构编号
 	
-	public String getTenantCode() {
-		return tenantCode;
-	}
-	public void setTenantCode(String tenantCode) {
-		this.tenantCode = tenantCode;
-	}
 	public String getUserCode() {
 		return userCode;
 	}

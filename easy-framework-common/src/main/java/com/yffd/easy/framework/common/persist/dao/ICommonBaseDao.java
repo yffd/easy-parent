@@ -2,8 +2,8 @@ package com.yffd.easy.framework.common.persist.dao;
 
 import java.util.List;
 
-import com.yffd.easy.common.core.page.PageParam;
-import com.yffd.easy.common.core.page.PageResult;
+import com.yffd.easy.framework.pojo.page.PageParam;
+import com.yffd.easy.framework.pojo.page.PageResult;
 
 /**
  * @Description  持久化常用操作接口.

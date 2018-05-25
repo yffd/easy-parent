@@ -15,6 +15,7 @@
   
   <properties>
   	<easy.common.core.version>0.0.1-SNAPSHOT</easy.common.core.version>
+  	<easy.framework.pojo.version>0.0.1-SNAPSHOT</easy.framework.pojo.version>
   	<!-- spring -->
 	<spring.version>4.2.6.RELEASE</spring.version>
 	<aspectjweaver.version>1.8.0</aspectjweaver.version>
@@ -27,6 +28,11 @@
   </properties>
   
   <dependencies>
+  	<dependency>
+		<groupId>com.yffd.easy</groupId>
+		<artifactId>easy-framework-pojo</artifactId>
+		<version>${easy.framework.pojo.version}</version>
+	</dependency>
   	<dependency>
 		<groupId>com.yffd.easy</groupId>
 		<artifactId>easy-common-core</artifactId>

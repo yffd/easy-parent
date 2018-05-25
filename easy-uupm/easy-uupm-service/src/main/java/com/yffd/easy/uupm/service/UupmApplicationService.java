@@ -6,11 +6,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
-import com.yffd.easy.framework.common.dao.bak.BakICommonExtDao;
-import com.yffd.easy.framework.common.service.impl.CommonSimpleServiceImpl;
-import com.yffd.easy.framework.core.exception.BizException;
+import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
+import com.yffd.easy.framework.common.service.CommonService;
 import com.yffd.easy.uupm.dao.UupmApplicationDao;
 import com.yffd.easy.uupm.entity.UupmApplicationEntity;
+import com.yffd.easy.uupm.exception.UupmBizException;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -21,27 +21,28 @@ import com.yffd.easy.uupm.entity.UupmApplicationEntity;
  * @see 	 
  */
 @Service
-public class UupmApplicationService extends CommonSimpleServiceImpl<UupmApplicationEntity> {
+public class UupmApplicationService extends CommonService<UupmApplicationEntity> {
 
 	@Autowired
 	private UupmApplicationDao uupmApplicationDao;
 	
 	@Override
-	protected BakICommonExtDao<UupmApplicationEntity> getBindDao() {
+	protected IMybatisCommonDao<UupmApplicationEntity> getBindDao() {
 		return uupmApplicationDao;
 	}
 
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public int saveAppCfg(UupmApplicationEntity model) {
-		if(null==model || EasyStringCheckUtils.isEmpty(model.getTenantCode())) throw BizException.BIZ_TENANT_IS_EMPTY();
+		if(null==model) throw UupmBizException.BIZ_PARAMS_IS_EMPTY();
 		this.deleteByAppCode(model.getAppCode());
 		return this.save(model);
 	}
 	
 	public int deleteByAppCode(String appCode) {
-		if(EasyStringCheckUtils.isEmpty(appCode)) throw BizException.BIZ_TENANT_IS_EMPTY();
+		if(EasyStringCheckUtils.isEmpty(appCode)) throw UupmBizException.BIZ_PARAMS_IS_EMPTY();
 		UupmApplicationEntity model = new UupmApplicationEntity();
 		model.setAppCode(appCode);
 		return this.delete(model);
 	}
+	
 }

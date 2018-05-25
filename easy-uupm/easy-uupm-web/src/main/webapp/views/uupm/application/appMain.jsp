@@ -14,19 +14,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <script type="text/javascript">
 	var $json_status = [ {id:"", text:"全部", "selected": true} ];
-	var $json_rsType = [ {id:"", text:"全部", "selected": true} ];
 	var $openWindow = this;// 当前窗口
 	var $dg_left;
 	var $dg_right;
 	$(function() {
 		// 初始化控件数据
-		$.post('/uupm/combox/findComboByDict', 
-				{'combo':'status,rs-type'}, 
+		$.post('/uupm/ui/listComboTree', 
+				{'treeIds':'status'}, 
 				function(result) {
 					if("OK"==result.status) {
 						var jsonData = result.data;
-						$json_status = $json_status.concat(jsonData['combo']['status'][0]['children']);
-						$json_rsType = $json_rsType.concat(jsonData['combo']['rs-type'][0]['children']);
+						$json_status = $json_status.concat(jsonData['status']);
 						// 初始化datagrid组件
 						makeGrid_left();
 					}
@@ -35,37 +33,36 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	// 初始化datagrid组件
 	function makeGrid_left() {
 		$dg_left = $('#dg_id_left');
-		$dg_left.treegrid({
-			url:'uupm/resource/listApp',
+		$dg_left.datagrid({
+			url:'uupm/resource/listRoot',
 		    width: 'auto',
 		    height: $(this).height()-commonui.remainHeight-20,
 		    fit:true,
-			rownumbers: false,
+			pagination: true,
+			pageSize: commonui.pageSize,
+			rownumbers: true,
 			animate: true,
 			collapsible: true,
 			fitColumns: true,
-			fit:true,
 			border: false,
 			striped: true,
 			singleSelect: true,
 			showHeader: true,
 			toolbar: '',
-			idField: 'id',
-			treeField: 'rsName',
 		    loadFilter: function(result) {
 		    	if("OK"==result.status) {
-		    		return result.data || [];
+		    		return result.data || {'total':0, 'rows':[]};
 		    	} else {
 		    		$.messager.show({
 						title :commonui.msg_title,
-						msg : result.msg,
-						timeout : commonui.msg_timeout
+						timeout : commonui.msg_timeout,
+						msg : result.msg
 					});
-		    		return [];
+		    		return {'total':0, 'rows':[]};
 	    		}
 	    	},
-			onClickRow: function(row) {
-				makeGrid_right(row);
+			onClickRow: function(rowIndex, rowData) {
+				makeGrid_right(rowData);
 			},
 			columns: [[
 	                   	{field: 'rsName', title: '名称', width:200,align: 'left'},
@@ -74,13 +71,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							formatter: function(value, row) {
 								return utils.fmtDict($json_status, value);
 							}
-						},
-						{field: 'rsType', title: '类型', width: 100, align: 'left',
-							formatter: function(value, row) {
-								return utils.fmtDict($json_rsType, value);
-							}	
-						},
-						{field: 'seqNo', title: '序号', width: 100, align: 'left'}
+						}
 	                   ]]
 		});
 	}
@@ -102,7 +93,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
 	function saveAppCfg() {
 		try{
-			var row = $dg_left.treegrid('getSelected');
+			var row = $dg_left.datagrid('getSelected');
 			var rows = $('#dg_id_right').propertygrid('getData').rows;
 // 			var rows = $('#dg_id_right').propertygrid('getChanges');
 			if(rows.length==0) {

@@ -8,8 +8,8 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.yffd.easy.framework.pojo.login.LoginInfo;
 import com.yffd.easy.framework.web.login.service.ILoginService;
-import com.yffd.easy.framework.web.model.LoginInfo;
 import com.yffd.easy.framework.web.mvc.WebController;
 
 /**

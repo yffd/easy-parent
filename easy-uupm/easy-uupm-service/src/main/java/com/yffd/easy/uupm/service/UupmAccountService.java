@@ -7,12 +7,13 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.yffd.easy.framework.common.dao.bak.BakICommonExtDao;
-import com.yffd.easy.framework.common.service.impl.CommonSimpleServiceImpl;
+import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
+import com.yffd.easy.framework.common.service.CommonService;
+import com.yffd.easy.framework.pojo.page.PageParam;
+import com.yffd.easy.framework.pojo.page.PageResult;
 import com.yffd.easy.uupm.dao.UupmAccountDao;
 import com.yffd.easy.uupm.entity.UupmAccountEntity;
 import com.yffd.easy.uupm.entity.UupmOrganizationEntity;
-import com.yffd.easy.uupm.entity.UupmRoleResourceEntity;
 import com.yffd.easy.uupm.entity.UupmUserRoleEntity;
 import com.yffd.easy.uupm.pojo.vo.UupmLoginInfoVo;
 
@@ -25,13 +26,13 @@ import com.yffd.easy.uupm.pojo.vo.UupmLoginInfoVo;
  * @see 	 
  */
 @Service
-public class UupmAccountService extends CommonSimpleServiceImpl<UupmAccountEntity> {
+public class UupmAccountService extends CommonService<UupmAccountEntity> {
 
 	@Override
-	protected BakICommonExtDao<UupmAccountEntity> getBindDao() {
+	protected IMybatisCommonDao<UupmAccountEntity> getBindDao() {
 		return this.uupmAccountDao;
 	}
-	
+
 	@Autowired
 	private UupmAccountDao uupmAccountDao;
 	
@@ -41,6 +42,11 @@ public class UupmAccountService extends CommonSimpleServiceImpl<UupmAccountEntit
 	private UupmRoleResourceService uupmRoleResourceService;
 	@Autowired
 	private UupmOrganizationService uupmOrganizationService;
+	
+	public PageResult<UupmAccountEntity> findAdminAccount(UupmAccountEntity paramModel, PageParam paramPage) {
+		paramModel.setAccountType("admin");
+		return this.findPage(paramModel, paramPage);
+	}
 	
 	public int addAccount(UupmAccountEntity model, String encryptPwd, String salt) {
 		model.setSalt(salt);
@@ -65,24 +71,20 @@ public class UupmAccountService extends CommonSimpleServiceImpl<UupmAccountEntit
 		UupmLoginInfoVo returnVo = new UupmLoginInfoVo();
 		returnVo.setRoleCodes(roles);
 		// 资源
-		List<UupmRoleResourceEntity> roleResourceList = this.uupmRoleResourceService.findResources(userRoleList);
-		if(null==roleResourceList ||roleResourceList.size()==0) return null;
-		Set<String> resources = new HashSet<String>();
-		for(UupmRoleResourceEntity model : roleResourceList) {
-			resources.add(model.getRsCode());
+		Set<String> roleCodeSet = new HashSet<String>();
+		for(UupmUserRoleEntity model : userRoleList) {
+			roleCodeSet.add(model.getRoleCode());
 		}
-		returnVo.setResourceCodes(resources);
+		Set<String> resourceCodes = this.uupmRoleResourceService.findRsCode(roleCodeSet);
+		returnVo.setResourceCodes(resourceCodes);
 		// 机构
 		String orgCode = resultVo.getOrgCode();
 		UupmOrganizationEntity orgModel = new UupmOrganizationEntity();
 		orgModel.setOrgCode(orgCode);
-		String orgNamePath = this.uupmOrganizationService.findParentNamePath(orgModel);
 		returnVo.setOrgCode(orgCode);
 		returnVo.setOrgName(resultVo.getOrgName());
-		returnVo.setDataPath(orgNamePath);
 		
 		return returnVo;
 	}
-	
 	
 }

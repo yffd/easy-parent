@@ -1,8 +1,6 @@
 package com.yffd.easy.uupm.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,8 +8,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
-import com.yffd.easy.framework.common.dao.bak.BakICommonExtDao;
-import com.yffd.easy.framework.common.service.impl.CommonSimpleServiceImpl;
+import com.yffd.easy.framework.common.exception.CommonBizException;
+import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
+import com.yffd.easy.framework.common.service.CommonService;
 import com.yffd.easy.uupm.dao.UupmUserRoleDao;
 import com.yffd.easy.uupm.entity.UupmUserRoleEntity;
 
@@ -24,13 +23,13 @@ import com.yffd.easy.uupm.entity.UupmUserRoleEntity;
  * @see 	 
  */
 @Service
-public class UupmUserRoleService extends CommonSimpleServiceImpl<UupmUserRoleEntity> {
+public class UupmUserRoleService extends CommonService<UupmUserRoleEntity> {
 
 	@Autowired
 	private UupmUserRoleDao uupmUserRoleDao;
 	
 	@Override
-	protected BakICommonExtDao<UupmUserRoleEntity> getBindDao() {
+	protected IMybatisCommonDao<UupmUserRoleEntity> getBindDao() {
 		return uupmUserRoleDao;
 	}
 
@@ -40,16 +39,17 @@ public class UupmUserRoleService extends CommonSimpleServiceImpl<UupmUserRoleEnt
 		this.save(modelList);
 	}
 	
-	public void delByUserCode(String tennantCode, String userCode) {
-		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("tennantCode", tennantCode);
-		paramMap.put("userCode", userCode);
-		this.delete(null, paramMap);
+	public void delByUserCode(String tenantCode, String userCode) {
+		UupmUserRoleEntity entity = new UupmUserRoleEntity();
+		entity.setTenantCode(tenantCode);
+		entity.setUserCode(userCode);
+		this.getBindDao().delete(entity );
 	}
 	
 	public List<UupmUserRoleEntity> findRoles(UupmUserRoleEntity paramModel) {
-		if(null==paramModel || EasyStringCheckUtils.isEmpty(paramModel.getUserCode())) {}
-		List<UupmUserRoleEntity> resultList = this.findList(paramModel, null);
+		if(null==paramModel || EasyStringCheckUtils.isEmpty(paramModel.getUserCode()))
+			throw CommonBizException.BIZ_PARAMS_IS_EMPTY();
+		List<UupmUserRoleEntity> resultList = this.findList(paramModel);
 		return resultList;
 	}
 //	public Set<String> findRoleCodes(UupmUserRoleModel paramModel) {

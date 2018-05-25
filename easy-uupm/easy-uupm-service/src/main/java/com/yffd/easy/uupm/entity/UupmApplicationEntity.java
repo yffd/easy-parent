@@ -6,6 +6,8 @@
 
 package com.yffd.easy.uupm.entity;
 
+import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
+
 /**
  * 
  * @Description  应用系统信息.
@@ -15,10 +17,9 @@ package com.yffd.easy.uupm.entity;
  * @since		 JDK 1.7+
  * @see
  */
-public class UupmApplicationEntity extends UupmCommonEntity {
+public class UupmApplicationEntity extends UupmBasePojo {
 	
-	private static final long serialVersionUID = -3316333314800573791L;
-	
+	private static final long serialVersionUID = 1L;
 	private String appCode;			//应用系统编号
 	private String appDomain;		//应用系统域名
 	private String appPort;			//应用系统端口
@@ -48,4 +49,5 @@ public class UupmApplicationEntity extends UupmCommonEntity {
 	public void setAppContextPath(String appContextPath) {
 		this.appContextPath = appContextPath;
 	}
+	
 }

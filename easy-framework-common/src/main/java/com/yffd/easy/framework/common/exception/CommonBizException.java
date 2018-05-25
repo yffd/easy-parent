@@ -36,15 +36,5 @@ public class CommonBizException extends EasyCommonException {
 		return new EasyCommonException("5B0102", "业务参数为空.");
 	}
 	
-	/**
-	 * 租户参数为空
-	 * @Date	2018年3月19日 下午2:02:20 <br/>
-	 * @author  zhangST
-	 * @return
-	 */
-	public static final EasyCommonException BIZ_TENANT_IS_EMPTY() {
-		return new EasyCommonException("5B0103", "租户参数为空.");
-	}
-	
 }
 

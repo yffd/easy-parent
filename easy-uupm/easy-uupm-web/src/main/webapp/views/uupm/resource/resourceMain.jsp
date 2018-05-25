@@ -13,20 +13,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <jsp:include page="/common/layout/script.jsp"></jsp:include>
 
 <script type="text/javascript">
-	var $json_status = [ {id:"", text:"全部", "selected": true} ];
-	var $json_rsType = [ {id:"", text:"全部", "selected": true} ];
+	var $json_rsType = [ {id:"all", text:"全部", "selected": true} ];
 	var $openWindow = this;// 当前窗口
 	var $dg_left;
 	var $dg_right;
 	$(function() {
 		// 初始化控件数据
-		$.post('/uupm/combox/findComboByDict', 
-				{'combo':'status,rs-type'}, 
+		$.post('/uupm/ui/listComboTree', 
+				{'treeIds':'rs-type'}, 
 				function(result) {
 					if("OK"==result.status) {
 						var jsonData = result.data;
-						$json_status = $json_status.concat(jsonData['combo']['status'][0]['children']);
-						$json_rsType = $json_rsType.concat(jsonData['combo']['rs-type'][0]['children']);
+						$json_rsType = $json_rsType.concat(jsonData['rs-type']);
 						// 初始化datagrid组件
 						makeGrid_left();
 						makeGrid_right();
@@ -36,41 +34,42 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	// 初始化datagrid组件
 	function makeGrid_left() {
 		$dg_left = $('#dg_id_left');
-		$dg_left.treegrid({
-			url:'uupm/resource/listApp',
+		$dg_left.datagrid({
+			url:'uupm/resource/listRoot',
 		    width: 'auto',
 		    height: $(this).height()-commonui.remainHeight-20,
 		    fit:true,
-			rownumbers: false,
+			pagination: true,
+			pageSize: commonui.pageSize,
+			rownumbers: true,
 			animate: true,
 			collapsible: true,
 			fitColumns: true,
-			fit:true,
 			border: false,
 			striped: true,
 			singleSelect: true,
-			showHeader: false,
+			showHeader: true,
 			toolbar: '#tb_id_left',
-			idField: 'id',
-			treeField: 'rsName',
 		    loadFilter: function(result) {
 		    	if("OK"==result.status) {
-		    		return result.data || [];
+		    		return result.data || {'total':0, 'rows':[]};
 		    	} else {
 		    		$.messager.show({
 						title :commonui.msg_title,
 						timeout : commonui.msg_timeout,
 						msg : result.msg
 					});
-		    		return [];
+		    		return {'total':0, 'rows':[]};
 	    		}
 	    	},
-			onClickRow: function(row) {
-				$dg_right.treegrid('options').url='uupm/resource/listChildren';
+			onClickRow: function(rowIndex, rowData) {
+				$dg_right.treegrid('options').url='uupm/resource/listTree';
 	    		$dg_right.treegrid('loadData', {'status':'OK',data:[]});
-	    		$dg_right.treegrid('reload', {'treeId': row.treeId, 'rsCode':row.rsCode});
+	    		$dg_right.treegrid('reload', {'treeId':rowData.treeId});
 			},
-			frozenColumns: [[{field: 'rsName', title: '', width:parseInt($(this).width())}]]
+			columns: [[{field: 'rsName', title: '名称', width:200},
+			           {field: 'rsCode', title: '编号', width:200}
+			]]
 		});
 	}
 	function makeGrid_right() {
@@ -93,7 +92,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			treeField: 'rsName',
 		    loadFilter: function(result) {
 		    	if("OK"==result.status) {
-		    		return result.data;
+		    		return result.data || [];
 		    	} else {
 		    		$.messager.show({
 						title :commonui.msg_title,
@@ -111,36 +110,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					top: e.pageY
 				});
 			},
-			frozenColumns: [[
-							 {field: 'operate', title: '操作', width: 100, align: 'center',
-								 formatter: function(value, row) {
-									 var text = " 激活状态 ";
-									 var style = "color: green";
-									 if('active'==row.rsStatus) {
-										 text = " 冻结状态 ";
-										 style = "color: red";
-									 }
-									 var a1 = '[<a href="javascript:void(0);" onClick="updateStatus(\''+row.treeId+'\',\''+row.rsCode+'\',\''+row.rsStatus+'\');" width="100" style="'+style+'">'+text+'</a>]';
-									 return a1 + '&nbsp;';
-								 }	
-							 }
-	    	                 ]],
 	        columns: [[
 	                   	{field: 'rsName', title: '名称', width:200,align: 'left'},
 						{field: 'rsCode', title: '编号', width: 100, align: 'left'},
-						{field: 'treeId', title: '树ID', width: 100, align: 'left'},
-						{field: 'rsStatus', title: '状态', width: 100, align: 'left',
-							formatter: function(value, row) {
-								return utils.fmtDict($json_status, value);
-							}
-						},
 						{field: 'rsType', title: '类型', width: 100, align: 'left',
 							formatter: function(value, row) {
 								return utils.fmtDict($json_rsType, value);
 							}	
 						},
-						{field: 'shortUrl', title: '短链接', width: 200, align: 'left'},
-						{field: 'seqNo', title: '序号', width: 100, align: 'left'}
+						{field: 'treeId', title: '树ID', width: 100, align: 'left'},
+						{field: 'seqNo', title: '序号', width: 100, align: 'left'},
+						{field: 'shortUrl', title: '短链接', width: 200, align: 'left'}
 	                   ]]
 		});
 	}
@@ -152,13 +132,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			title: "添加",
 			width: 800,
 			height: 400,
-			href: 'views/uupm/resource/resourceEditDlg.jsp',
+			href: 'views/uupm/resource/resourceEdit.jsp',
 			onLoad:function() {
 				var editForm = parent.$.modalDialog.handler.find("#form_id");
-				setComboForSelected(editForm);
-				var parentCode=editForm.find('input[name="parentCode"]');
-				parentCode.val("root");
-				parentCode.attr('readonly',true);
+				var combo = setComboForSelected(editForm);
+				combo.combobox("setValue", "A");
+				combo.combobox('readonly',true);
+				editForm.find('input[name="parentCode"]').val("root");
+				editForm.find('input[name="parentName"]').val("默认");
 			},
 			buttons: [{
 				text: '确定',
@@ -169,7 +150,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					$.post('uupm/resource/addRoot', obj, function(result) {
 						if("OK"==result.status) {
 							parent.$.modalDialog.handler.dialog('close');
-							$dg_left.treegrid('reload');
+							$dg_left.datagrid('reload');
 				    	}
 						$.messager.show({
 							title :commonui.msg_title,
@@ -191,19 +172,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
 	// 打开修改对话框
 	function openEditDlg() {
-		var row = $dg_left.treegrid('getSelected');
+		var row = $dg_left.datagrid('getSelected');
 		if(row) {
 			parent.$.modalDialog({
 				title: "编辑",
 				width: 800,
 				height: 400,
-				href: 'views/uupm/resource/resourceEditDlg.jsp',
+				href: 'views/uupm/resource/resourceEdit.jsp',
 				onLoad:function(){
 					var editForm = parent.$.modalDialog.handler.find("#form_id");
-					setComboForSelected(editForm);
+					var combo = setComboForSelected(editForm);
+					combo.combobox("setValue", "A");
+					combo.combobox('readonly',true);
 					editForm.form("load", row);
 					editForm.find('input[name="rsCode"]').attr('readonly',true);
-					editForm.find('input[name="parentCode"]').attr('readonly',true);
+					editForm.find('input[name="parentName"]').val("默认");
 				},
 				buttons: [{
 					text: '确定',
@@ -211,10 +194,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					handler: function() {
 						var editForm = parent.$.modalDialog.handler.find("#form_id");
 						var obj = utils.serializeObject(editForm);
-						$.post('uupm/resource/edit', obj, function(result) {
+						$.post('uupm/resource/update', obj, function(result) {
 							if("OK"==result.status) {
 								parent.$.modalDialog.handler.dialog('close');
-								$dg_left.treegrid('reload');
+								$dg_left.datagrid('reload');
 					    	}
 							$.messager.show({
 								title :commonui.msg_title,
@@ -243,13 +226,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
 	// 删除
 	function removeFunc() {
-		var row = $dg_left.treegrid('getSelected');
+		var row = $dg_left.datagrid('getSelected');
 		if(row) {
-			parent.$.messager.confirm("提示","确定要删除该记录吗?",function(r){  
+			parent.$.messager.confirm("提示","确定要删除该记录吗？如果该节点有子节点，将会级联删除其子节点。",function(r){  
 			    if(r) {
-			    	$.post("uupm/resource/del", {'treeId': row.treeId, 'rsCode': row.rsCode}, function(result) {
+			    	$.post("uupm/resource/delTree", {'treeId': row.treeId}, function(result) {
 						if(result.status=='OK') {
-							$dg_left.treegrid('remove', row.id); 
+							var rowIndex = $dg_left.datagrid('getRowIndex', row);
+							$dg_left.datagrid('deleteRow', rowIndex);
 							$dg_right.treegrid('reload', {});
 						}
 						$.messager.show({
@@ -273,7 +257,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
 	// 打开添加对话框
 	function openAddDlg_right() {
-		var row_left = $dg_left.treegrid('getSelected');
+		var row_left = $dg_left.datagrid('getSelected');
 		var row_right = $dg_right.treegrid('getSelected');
 		var row = row_right || row_left;
 		if(row) {
@@ -281,15 +265,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				title: "添加",
 				width: 800,
 				height: 400,
-				href: 'views/uupm/resource/resourceEditDlg.jsp',
+				href: 'views/uupm/resource/resourceEdit.jsp',
 				onLoad:function() {
 					if(row) {
 						var editForm = parent.$.modalDialog.handler.find("#form_id");
-						setComboForSelected(editForm);
-						var parentCode=editForm.find('input[name="parentCode"]');
-						parentCode.val(row.rsCode);
-						parentCode.attr('readonly',true);
+						setComboForSelected(editForm, 'all,A');
 						editForm.find('input[name="treeId"]').val(row.treeId);
+						editForm.find('input[name="parentCode"]').val(row.rsCode);
+						editForm.find('input[name="parentName"]').val(row.rsName);
 					}
 				},
 				buttons: [{
@@ -298,7 +281,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					handler: function() {
 						var editForm = parent.$.modalDialog.handler.find("#form_id");
 						var obj = utils.serializeObject(editForm);
-						$.post('uupm/resource/addChild', obj, function(result) {
+						$.post('uupm/resource/add', obj, function(result) {
 							if("OK"==result.status) {
 								parent.$.modalDialog.handler.dialog('close');
 								$dg_right.treegrid('reload');
@@ -330,19 +313,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
 	// 打开修改对话框
 	function openEditDlg_right() {
+		var row_left = $dg_left.datagrid('getSelected');
 		var row = $dg_right.treegrid('getSelected');
 		if(row) {
 			parent.$.modalDialog({
 				title: "编辑",
 				width: 800,
 				height: 400,
-				href: 'views/uupm/resource/resourceEditDlg.jsp',
+				href: 'views/uupm/resource/resourceEdit.jsp',
 				onLoad:function(){
 					var editForm = parent.$.modalDialog.handler.find("#form_id");
-					setComboForSelected(editForm);
+					setComboForSelected(editForm, 'all,A');
 					editForm.form("load", row);
-					editForm.find('input[name="rsCode"]').attr('readonly',true);
-					editForm.find('input[name="parentCode"]').attr('readonly',true);
+					var parentName = editForm.find('input[name="parentName"]');
+					if(!parentName.val()) parentName.val(row_left.rsName);
 				},
 				buttons: [{
 					text: '确定',
@@ -350,7 +334,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					handler: function() {
 						var editForm = parent.$.modalDialog.handler.find("#form_id");
 						var obj = utils.serializeObject(editForm);
-						$.post('uupm/resource/edit', obj, function(result) {
+						$.post('uupm/resource/update', obj, function(result) {
 							if("OK"==result.status) {
 								parent.$.modalDialog.handler.dialog('close');
 								$dg_right.treegrid('reload');
@@ -384,9 +368,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	function removeFunc_right() {
 		var row = $dg_right.treegrid('getSelected');
 		if(row) {
-			parent.$.messager.confirm("提示","确定要删除该记录吗?",function(r){  
+			parent.$.messager.confirm("提示","确定要删除该记录吗？如果该节点有子节点，将会级联删除其子节点。",function(r){  
 			    if(r) {
-			    	$.post("uupm/resource/del", {'treeId': row.treeId, 'rsCode': row.rsCode}, function(result) {
+			    	var arr_id = iterNode(row);
+			    	var ids = arr_id.join(",");
+			    	$.post("uupm/resource/delByIds", {'ids': ids}, function(result) {
 						if(result.status=='OK') {
 							$dg_right.treegrid('remove', row.id);
 						}
@@ -406,6 +392,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			});
 		}
 	}
+	
+	// 递归获取tree的id
+	function iterNode(pNode) {
+		var arrs = [];
+		if(pNode) {
+			arrs.push(pNode.id);
+			if(pNode.children) {
+				$.each(pNode.children, function(i, obj){
+					arrs = arrs.concat(iterNode(obj));
+				});
+			}
+		}
+		return arrs;
+	}
+	
 	// 生成菜单
 	function saveMenuFunc() {
 		$.post("uupm/menu/saveMenuForAdmin", {}, function(result) {
@@ -417,43 +418,25 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		}, "json");
 	}
 	
-	// 修改状态
-	function updateStatus(treeId, rsCode, rsStatus) {
-		var tmp='active';
-		if('active'==rsStatus) tmp='inactive';
-		$.post("uupm/resource/editStatus", {'treeId':treeId, 'rsCode':rsCode, 'rsStatus':tmp}, function(result) {
-			if(result.status=='OK') {
-				$dg_right.treegrid('reload');
-			}
-			$.messager.show({
-				title :commonui.msg_title,
-				timeout : commonui.msg_timeout,
-				msg : result.msg
-			});
-		}, "json");
-	}
 	// 设置控件选中
-	function setComboForSelected(selectForm) {
-		selectForm.find('input[name="rsType"]').combobox({
+	function setComboForSelected(selectForm, skipIds) {
+		var tmpData = $json_rsType;
+		if(skipIds) {
+			var skipIdsArr = skipIds.split(',');
+			tmpData = $.grep($json_rsType, function(n,i){
+				n['selected'] = false;
+				return $.inArray(n['id'], skipIdsArr) == -1;
+		    });
+		}
+		tmpData[0]['selected'] = true;
+		var rsTypeCombobox = selectForm.find('input[name="rsType"]').combobox({
 			editable:false,
 			panelHeight: 120,
 			valueField:'id',
 		    textField:'text',
-		    data: $.grep($json_rsType, function(n,i){
-		    	if(i==1) n['selected']=true;
-		    	return i > 0;
-		    })
+		    data: tmpData
 		});
-		selectForm.find('input[name="rsStatus"]').combobox({
-			editable:false,
-			panelHeight: 120,
-			valueField:'id',
-		    textField:'text',
-		    data: $.grep($json_status, function(n,i){
-		    	if(i==1) n['selected']=true;
-		    	return i > 0;
-		    })
-		});
+		return rsTypeCombobox;
 	}
 	// 展开
 	function expandAll_right() {

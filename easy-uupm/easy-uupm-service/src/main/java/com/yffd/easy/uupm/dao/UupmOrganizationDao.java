@@ -1,12 +1,11 @@
 package com.yffd.easy.uupm.dao;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.springframework.stereotype.Repository;
 
+import com.yffd.easy.framework.common.persist.mybatis.dao.MybatisCommonDao;
 import com.yffd.easy.uupm.entity.UupmOrganizationEntity;
 
 /**
@@ -18,11 +17,14 @@ import com.yffd.easy.uupm.entity.UupmOrganizationEntity;
  * @see 	 
  */
 @Repository
-public class UupmOrganizationDao extends UupmCommonDao<UupmOrganizationEntity> {
+public class UupmOrganizationDao extends MybatisCommonDao<UupmOrganizationEntity> {
 
-	public List<UupmOrganizationEntity> findByOrgCodes(List<String> orgCodes) {
-		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("orgCodeList", Arrays.asList(orgCodes));
-		return this.findList(paramMap);
+	public Integer deleteByIds(Set<String> ids) {
+		return this.deleteByProps("idIter", ids);
+	}
+	
+	public List<UupmOrganizationEntity> findByOrgCodes(Set<String> orgCodes) {
+		if(null==orgCodes || orgCodes.size()==0) return null;
+		return this.selectListByProps("orgCodeIter", orgCodes, null);
 	}
 }

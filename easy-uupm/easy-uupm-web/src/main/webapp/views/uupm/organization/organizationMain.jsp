@@ -37,7 +37,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			treeField: 'orgName',
 			loadFilter: function(result) {
 		    	if("OK"==result.status) {
-		    		return JSON.parse(result.data) || [];
+		    		return result.data || [];
 		    	} else {
 		    		$.messager.show({
 						title :commonui.msg_title,
@@ -61,6 +61,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	        columns: [[
 						{field: 'orgCode', title: '编号', width: 100, align: 'left'},
 						{field: 'parentCode', title: '父编号', width: 100, align: 'left'},
+						{field: 'parentName', title: '父名称', width: 100, align: 'left'},
 						{field: 'dataPath', title: '路径', width: 100, align: 'left'},
 						{field: 'seqNo', title: '类型', width: 100, align: 'left'},
 						{field: 'remark', title: '备注', width: 100, align: 'left'},
@@ -91,7 +92,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			title: "添加",
 			width: 800,
 			height: 400,
-			href: 'views/uupm/organization/organizationEditDlg.jsp',
+			href: 'views/uupm/organization/organizationEdit.jsp',
 			onLoad:function() {
 				var editForm = parent.$.modalDialog.handler.find("#form_id");
 				var parentName=editForm.find('input[name="parentName"]');
@@ -138,7 +139,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				title: "编辑",
 				width: 800,
 				height: 400,
-				href: 'views/uupm/organization/organizationEditDlg.jsp',
+				href: 'views/uupm/organization/organizationEdit.jsp',
 				onLoad:function(){
 					var editForm = parent.$.modalDialog.handler.find("#form_id");
 					editForm.form("load", row);

@@ -8,6 +8,8 @@ package com.yffd.easy.uupm.entity;
 
 import java.util.Date;
 
+import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
+
 /**
  * 
  * @Description  用户信息.
@@ -17,11 +19,10 @@ import java.util.Date;
  * @since		 JDK 1.7+
  * @see
  */
-public class UupmAccountEntity extends UupmCommonEntity {
+public class UupmAccountEntity extends UupmBasePojo {
 	
-	private static final long serialVersionUID = 7097872211031842341L;
+	private static final long serialVersionUID = 1L;
 	
-	private String tenantCode;		// 租户编号
 	private String accountId;		// 账号ID
 	private String accountPwd;		// 账号密码
 	private String accountStatus;	// 账号状态：1=激活、0=冻结
@@ -34,13 +35,8 @@ public class UupmAccountEntity extends UupmCommonEntity {
     private Date visitFirst; 		// 第一次登录时间
     private Date visitPrevious; 	// 上一次登录时间
     private Date visitLast; 		// 最后一次登录时间
-	public String getTenantCode() {
-		return tenantCode;
-	}
-	public void setTenantCode(String tenantCode) {
-		this.tenantCode = tenantCode;
-	}
-	public String getAccountId() {
+
+    public String getAccountId() {
 		return accountId;
 	}
 	public void setAccountId(String accountId) {

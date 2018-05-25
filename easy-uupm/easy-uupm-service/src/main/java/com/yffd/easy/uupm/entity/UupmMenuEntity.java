@@ -6,6 +6,8 @@
 
 package com.yffd.easy.uupm.entity;
 
+import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
+
 /**
  * 
  * @Description  菜单信息.
@@ -15,9 +17,9 @@ package com.yffd.easy.uupm.entity;
  * @since		 JDK 1.7+
  * @see
  */
-public class UupmMenuEntity extends UupmCommonEntity {
+public class UupmMenuEntity extends UupmBasePojo {
 	
-	private static final long serialVersionUID = -7089319244476271520L;
+	private static final long serialVersionUID = 1L;
 	private String menuCode;
 	private String parentCode;
 	private String menuName;

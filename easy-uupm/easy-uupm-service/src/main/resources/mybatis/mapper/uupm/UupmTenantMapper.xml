@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yffd.easy.uupm.mapper.IUupmTenantMapper">
+<mapper namespace="com.yffd.easy.uupm.dao.UupmTenantDao">
 
 
 	<!-- ######################################################################### -->
@@ -12,67 +12,45 @@
 	<!-- 列名 -->
 	<sql id="table_columns">
 		t.VERSION as version, t.DEL_FLAG as delFlag, t.CREATE_BY as createBy, t.CREATE_TIME as createTime, t.UPDATE_BY as updateBy, 
-		t.UPDATE_TIME as updateTime, t.ID as id, t.TENANT_CODE as tenantCode, t.END_TIME as endTime, t.SERVE_TYPE as serveType, 
+		t.UPDATE_TIME as updateTime, t.TENANT_CODE as tenantCode, t.ID as id, t.END_TIME as endTime, t.SERVE_TYPE as serveType, 
 		t.START_TIME as startTime, t.TENANT_NAME as tenantName, t.TENANT_STATUS as tenantStatus, t.TENANT_TYPE as tenantType
 	</sql>
 	<!-- 分页条件 -->
 	<sql id="conditions_limit"><if test="page != null"> limit #{page.startIndex}, #{page.pageLimit} </if></sql>
 	<!-- 排序条件 -->
-	<sql id="conditions_orderby"> ORDER BY t.CREATE_TIME desc </sql>
+	<sql id="conditions_orderby">
+		<choose>
+			<when test="orderBy != null and orderBy !=''"> ORDER BY #{orderBy} </when>
+			<otherwise> ORDER BY id desc </otherwise>
+		</choose>
+	</sql>
 	<!-- 动态组装复合查询条件 -->
 	<sql id="conditions_where">
-		<if test="model != null">
+		<if test="entity != null">
 			<!-- Equal query -->
-			<if test="model.version != null "> and t.VERSION = #{model.version} </if>
-			<if test="model.delFlag != null and model.delFlag != ''"> and t.DEL_FLAG = #{model.delFlag} </if>
-			<if test="model.createBy != null and model.createBy != ''"> and t.CREATE_BY = #{model.createBy} </if>
-			<if test="model.createTime != null "><![CDATA[ and t.CREATE_TIME = #{model.createTime}]]> </if>
-			<if test="model.updateBy != null and model.updateBy != ''"> and t.UPDATE_BY = #{model.updateBy} </if>
-			<if test="model.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{model.updateTime}]]> </if>
-			<if test="model.id != null and model.id != ''"> and t.ID = #{model.id} </if>
-			<if test="model.tenantCode != null and model.tenantCode != ''"> and t.TENANT_CODE = #{model.tenantCode} </if>
-			<if test="model.endTime != null "><![CDATA[ and t.END_TIME = #{model.endTime}]]> </if>
-			<if test="model.serveType != null and model.serveType != ''"> and t.SERVE_TYPE = #{model.serveType} </if>
-			<if test="model.startTime != null "><![CDATA[ and t.START_TIME = #{model.startTime}]]> </if>
-			<if test="model.tenantStatus != null and model.tenantStatus != ''"> and t.TENANT_STATUS = #{model.tenantStatus} </if>
-			<if test="model.tenantType != null and model.tenantType != ''"> and t.TENANT_TYPE = #{model.tenantType} </if>
+			<if test="entity.version != null "> and t.VERSION = #{entity.version} </if>
+			<if test="entity.delFlag != null and entity.delFlag != ''"> and t.DEL_FLAG = #{entity.delFlag} </if>
+			<if test="entity.createBy != null and entity.createBy != ''"> and t.CREATE_BY = #{entity.createBy} </if>
+			<if test="entity.createTime != null "><![CDATA[ and t.CREATE_TIME = #{entity.createTime}]]> </if>
+			<if test="entity.updateBy != null and entity.updateBy != ''"> and t.UPDATE_BY = #{entity.updateBy} </if>
+			<if test="entity.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{entity.updateTime}]]> </if>
+			<if test="entity.tenantCode != null and entity.tenantCode != ''"> and t.TENANT_CODE = #{entity.tenantCode} </if>
+			<if test="entity.id != null and entity.id != ''"> and t.ID = #{entity.id} </if>
+			<if test="entity.endTime != null "><![CDATA[ and t.END_TIME = #{entity.endTime}]]> </if>
+			<if test="entity.serveType != null and entity.serveType != ''"> and t.SERVE_TYPE = #{entity.serveType} </if>
+			<if test="entity.startTime != null "><![CDATA[ and t.START_TIME = #{entity.startTime}]]> </if>
+			<if test="entity.tenantStatus != null and entity.tenantStatus != ''"> and t.TENANT_STATUS = #{entity.tenantStatus} </if>
+			<if test="entity.tenantType != null and entity.tenantType != ''"> and t.TENANT_TYPE = #{entity.tenantType} </if>
 			<!-- Like query -->
-			<if test="model.tenantName != null and model.tenantName != ''"> and t.TENANT_NAME like CONCAT(CONCAT('%', #{model.tenantName}), '%') </if>
+			<if test="entity.tenantName != null and entity.tenantName != ''"> and t.TENANT_NAME like CONCAT(CONCAT('%', #{entity.tenantName}), '%') </if>
 		</if>
-		<if test="map != null">
-			<!-- Equal query -->
-			<if test="map.version != null "> and t.VERSION = #{map.version} </if>
-			<if test="map.delFlag != null and map.delFlag != ''"> and t.DEL_FLAG = #{map.delFlag} </if>
-			<if test="map.createBy != null and map.createBy != ''"> and t.CREATE_BY = #{map.createBy} </if>
-			<if test="map.createTime != null "><![CDATA[ and t.CREATE_TIME = #{map.createTime}]]> </if>
-			<if test="map.updateBy != null and map.updateBy != ''"> and t.UPDATE_BY = #{map.updateBy} </if>
-			<if test="map.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{map.updateTime}]]> </if>
-			<if test="map.id != null and map.id != ''"> and t.ID = #{map.id} </if>
-			<if test="map.tenantCode != null and map.tenantCode != ''"> and t.TENANT_CODE = #{map.tenantCode} </if>
-			<if test="map.endTime != null "><![CDATA[ and t.END_TIME = #{map.endTime}]]> </if>
-			<if test="map.serveType != null and map.serveType != ''"> and t.SERVE_TYPE = #{map.serveType} </if>
-			<if test="map.startTime != null "><![CDATA[ and t.START_TIME = #{map.startTime}]]> </if>
-			<if test="map.tenantName != null and map.tenantName != ''"> and t.TENANT_NAME = #{map.tenantName} </if>
-			<if test="map.tenantStatus != null and map.tenantStatus != ''"> and t.TENANT_STATUS = #{map.tenantStatus} </if>
-			<if test="map.tenantType != null and map.tenantType != ''"> and t.TENANT_TYPE = #{map.tenantType} </if>
+		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="map.idList != null and map.idList.size()>0">
-			and t.ID in <foreach item="item" index="index" collection="map.idList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
+			and t.TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.serveTypeList != null and map.serveTypeList.size()>0">
-			and t.SERVE_TYPE in <foreach item="item" index="index" collection="map.serveTypeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.tenantCodeList != null and map.tenantCodeList.size()>0">
-			and t.TENANT_CODE in <foreach item="item" index="index" collection="map.tenantCodeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.tenantNameList != null and map.tenantNameList.size()>0">
-			and t.TENANT_NAME in <foreach item="item" index="index" collection="map.tenantNameList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.tenantStatusList != null and map.tenantStatusList.size()>0">
-			and t.TENANT_STATUS in <foreach item="item" index="index" collection="map.tenantStatusList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.tenantTypeList != null and map.tenantTypeList.size()>0">
-			and t.TENANT_TYPE in <foreach item="item" index="index" collection="map.tenantTypeList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
+			and t.ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
 	</sql>
@@ -87,7 +65,7 @@
 		<include refid="conditions_limit" />
 	</select>
 	<!-- 统计查询 -->
-	<select id="selectCountBy" parameterType="java.util.Map" resultType="long">
+	<select id="selectCountBy" parameterType="java.util.Map" resultType="java.lang.Integer">
 		select count(1) from 
 		<include refid="table_name"/> as t 
 		<where>
@@ -103,7 +81,7 @@
 		</where>
 	</select>
 	<!-- 单条插入 -->
-	<insert id="insertOne" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
+	<insert id="insertOneBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into
 		<include refid="table_name" />
 		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, END_TIME, SERVE_TYPE, START_TIME, TENANT_NAME, TENANT_STATUS, TENANT_TYPE)
@@ -111,163 +89,111 @@
 		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{tenantCode}, #{endTime}, #{serveType}, #{startTime}, #{tenantName}, #{tenantStatus}, #{tenantType})
 	</insert>
 	<!-- 批量插入 -->
-	<insert id="insertList" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
+	<insert id="insertListBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into <include refid="table_name" />
 		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, END_TIME, SERVE_TYPE, START_TIME, TENANT_NAME, TENANT_STATUS, TENANT_TYPE)
 		values
 		<foreach collection="list" item="item" index="index" separator=",">
-		(#{item.version},
-		#{item.delFlag},
-		#{item.createBy},
-		#{item.createTime},
-		#{item.updateBy},
-		#{item.updateTime},
-		#{item.tenantCode},
-		#{item.endTime},
-		#{item.serveType},
-		#{item.startTime},
-		#{item.tenantName},
-		#{item.tenantStatus},
-		#{item.tenantType})
+		(#{item.version},#{item.delFlag},#{item.createBy},#{item.createTime},#{item.updateBy},
+		#{item.updateTime},#{item.tenantCode},#{item.endTime},#{item.serveType},#{item.startTime},
+		#{item.tenantName},#{item.tenantStatus},#{item.tenantType})
 		</foreach>
 	</insert>
 	<!-- 更新 -->
 	<update id="updateBy" parameterType="java.util.Map">
 		update <include refid="table_name" />
 		<set>
-		<if test="model != null">
-			<if test="model.delFlag != null and model.delFlag != ''"> DEL_FLAG = #{model.delFlag},  </if>
-			<if test="model.endTime != null"> END_TIME = #{model.endTime},  </if>
-			<if test="model.serveType != null and model.serveType != ''"> SERVE_TYPE = #{model.serveType},  </if>
-			<if test="model.startTime != null"> START_TIME = #{model.startTime},  </if>
-			<if test="model.tenantCode != null and model.tenantCode != ''"> TENANT_CODE = #{model.tenantCode},  </if>
-			<if test="model.tenantName != null and model.tenantName != ''"> TENANT_NAME = #{model.tenantName},  </if>
-			<if test="model.tenantStatus != null and model.tenantStatus != ''"> TENANT_STATUS = #{model.tenantStatus},  </if>
-			<if test="model.tenantType != null and model.tenantType != ''"> TENANT_TYPE = #{model.tenantType},  </if>
-			<if test="model.updateBy != null and model.updateBy != ''"> UPDATE_BY = #{model.updateBy},  </if>
-			<if test="model.updateTime != null"> UPDATE_TIME = #{model.updateTime},  </if>
+		<if test="entity != null">
 			VERSION = VERSION + 1, 
+			<if test="entity.delFlag != null and entity.delFlag != ''"> DEL_FLAG = #{entity.delFlag},  </if>
+			<if test="entity.updateBy != null and entity.updateBy != ''"> UPDATE_BY = #{entity.updateBy},  </if>
+			<if test="entity.updateTime != null"> UPDATE_TIME = #{entity.updateTime},  </if>
+			<if test="entity.tenantCode != null and entity.tenantCode != ''"> TENANT_CODE = #{entity.tenantCode},  </if>
+			<if test="entity.endTime != null"> END_TIME = #{entity.endTime},  </if>
+			<if test="entity.serveType != null and entity.serveType != ''"> SERVE_TYPE = #{entity.serveType},  </if>
+			<if test="entity.startTime != null"> START_TIME = #{entity.startTime},  </if>
+			<if test="entity.tenantName != null and entity.tenantName != ''"> TENANT_NAME = #{entity.tenantName},  </if>
+			<if test="entity.tenantStatus != null and entity.tenantStatus != ''"> TENANT_STATUS = #{entity.tenantStatus},  </if>
+			<if test="entity.tenantType != null and entity.tenantType != ''"> TENANT_TYPE = #{entity.tenantType},  </if>
 		</if>
 		</set>
 		<where>
-		<if test="old != null">
+		<choose>
+		<when test="entityOld != null or propsMap != null">
+		<if test="entityOld != null">
 			<!-- Equal query -->
-			<if test="old.version != null "> and VERSION = #{old.version} </if>
-			<if test="old.delFlag != null and old.delFlag != ''"> and DEL_FLAG = #{old.delFlag} </if>
-			<if test="old.createBy != null and old.createBy != ''"> and CREATE_BY = #{old.createBy} </if>
-			<if test="old.createTime != null "><![CDATA[ and CREATE_TIME = #{old.createTime}]]> </if>
-			<if test="old.updateBy != null and old.updateBy != ''"> and UPDATE_BY = #{old.updateBy} </if>
-			<if test="old.updateTime != null "><![CDATA[ and UPDATE_TIME = #{old.updateTime}]]> </if>
-			<if test="old.id != null and old.id != ''"> and ID = #{old.id} </if>
-			<if test="old.tenantCode != null and old.tenantCode != ''"> and TENANT_CODE = #{old.tenantCode} </if>
-			<if test="old.endTime != null "><![CDATA[ and END_TIME = #{old.endTime}]]> </if>
-			<if test="old.serveType != null and old.serveType != ''"> and SERVE_TYPE = #{old.serveType} </if>
-			<if test="old.startTime != null "><![CDATA[ and START_TIME = #{old.startTime}]]> </if>
-			<if test="old.tenantName != null and old.tenantName != ''"> and TENANT_NAME = #{old.tenantName} </if>
-			<if test="old.tenantStatus != null and old.tenantStatus != ''"> and TENANT_STATUS = #{old.tenantStatus} </if>
-			<if test="old.tenantType != null and old.tenantType != ''"> and TENANT_TYPE = #{old.tenantType} </if>
+			<if test="entityOld.version != null "> and VERSION = #{entityOld.version} </if>
+			<if test="entityOld.delFlag != null and entityOld.delFlag != ''"> and DEL_FLAG = #{entityOld.delFlag} </if>
+			<if test="entityOld.createBy != null and entityOld.createBy != ''"> and CREATE_BY = #{entityOld.createBy} </if>
+			<if test="entityOld.createTime != null "><![CDATA[ and CREATE_TIME = #{entityOld.createTime}]]> </if>
+			<if test="entityOld.updateBy != null and entityOld.updateBy != ''"> and UPDATE_BY = #{entityOld.updateBy} </if>
+			<if test="entityOld.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entityOld.updateTime}]]> </if>
+			<if test="entityOld.tenantCode != null and entityOld.tenantCode != ''"> and TENANT_CODE = #{entityOld.tenantCode} </if>
+			<if test="entityOld.id != null and entityOld.id != ''"> and ID = #{entityOld.id} </if>
+			<if test="entityOld.endTime != null "><![CDATA[ and END_TIME = #{entityOld.endTime}]]> </if>
+			<if test="entityOld.serveType != null and entityOld.serveType != ''"> and SERVE_TYPE = #{entityOld.serveType} </if>
+			<if test="entityOld.startTime != null "><![CDATA[ and START_TIME = #{entityOld.startTime}]]> </if>
+			<if test="entityOld.tenantName != null and entityOld.tenantName != ''"> and TENANT_NAME = #{entityOld.tenantName} </if>
+			<if test="entityOld.tenantStatus != null and entityOld.tenantStatus != ''"> and TENANT_STATUS = #{entityOld.tenantStatus} </if>
+			<if test="entityOld.tenantType != null and entityOld.tenantType != ''"> and TENANT_TYPE = #{entityOld.tenantType} </if>
 		</if>
-		<if test="map != null">
-			<!-- Equal query -->
-			<if test="map.version != null "> and VERSION = #{map.version} </if>
-			<if test="map.delFlag != null and map.delFlag != ''"> and DEL_FLAG = #{map.delFlag} </if>
-			<if test="map.createBy != null and map.createBy != ''"> and CREATE_BY = #{map.createBy} </if>
-			<if test="map.createTime != null "><![CDATA[ and CREATE_TIME = #{map.createTime}]]> </if>
-			<if test="map.updateBy != null and map.updateBy != ''"> and UPDATE_BY = #{map.updateBy} </if>
-			<if test="map.updateTime != null "><![CDATA[ and UPDATE_TIME = #{map.updateTime}]]> </if>
-			<if test="map.id != null and map.id != ''"> and ID = #{map.id} </if>
-			<if test="map.tenantCode != null and map.tenantCode != ''"> and TENANT_CODE = #{map.tenantCode} </if>
-			<if test="map.endTime != null "><![CDATA[ and END_TIME = #{map.endTime}]]> </if>
-			<if test="map.serveType != null and map.serveType != ''"> and SERVE_TYPE = #{map.serveType} </if>
-			<if test="map.startTime != null "><![CDATA[ and START_TIME = #{map.startTime}]]> </if>
-			<if test="map.tenantName != null and map.tenantName != ''"> and TENANT_NAME = #{map.tenantName} </if>
-			<if test="map.tenantStatus != null and map.tenantStatus != ''"> and TENANT_STATUS = #{map.tenantStatus} </if>
-			<if test="map.tenantType != null and map.tenantType != ''"> and TENANT_TYPE = #{map.tenantType} </if>
+		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="map.idList != null and map.idList.size()>0">
-			and ID in <foreach item="item" index="index" collection="map.idList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
+			and TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.serveTypeList != null and map.serveTypeList.size()>0">
-			and SERVE_TYPE in <foreach item="item" index="index" collection="map.serveTypeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.tenantCodeList != null and map.tenantCodeList.size()>0">
-			and TENANT_CODE in <foreach item="item" index="index" collection="map.tenantCodeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.tenantNameList != null and map.tenantNameList.size()>0">
-			and TENANT_NAME in <foreach item="item" index="index" collection="map.tenantNameList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.tenantStatusList != null and map.tenantStatusList.size()>0">
-			and TENANT_STATUS in <foreach item="item" index="index" collection="map.tenantStatusList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.tenantTypeList != null and map.tenantTypeList.size()>0">
-			and TENANT_TYPE in <foreach item="item" index="index" collection="map.tenantTypeList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
+			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
+		</when>
+		<otherwise>
 		<!-- 防止没有参数传递，导致全部更新 -->
-		or 1=2
+		and 1=2
+		</otherwise>
+		</choose>
 		</where>
 	</update>
 	<!-- 删除 -->
 	<delete id="deleteBy" parameterType="java.util.Map">
 		delete from <include refid="table_name" />
 		<where>
-		<if test="model != null">
+		<choose>
+		<when test="entity != null or propsMap != null">
+		<if test="entity != null">
 			<!-- Equal query -->
-			<if test="model.version != null "> and VERSION = #{model.version} </if>
-			<if test="model.delFlag != null and model.delFlag != ''"> and DEL_FLAG = #{model.delFlag} </if>
-			<if test="model.createBy != null and model.createBy != ''"> and CREATE_BY = #{model.createBy} </if>
-			<if test="model.createTime != null "><![CDATA[ and CREATE_TIME = #{model.createTime}]]> </if>
-			<if test="model.updateBy != null and model.updateBy != ''"> and UPDATE_BY = #{model.updateBy} </if>
-			<if test="model.updateTime != null "><![CDATA[ and UPDATE_TIME = #{model.updateTime}]]> </if>
-			<if test="model.id != null and model.id != ''"> and ID = #{model.id} </if>
-			<if test="model.tenantCode != null and model.tenantCode != ''"> and TENANT_CODE = #{model.tenantCode} </if>
-			<if test="model.endTime != null "><![CDATA[ and END_TIME = #{model.endTime}]]> </if>
-			<if test="model.serveType != null and model.serveType != ''"> and SERVE_TYPE = #{model.serveType} </if>
-			<if test="model.startTime != null "><![CDATA[ and START_TIME = #{model.startTime}]]> </if>
-			<if test="model.tenantStatus != null and model.tenantStatus != ''"> and TENANT_STATUS = #{model.tenantStatus} </if>
-			<if test="model.tenantType != null and model.tenantType != ''"> and TENANT_TYPE = #{model.tenantType} </if>
-			<!-- Like query -->
-			<if test="model.tenantName != null and model.tenantName != ''"> and TENANT_NAME like CONCAT(CONCAT('%', #{model.tenantName}), '%') </if>
+			<if test="entity.version != null "> and VERSION = #{entity.version} </if>
+			<if test="entity.delFlag != null and entity.delFlag != ''"> and DEL_FLAG = #{entity.delFlag} </if>
+			<if test="entity.createBy != null and entity.createBy != ''"> and CREATE_BY = #{entity.createBy} </if>
+			<if test="entity.createTime != null "><![CDATA[ and CREATE_TIME = #{entity.createTime}]]> </if>
+			<if test="entity.updateBy != null and entity.updateBy != ''"> and UPDATE_BY = #{entity.updateBy} </if>
+			<if test="entity.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entity.updateTime}]]> </if>
+			<if test="entity.tenantCode != null and entity.tenantCode != ''"> and TENANT_CODE = #{entity.tenantCode} </if>
+			<if test="entity.id != null and entity.id != ''"> and ID = #{entity.id} </if>
+			<if test="entity.endTime != null "><![CDATA[ and END_TIME = #{entity.endTime}]]> </if>
+			<if test="entity.serveType != null and entity.serveType != ''"> and SERVE_TYPE = #{entity.serveType} </if>
+			<if test="entity.startTime != null "><![CDATA[ and START_TIME = #{entity.startTime}]]> </if>
+			<if test="entity.tenantName != null and entity.tenantName != ''"> and TENANT_NAME = #{entity.tenantName} </if>
+			<if test="entity.tenantStatus != null and entity.tenantStatus != ''"> and TENANT_STATUS = #{entity.tenantStatus} </if>
+			<if test="entity.tenantType != null and entity.tenantType != ''"> and TENANT_TYPE = #{entity.tenantType} </if>
 		</if>
-		<if test="map != null">
-			<!-- Equal query -->
-			<if test="map.version != null "> and VERSION = #{map.version} </if>
-			<if test="map.delFlag != null and map.delFlag != ''"> and DEL_FLAG = #{map.delFlag} </if>
-			<if test="map.createBy != null and map.createBy != ''"> and CREATE_BY = #{map.createBy} </if>
-			<if test="map.createTime != null "><![CDATA[ and CREATE_TIME = #{map.createTime}]]> </if>
-			<if test="map.updateBy != null and map.updateBy != ''"> and UPDATE_BY = #{map.updateBy} </if>
-			<if test="map.updateTime != null "><![CDATA[ and UPDATE_TIME = #{map.updateTime}]]> </if>
-			<if test="map.id != null and map.id != ''"> and ID = #{map.id} </if>
-			<if test="map.tenantCode != null and map.tenantCode != ''"> and TENANT_CODE = #{map.tenantCode} </if>
-			<if test="map.endTime != null "><![CDATA[ and END_TIME = #{map.endTime}]]> </if>
-			<if test="map.serveType != null and map.serveType != ''"> and SERVE_TYPE = #{map.serveType} </if>
-			<if test="map.startTime != null "><![CDATA[ and START_TIME = #{map.startTime}]]> </if>
-			<if test="map.tenantName != null and map.tenantName != ''"> and TENANT_NAME = #{map.tenantName} </if>
-			<if test="map.tenantStatus != null and map.tenantStatus != ''"> and TENANT_STATUS = #{map.tenantStatus} </if>
-			<if test="map.tenantType != null and map.tenantType != ''"> and TENANT_TYPE = #{map.tenantType} </if>
+		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="map.idList != null and map.idList.size()>0">
-			and ID in <foreach item="item" index="index" collection="map.idList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
+			and TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.serveTypeList != null and map.serveTypeList.size()>0">
-			and SERVE_TYPE in <foreach item="item" index="index" collection="map.serveTypeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.tenantCodeList != null and map.tenantCodeList.size()>0">
-			and TENANT_CODE in <foreach item="item" index="index" collection="map.tenantCodeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.tenantNameList != null and map.tenantNameList.size()>0">
-			and TENANT_NAME in <foreach item="item" index="index" collection="map.tenantNameList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.tenantStatusList != null and map.tenantStatusList.size()>0">
-			and TENANT_STATUS in <foreach item="item" index="index" collection="map.tenantStatusList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.tenantTypeList != null and map.tenantTypeList.size()>0">
-			and TENANT_TYPE in <foreach item="item" index="index" collection="map.tenantTypeList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
+			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
+		</when>
+		<otherwise>
 		<!-- 防止没有参数传递，导致全部删除 -->
-		or 1=2
-		</where></delete>
+		and 1=2
+		</otherwise>
+		</choose>
+		</where>
+	</delete>
 	<!-- ######################################################################### -->
 	<!-- ##########################   common sql end    ########################## -->
 	<!-- ######################################################################### -->

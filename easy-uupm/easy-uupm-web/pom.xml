@@ -11,15 +11,15 @@
   <artifactId>easy-uupm-web</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
-  <name>easy-uupm-web Maven Webapp</name>
-  <url>http://maven.apache.org</url>
+  <name>easy-uupm-web</name>
   
   <properties>
     <easy.uupm.service.version>0.0.1-SNAPSHOT</easy.uupm.service.version>
     <easy.framework.web.version>0.0.1-SNAPSHOT</easy.framework.web.version>
   </properties>
+  
   <dependencies>
-  	<dependency>
+    <dependency>
   		<groupId>com.yffd.easy</groupId>
 	  	<artifactId>easy-uupm-service</artifactId>
 	  	<version>${easy.uupm.service.version}</version>
@@ -29,16 +29,36 @@
   		<artifactId>easy-framework-web</artifactId>
   		<version>${easy.framework.web.version}</version>
   	</dependency>
+  	<!-- Servlet start -->
+	<dependency>
+		<groupId>javax.servlet</groupId>
+      		<artifactId>javax.servlet-api</artifactId>
+		<version>${javax.servlet.api.version}</version>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>javax.servlet.jsp</groupId>
+		<artifactId>jsp-api</artifactId>
+		<version>${jsp.api.version}</version>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>jstl</artifactId>
+		<version>${jstl.version}</version>
+		<scope>provided</scope>
+	</dependency>
+	<!-- Servlet end -->
     <dependency>
       	<groupId>junit</groupId>
       	<artifactId>junit</artifactId>
       	<scope>test</scope>
     </dependency>
+    
   </dependencies>
-  
   <build>
     <finalName>easy-uupm-web</finalName>
-    <resources>
+  	<resources>
   		<resource>
   			<targetPath>${project.build.directory}/classes</targetPath>
     		<directory>src/main/resources</directory>
@@ -84,5 +104,4 @@
 		</plugin>
   	</plugins>
   </build>
-  
 </project>

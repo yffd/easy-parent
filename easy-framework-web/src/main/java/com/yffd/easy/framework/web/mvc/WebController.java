@@ -4,9 +4,9 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 
+import com.yffd.easy.framework.pojo.login.LoginInfo;
+import com.yffd.easy.framework.pojo.vo.RespData;
 import com.yffd.easy.framework.web.enums.WebCommonEnum;
-import com.yffd.easy.framework.web.model.LoginInfo;
-import com.yffd.easy.framework.web.model.RespData;
 import com.yffd.easy.framework.web.view.ViewModelConverter;
 
 /**
@@ -38,7 +38,7 @@ public abstract class WebController extends ViewModelConverter {
 	 * @author  zhangST
 	 * @return
 	 */
-	protected LoginInfo loginInfo() {
+	protected LoginInfo getLoginInfo() {
 		LoginInfo info = (LoginInfo) this.getSession().getAttribute(KEY_SESSION_LOGIN_INFO);
 		return info;
 	}

@@ -2,6 +2,7 @@ package com.yffd.easy.uupm.dao;
 
 import org.springframework.stereotype.Repository;
 
+import com.yffd.easy.framework.common.persist.mybatis.dao.MybatisCommonDao;
 import com.yffd.easy.uupm.entity.UupmTenantEntity;
 
 /**
@@ -13,6 +14,6 @@ import com.yffd.easy.uupm.entity.UupmTenantEntity;
  * @see 	 
  */
 @Repository
-public class UupmTenantDao extends UupmCommonDao<UupmTenantEntity> {
+public class UupmTenantDao extends MybatisCommonDao<UupmTenantEntity> {
 
 }

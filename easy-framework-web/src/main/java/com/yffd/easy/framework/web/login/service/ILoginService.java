@@ -1,6 +1,6 @@
 package com.yffd.easy.framework.web.login.service;
 
-import com.yffd.easy.framework.web.model.LoginInfo;
+import com.yffd.easy.framework.pojo.login.LoginInfo;
 
 /**
  * @Description  简单描述该类的功能（可选）.

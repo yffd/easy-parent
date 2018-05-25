@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.yffd.easy.common.core.page.PageParam;
+import com.yffd.easy.framework.pojo.page.PageParam;
 
 /**
  * @Description  简单描述该类的功能（可选）.

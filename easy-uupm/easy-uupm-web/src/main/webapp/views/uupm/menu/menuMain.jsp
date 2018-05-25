@@ -20,7 +20,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	var $dg_right;
 	$(function() {
 		// 初始化控件数据
-		$.post('/uupm/combox/findComboByDict', 
+		$.post('/uupm/combo/findDictTree', 
 				{'combo':'status,rs-type'}, 
 				function(result) {
 					if("OK"==result.status) {

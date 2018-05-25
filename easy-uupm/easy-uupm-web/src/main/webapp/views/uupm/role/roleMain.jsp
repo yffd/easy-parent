@@ -17,10 +17,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 	var $openWindow = this;// 当前窗口
 	var $dg;
+	var $combobox_roleStatus;
 	$(function() {
 		$dg = $('#dg_id');
 		// 初始化控件数据
-		$.post('/uupm/combox/findComboByDict', 
+		$.post('/uupm/combo/findDictTree', 
 				{'combo':'status'},
 				function(result) {
 					if("OK"==result.status) {
@@ -29,7 +30,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						
 						makeGrid_left();	// 初始化datagrid组件
 						$json_status[0]['selected']=true;
-						$('input[name="roleStatus"]').combobox({
+						$combobox_roleStatus = $('input[name="roleStatus"]').combobox({
 							editable:false,
 							panelHeight: 120,
 						    valueField:'id',
@@ -104,8 +105,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	function cleanSearch() {
 		$('#searchForm_id input').val('');
 		
-		var val = $('input[name="roleStatus"]').combobox('getData');
-		$('input[name="roleStatus"]').combobox('select',val[0]['id']);
+		var val = $combobox_roleStatus.combobox('getData');
+		$combobox_roleStatus.combobox('select',val[0]['id']);
 	}
 	
 	// 打开添加对话框
@@ -123,11 +124,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				text: '确定',
 				iconCls: 'icon-ok',
 				handler: function() {
-					parent.$.modalDialog.openWindow = $openWindow;//定义打开对话框的窗口
-					parent.$.modalDialog.openner = $dg;//定义对话框关闭要刷新的grid
 					var editForm = parent.$.modalDialog.handler.find("#form_id");
-					editForm.attr("action", "uupm/role/add");
-					editForm.submit();
+					var obj = utils.serializeObject(editForm);
+					$.post('uupm/role/add', obj, function(result) {
+						if("OK"==result.status) {
+							parent.$.modalDialog.handler.dialog('close');
+							$dg.datagrid('reload');
+				    	}
+						$.messager.show({
+							title :commonui.msg_title,
+							timeout : commonui.msg_timeout,
+							msg : result.msg
+						});
+					}, 'json');
 				}
 			},{
 				text: '取消',
@@ -146,7 +155,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		if(row) {
 			parent.$.modalDialog({
 				title: "编辑",
-				width: 600,
+				width: 800,
 				height: 400,
 				href: 'views/uupm/role/roleEditDlg.jsp',
 				onLoad:function(){
@@ -159,11 +168,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					text: '确定',
 					iconCls: 'icon-ok',
 					handler: function() {
-						parent.$.modalDialog.openWindow = $openWindow;//定义打开对话框的窗口
-						parent.$.modalDialog.openner = $dg;//定义对话框关闭要刷新的grid
 						var editForm = parent.$.modalDialog.handler.find("#form_id");
-						editForm.attr("action", "uupm/role/edit");
-						editForm.submit();
+						var obj = utils.serializeObject(editForm);
+						$.post('uupm/role/edit', obj, function(result) {
+							if("OK"==result.status) {
+								parent.$.modalDialog.handler.dialog('close');
+								$dg.datagrid('reload');
+					    	}
+							$.messager.show({
+								title :commonui.msg_title,
+								timeout : commonui.msg_timeout,
+								msg : result.msg
+							});
+						}, 'json');
 					}
 				},{
 					text: '取消',

@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
 import com.yffd.easy.common.core.db.dialect.IDialect;
 import com.yffd.easy.common.core.db.dialect.MySql5Dialect;
 import com.yffd.easy.common.core.log.EasyCommonLogFormat;
-import com.yffd.easy.common.core.page.PageParam;
 import com.yffd.easy.common.core.util.CommonUtils;
 import com.yffd.easy.common.core.util.ValidUtils;
+import com.yffd.easy.framework.pojo.page.PageParam;
 
 /**
  * @Description  mybatis分页拦截器--拦截查询.

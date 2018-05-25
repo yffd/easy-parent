@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yffd.easy.framework.common.dao.bak.BakICommonExtDao;
-import com.yffd.easy.framework.common.service.impl.CommonSimpleServiceImpl;
-import com.yffd.easy.framework.core.exception.BizException;
+import com.yffd.easy.framework.common.exception.CommonBizException;
+import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
+import com.yffd.easy.framework.common.service.CommonService;
 import com.yffd.easy.uupm.dao.UupmTenantDao;
 import com.yffd.easy.uupm.entity.UupmAccountEntity;
 import com.yffd.easy.uupm.entity.UupmTenantEntity;
@@ -21,7 +21,7 @@ import com.yffd.easy.uupm.entity.UupmTenantEntity;
  * @see 	 
  */
 @Service
-public class UupmTenantService extends CommonSimpleServiceImpl<UupmTenantEntity> {
+public class UupmTenantService extends CommonService<UupmTenantEntity> {
 
 	@Autowired
 	private UupmAccountService uupmAccountService;
@@ -30,14 +30,14 @@ public class UupmTenantService extends CommonSimpleServiceImpl<UupmTenantEntity>
 	private UupmTenantDao uupmTenantDao;
 	
 	@Override
-	protected BakICommonExtDao<UupmTenantEntity> getBindDao() {
+	protected IMybatisCommonDao<UupmTenantEntity> getBindDao() {
 		return this.uupmTenantDao;
 	}
 
 
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public int addTenantWithAccount(UupmTenantEntity model) {
-		if(null==model) throw BizException.BIZ_PARAMS_IS_EMPTY();
+		if(null==model) throw CommonBizException.BIZ_PARAMS_IS_EMPTY();
 		int num = this.getBindDao().save(model);
 		// 生成账号
 		UupmAccountEntity account = new UupmAccountEntity();

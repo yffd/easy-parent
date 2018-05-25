@@ -21,9 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yffd.easy.common.core.util.ValidUtils;
-import com.yffd.easy.framework.web.enums.WebCommonEnum;
+import com.yffd.easy.framework.pojo.login.LoginInfo;
 import com.yffd.easy.framework.web.login.service.ILoginService;
-import com.yffd.easy.framework.web.model.LoginInfo;
 import com.yffd.easy.framework.web.mvc.WebController;
 
 /**
@@ -65,7 +64,7 @@ public class PermissionRealm extends AuthorizingRealm {
 		
 		LoginInfo loginInfo = this.loginService.getLoginInfo(accountId);
 		if(null==loginInfo) throw new UnknownAccountException();//没找到帐号
-		if(WebCommonEnum.INACTIVE.getValue().equals(loginInfo.getAccountStatus())) 
+		if("A".equals(loginInfo.getAccountStatus())) 
 			throw new LockedAccountException(); //帐号锁定
 		String credentialsSalt = loginInfo.getAccountId() + loginInfo.getAccountSalt();
 		SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(

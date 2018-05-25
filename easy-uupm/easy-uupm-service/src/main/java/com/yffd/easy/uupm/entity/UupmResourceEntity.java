@@ -1,5 +1,7 @@
 package com.yffd.easy.uupm.entity;
 
+import com.yffd.easy.framework.common.persist.entity.CommonEntity;
+
 /**
  * @Description  简单描述该类的功能（可选）.
  * @Date		 2018年4月3日 下午2:00:27 <br/>
@@ -8,41 +10,39 @@ package com.yffd.easy.uupm.entity;
  * @since		 JDK 1.7+
  * @see 	 
  */
-public class UupmResourceEntity extends UupmCommonTreeEntity {
+public class UupmResourceEntity extends CommonEntity {
 
-	private static final long serialVersionUID = 392536829366303556L;
-	private String tenantCode = "dft";	//租户编号
-	private String rsCode;
+	private static final long serialVersionUID = 1L;
 	private String rsName;
-	private String rsStatus;
+	private String rsCode;
+	private String parentCode;
+	private String treeId;
 	private String rsType;
 	private String shortUrl;
 	private Integer seqNo;
-	
-	public String getTenantCode() {
-		return tenantCode;
-	}
-	public void setTenantCode(String tenantCode) {
-		this.tenantCode = tenantCode;
-	}
-	public String getRsCode() {
-		return rsCode;
-	}
-	public void setRsCode(String rsCode) {
-		this.setNodeCode(rsCode);	// 设置nodeCode=rsCode
-		this.rsCode = rsCode;
-	}
 	public String getRsName() {
 		return rsName;
 	}
 	public void setRsName(String rsName) {
 		this.rsName = rsName;
 	}
-	public String getRsStatus() {
-		return rsStatus;
+	public String getRsCode() {
+		return rsCode;
 	}
-	public void setRsStatus(String rsStatus) {
-		this.rsStatus = rsStatus;
+	public void setRsCode(String rsCode) {
+		this.rsCode = rsCode;
+	}
+	public String getParentCode() {
+		return parentCode;
+	}
+	public void setParentCode(String parentCode) {
+		this.parentCode = parentCode;
+	}
+	public String getTreeId() {
+		return treeId;
+	}
+	public void setTreeId(String treeId) {
+		this.treeId = treeId;
 	}
 	public String getRsType() {
 		return rsType;

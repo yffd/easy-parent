@@ -2,6 +2,8 @@ package com.yffd.easy.uupm.pojo.vo;
 
 import java.util.List;
 
+import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
+
 /**
  * @Description  简单描述该类的功能（可选）.
  * @Date		 2018年4月28日 上午10:57:31 <br/>
@@ -10,7 +12,7 @@ import java.util.List;
  * @since		 JDK 1.7+
  * @see 	 
  */
-public class UupmRoleResourceVo extends UupmCommonVo {
+public class UupmRoleResourceVo extends UupmBasePojo {
 	private static final long serialVersionUID = 7973602106411883657L;
 
 	private List<String> rsCodeList;

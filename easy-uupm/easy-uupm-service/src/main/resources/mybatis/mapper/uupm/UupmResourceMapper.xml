@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yffd.easy.uupm.mapper.IUupmResourceMapper">
+<mapper namespace="com.yffd.easy.uupm.dao.UupmResourceDao">
 
 
 	<!-- ######################################################################### -->
@@ -12,94 +12,51 @@
 	<!-- 列名 -->
 	<sql id="table_columns">
 		t.VERSION as version, t.DEL_FLAG as delFlag, t.CREATE_BY as createBy, t.CREATE_TIME as createTime, t.UPDATE_BY as updateBy, 
-		t.UPDATE_TIME as updateTime, t.TREE_ID as treeId, t.NODE_LAYER as nodeLayer, t.NODE_LEFT as nodeLeft, t.NODE_RIGHT as nodeRight, 
-		t.NODE_CODE as nodeCode, t.TENANT_CODE as tenantCode, t.ID as id, t.PARENT_CODE as parentCode, t.RS_CODE as rsCode, 
-		t.RS_NAME as rsName, t.RS_STATUS as rsStatus, t.RS_TYPE as rsType, t.SEQ_NO as seqNo, t.SHORT_URL as shortUrl
+		t.UPDATE_TIME as updateTime, t.ID as id, t.PARENT_CODE as parentCode, t.RS_CODE as rsCode, t.RS_NAME as rsName, 
+		t.RS_TYPE as rsType, t.SEQ_NO as seqNo, t.SHORT_URL as shortUrl, t.TREE_ID as treeId
 	</sql>
 	<!-- 分页条件 -->
 	<sql id="conditions_limit"><if test="page != null"> limit #{page.startIndex}, #{page.pageLimit} </if></sql>
 	<!-- 排序条件 -->
-	<sql id="conditions_orderby"> ORDER BY t.CREATE_TIME desc </sql>
+	<sql id="conditions_orderby">
+		<choose>
+			<when test="orderBy != null and orderBy !=''"> ORDER BY #{orderBy} </when>
+			<otherwise> ORDER BY seqNo ASC </otherwise>
+		</choose>
+	</sql>
 	<!-- 动态组装复合查询条件 -->
 	<sql id="conditions_where">
-		<if test="model != null">
+		<if test="entity != null">
 			<!-- Equal query -->
-			<if test="model.version != null "> and t.VERSION = #{model.version} </if>
-			<if test="model.delFlag != null and model.delFlag != ''"> and t.DEL_FLAG = #{model.delFlag} </if>
-			<if test="model.createBy != null and model.createBy != ''"> and t.CREATE_BY = #{model.createBy} </if>
-			<if test="model.createTime != null "><![CDATA[ and t.CREATE_TIME = #{model.createTime}]]> </if>
-			<if test="model.updateBy != null and model.updateBy != ''"> and t.UPDATE_BY = #{model.updateBy} </if>
-			<if test="model.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{model.updateTime}]]> </if>
-			<if test="model.treeId != null and model.treeId != ''"> and t.TREE_ID = #{model.treeId} </if>
-			<if test="model.nodeLayer != null "> and t.NODE_LAYER = #{model.nodeLayer} </if>
-			<if test="model.nodeCode != null and model.nodeCode != ''"> and t.NODE_CODE = #{model.nodeCode} </if>
-			<if test="model.tenantCode != null and model.tenantCode != ''"> and t.TENANT_CODE = #{model.tenantCode} </if>
-			<if test="model.id != null and model.id != ''"> and t.ID = #{model.id} </if>
-			<if test="model.parentCode != null and model.parentCode != ''"> and t.PARENT_CODE = #{model.parentCode} </if>
-			<if test="model.rsCode != null and model.rsCode != ''"> and t.RS_CODE = #{model.rsCode} </if>
-			<if test="model.rsStatus != null and model.rsStatus != ''"> and t.RS_STATUS = #{model.rsStatus} </if>
-			<if test="model.rsType != null and model.rsType != ''"> and t.RS_TYPE = #{model.rsType} </if>
-			<if test="model.seqNo != null "> and t.SEQ_NO = #{model.seqNo} </if>
-			<if test="model.shortUrl != null and model.shortUrl != ''"> and t.SHORT_URL = #{model.shortUrl} </if>
+			<if test="entity.version != null "> and t.VERSION = #{entity.version} </if>
+			<if test="entity.delFlag != null and entity.delFlag != ''"> and t.DEL_FLAG = #{entity.delFlag} </if>
+			<if test="entity.createBy != null and entity.createBy != ''"> and t.CREATE_BY = #{entity.createBy} </if>
+			<if test="entity.createTime != null "><![CDATA[ and t.CREATE_TIME = #{entity.createTime}]]> </if>
+			<if test="entity.updateBy != null and entity.updateBy != ''"> and t.UPDATE_BY = #{entity.updateBy} </if>
+			<if test="entity.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{entity.updateTime}]]> </if>
+			<if test="entity.id != null and entity.id != ''"> and t.ID = #{entity.id} </if>
+			<if test="entity.parentCode != null and entity.parentCode != ''"> and t.PARENT_CODE = #{entity.parentCode} </if>
+			<if test="entity.rsCode != null and entity.rsCode != ''"> and t.RS_CODE = #{entity.rsCode} </if>
+			<if test="entity.rsType != null and entity.rsType != ''"> and t.RS_TYPE = #{entity.rsType} </if>
+			<if test="entity.seqNo != null "> and t.SEQ_NO = #{entity.seqNo} </if>
+			<if test="entity.shortUrl != null and entity.shortUrl != ''"> and t.SHORT_URL = #{entity.shortUrl} </if>
+			<if test="entity.treeId != null and entity.treeId != ''"> and t.TREE_ID = #{entity.treeId} </if>
 			<!-- Like query -->
-			<if test="model.rsName != null and model.rsName != ''"> and t.RS_NAME like CONCAT(CONCAT('%', #{model.rsName}), '%') </if>
+			<if test="entity.rsName != null and entity.rsName != ''"> and t.RS_NAME like CONCAT(CONCAT('%', #{entity.rsName}), '%') </if>
 		</if>
-		<if test="map != null">
-			<!-- Equal query -->
-			<if test="map.version != null "> and t.VERSION = #{map.version} </if>
-			<if test="map.delFlag != null and map.delFlag != ''"> and t.DEL_FLAG = #{map.delFlag} </if>
-			<if test="map.createBy != null and map.createBy != ''"> and t.CREATE_BY = #{map.createBy} </if>
-			<if test="map.createTime != null "><![CDATA[ and t.CREATE_TIME = #{map.createTime}]]> </if>
-			<if test="map.updateBy != null and map.updateBy != ''"> and t.UPDATE_BY = #{map.updateBy} </if>
-			<if test="map.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{map.updateTime}]]> </if>
-			<if test="map.treeId != null and map.treeId != ''"> and t.TREE_ID = #{map.treeId} </if>
-			<if test="map.nodeLayer != null "> and t.NODE_LAYER = #{map.nodeLayer} </if>
-			<if test="map.nodeCode != null and map.nodeCode != ''"> and t.NODE_CODE = #{map.nodeCode} </if>
-			<if test="map.tenantCode != null and map.tenantCode != ''"> and t.TENANT_CODE = #{map.tenantCode} </if>
-			<if test="map.id != null and map.id != ''"> and t.ID = #{map.id} </if>
-			<if test="map.parentCode != null and map.parentCode != ''"> and t.PARENT_CODE = #{map.parentCode} </if>
-			<if test="map.rsCode != null and map.rsCode != ''"> and t.RS_CODE = #{map.rsCode} </if>
-			<if test="map.rsName != null and map.rsName != ''"> and t.RS_NAME = #{map.rsName} </if>
-			<if test="map.rsStatus != null and map.rsStatus != ''"> and t.RS_STATUS = #{map.rsStatus} </if>
-			<if test="map.rsType != null and map.rsType != ''"> and t.RS_TYPE = #{map.rsType} </if>
-			<if test="map.seqNo != null "> and t.SEQ_NO = #{map.seqNo} </if>
-			<if test="map.shortUrl != null and map.shortUrl != ''"> and t.SHORT_URL = #{map.shortUrl} </if>
+		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="map.idList != null and map.idList.size()>0">
-			and t.ID in <foreach item="item" index="index" collection="map.idList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
+			and t.ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.nodeCodeList != null and map.nodeCodeList.size()>0">
-			and t.NODE_CODE in <foreach item="item" index="index" collection="map.nodeCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.parentCodeIter != null and propsMap.parentCodeIter.size()>0">
+			and t.PARENT_CODE in <foreach item="item" index="index" collection="propsMap.parentCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.nodeLayerList != null and map.nodeLayerList.size()>0">
-			and t.NODE_LAYER in <foreach item="item" index="index" collection="map.nodeLayerList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.rsCodeIter != null and propsMap.rsCodeIter.size()>0">
+			and t.RS_CODE in <foreach item="item" index="index" collection="propsMap.rsCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.parentCodeList != null and map.parentCodeList.size()>0">
-			and t.PARENT_CODE in <foreach item="item" index="index" collection="map.parentCodeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.rsCodeList != null and map.rsCodeList.size()>0">
-			and t.RS_CODE in <foreach item="item" index="index" collection="map.rsCodeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.rsNameList != null and map.rsNameList.size()>0">
-			and t.RS_NAME in <foreach item="item" index="index" collection="map.rsNameList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.rsStatusList != null and map.rsStatusList.size()>0">
-			and t.RS_STATUS in <foreach item="item" index="index" collection="map.rsStatusList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.rsTypeList != null and map.rsTypeList.size()>0">
-			and t.RS_TYPE in <foreach item="item" index="index" collection="map.rsTypeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.seqNoList != null and map.seqNoList.size()>0">
-			and t.SEQ_NO in <foreach item="item" index="index" collection="map.seqNoList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.shortUrlList != null and map.shortUrlList.size()>0">
-			and t.SHORT_URL in <foreach item="item" index="index" collection="map.shortUrlList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.tenantCodeList != null and map.tenantCodeList.size()>0">
-			and t.TENANT_CODE in <foreach item="item" index="index" collection="map.tenantCodeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.treeIdList != null and map.treeIdList.size()>0">
-			and t.TREE_ID in <foreach item="item" index="index" collection="map.treeIdList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.treeIdIter != null and propsMap.treeIdIter.size()>0">
+			and t.TREE_ID in <foreach item="item" index="index" collection="propsMap.treeIdIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
 	</sql>
@@ -114,7 +71,7 @@
 		<include refid="conditions_limit" />
 	</select>
 	<!-- 统计查询 -->
-	<select id="selectCountBy" parameterType="java.util.Map" resultType="long">
+	<select id="selectCountBy" parameterType="java.util.Map" resultType="java.lang.Integer">
 		select count(1) from 
 		<include refid="table_name"/> as t 
 		<where>
@@ -130,343 +87,129 @@
 		</where>
 	</select>
 	<!-- 单条插入 -->
-	<insert id="insertOne" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
+	<insert id="insertOneBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into
 		<include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TREE_ID, NODE_LAYER, NODE_LEFT, NODE_RIGHT, NODE_CODE, TENANT_CODE, PARENT_CODE, RS_CODE, RS_NAME, RS_STATUS, RS_TYPE, SEQ_NO, SHORT_URL)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, PARENT_CODE, RS_CODE, RS_NAME, RS_TYPE, SEQ_NO, SHORT_URL, TREE_ID)
 		values
-		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{treeId}, #{nodeLayer}, #{nodeLeft}, #{nodeRight}, #{nodeCode}, #{tenantCode}, #{parentCode}, #{rsCode}, #{rsName}, #{rsStatus}, #{rsType}, #{seqNo}, #{shortUrl})
+		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{parentCode}, #{rsCode}, #{rsName}, #{rsType}, #{seqNo}, #{shortUrl}, #{treeId})
 	</insert>
 	<!-- 批量插入 -->
-	<insert id="insertList" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
+	<insert id="insertListBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into <include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TREE_ID, NODE_LAYER, NODE_LEFT, NODE_RIGHT, NODE_CODE, TENANT_CODE, PARENT_CODE, RS_CODE, RS_NAME, RS_STATUS, RS_TYPE, SEQ_NO, SHORT_URL)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, PARENT_CODE, RS_CODE, RS_NAME, RS_TYPE, SEQ_NO, SHORT_URL, TREE_ID)
 		values
 		<foreach collection="list" item="item" index="index" separator=",">
 		(#{item.version},#{item.delFlag},#{item.createBy},#{item.createTime},#{item.updateBy},
-		#{item.updateTime},#{item.treeId},#{item.nodeLayer},#{item.nodeLeft},#{item.nodeRight},
-		#{item.nodeCode},#{item.tenantCode},#{item.parentCode},#{item.rsCode},#{item.rsName},
-		#{item.rsStatus},#{item.rsType},#{item.seqNo},#{item.shortUrl})
+		#{item.updateTime},#{item.parentCode},#{item.rsCode},#{item.rsName},#{item.rsType},
+		#{item.seqNo},#{item.shortUrl},#{item.treeId})
 		</foreach>
 	</insert>
 	<!-- 更新 -->
 	<update id="updateBy" parameterType="java.util.Map">
 		update <include refid="table_name" />
 		<set>
-		<if test="model != null">
-			<if test="model.delFlag != null and model.delFlag != ''"> DEL_FLAG = #{model.delFlag},  </if>
-			<if test="model.nodeCode != null and model.nodeCode != ''"> NODE_CODE = #{model.nodeCode},  </if>
-			<if test="model.nodeLayer != null"> NODE_LAYER = #{model.nodeLayer},  </if>
-			<if test="model.parentCode != null and model.parentCode != ''"> PARENT_CODE = #{model.parentCode},  </if>
-			<if test="model.rsCode != null and model.rsCode != ''"> RS_CODE = #{model.rsCode},  </if>
-			<if test="model.rsName != null and model.rsName != ''"> RS_NAME = #{model.rsName},  </if>
-			<if test="model.rsStatus != null and model.rsStatus != ''"> RS_STATUS = #{model.rsStatus},  </if>
-			<if test="model.rsType != null and model.rsType != ''"> RS_TYPE = #{model.rsType},  </if>
-			<if test="model.seqNo != null"> SEQ_NO = #{model.seqNo},  </if>
-			<if test="model.shortUrl != null and model.shortUrl != ''"> SHORT_URL = #{model.shortUrl},  </if>
-			<if test="model.tenantCode != null and model.tenantCode != ''"> TENANT_CODE = #{model.tenantCode},  </if>
-			<if test="model.treeId != null and model.treeId != ''"> TREE_ID = #{model.treeId},  </if>
-			<if test="model.updateBy != null and model.updateBy != ''"> UPDATE_BY = #{model.updateBy},  </if>
-			<if test="model.updateTime != null"> UPDATE_TIME = #{model.updateTime},  </if>
+		<if test="entity != null">
 			VERSION = VERSION + 1, 
+			<if test="entity.delFlag != null and entity.delFlag != ''"> DEL_FLAG = #{entity.delFlag},  </if>
+			<if test="entity.updateBy != null and entity.updateBy != ''"> UPDATE_BY = #{entity.updateBy},  </if>
+			<if test="entity.updateTime != null"> UPDATE_TIME = #{entity.updateTime},  </if>
+			<if test="entity.parentCode != null and entity.parentCode != ''"> PARENT_CODE = #{entity.parentCode},  </if>
+			<if test="entity.rsCode != null and entity.rsCode != ''"> RS_CODE = #{entity.rsCode},  </if>
+			<if test="entity.rsName != null and entity.rsName != ''"> RS_NAME = #{entity.rsName},  </if>
+			<if test="entity.rsType != null and entity.rsType != ''"> RS_TYPE = #{entity.rsType},  </if>
+			<if test="entity.seqNo != null"> SEQ_NO = #{entity.seqNo},  </if>
+			<if test="entity.shortUrl != null and entity.shortUrl != ''"> SHORT_URL = #{entity.shortUrl},  </if>
+			<if test="entity.treeId != null and entity.treeId != ''"> TREE_ID = #{entity.treeId},  </if>
 		</if>
 		</set>
 		<where>
-		<if test="old != null">
+		<choose>
+		<when test="entityOld != null or propsMap != null">
+		<if test="entityOld != null">
 			<!-- Equal query -->
-			<if test="old.version != null "> and VERSION = #{old.version} </if>
-			<if test="old.delFlag != null and old.delFlag != ''"> and DEL_FLAG = #{old.delFlag} </if>
-			<if test="old.createBy != null and old.createBy != ''"> and CREATE_BY = #{old.createBy} </if>
-			<if test="old.createTime != null "><![CDATA[ and CREATE_TIME = #{old.createTime}]]> </if>
-			<if test="old.updateBy != null and old.updateBy != ''"> and UPDATE_BY = #{old.updateBy} </if>
-			<if test="old.updateTime != null "><![CDATA[ and UPDATE_TIME = #{old.updateTime}]]> </if>
-			<if test="old.treeId != null and old.treeId != ''"> and TREE_ID = #{old.treeId} </if>
-			<if test="old.nodeLayer != null "> and NODE_LAYER = #{old.nodeLayer} </if>
-			<if test="old.nodeCode != null and old.nodeCode != ''"> and NODE_CODE = #{old.nodeCode} </if>
-			<if test="old.tenantCode != null and old.tenantCode != ''"> and TENANT_CODE = #{old.tenantCode} </if>
-			<if test="old.id != null and old.id != ''"> and ID = #{old.id} </if>
-			<if test="old.parentCode != null and old.parentCode != ''"> and PARENT_CODE = #{old.parentCode} </if>
-			<if test="old.rsCode != null and old.rsCode != ''"> and RS_CODE = #{old.rsCode} </if>
-			<if test="old.rsName != null and old.rsName != ''"> and RS_NAME = #{old.rsName} </if>
-			<if test="old.rsStatus != null and old.rsStatus != ''"> and RS_STATUS = #{old.rsStatus} </if>
-			<if test="old.rsType != null and old.rsType != ''"> and RS_TYPE = #{old.rsType} </if>
-			<if test="old.seqNo != null "> and SEQ_NO = #{old.seqNo} </if>
-			<if test="old.shortUrl != null and old.shortUrl != ''"> and SHORT_URL = #{old.shortUrl} </if>
+			<if test="entityOld.version != null "> and VERSION = #{entityOld.version} </if>
+			<if test="entityOld.delFlag != null and entityOld.delFlag != ''"> and DEL_FLAG = #{entityOld.delFlag} </if>
+			<if test="entityOld.createBy != null and entityOld.createBy != ''"> and CREATE_BY = #{entityOld.createBy} </if>
+			<if test="entityOld.createTime != null "><![CDATA[ and CREATE_TIME = #{entityOld.createTime}]]> </if>
+			<if test="entityOld.updateBy != null and entityOld.updateBy != ''"> and UPDATE_BY = #{entityOld.updateBy} </if>
+			<if test="entityOld.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entityOld.updateTime}]]> </if>
+			<if test="entityOld.id != null and entityOld.id != ''"> and ID = #{entityOld.id} </if>
+			<if test="entityOld.parentCode != null and entityOld.parentCode != ''"> and PARENT_CODE = #{entityOld.parentCode} </if>
+			<if test="entityOld.rsCode != null and entityOld.rsCode != ''"> and RS_CODE = #{entityOld.rsCode} </if>
+			<if test="entityOld.rsName != null and entityOld.rsName != ''"> and RS_NAME = #{entityOld.rsName} </if>
+			<if test="entityOld.rsType != null and entityOld.rsType != ''"> and RS_TYPE = #{entityOld.rsType} </if>
+			<if test="entityOld.seqNo != null "> and SEQ_NO = #{entityOld.seqNo} </if>
+			<if test="entityOld.shortUrl != null and entityOld.shortUrl != ''"> and SHORT_URL = #{entityOld.shortUrl} </if>
+			<if test="entityOld.treeId != null and entityOld.treeId != ''"> and TREE_ID = #{entityOld.treeId} </if>
 		</if>
-		<if test="map != null">
-			<!-- Equal query -->
-			<if test="map.version != null "> and VERSION = #{map.version} </if>
-			<if test="map.delFlag != null and map.delFlag != ''"> and DEL_FLAG = #{map.delFlag} </if>
-			<if test="map.createBy != null and map.createBy != ''"> and CREATE_BY = #{map.createBy} </if>
-			<if test="map.createTime != null "><![CDATA[ and CREATE_TIME = #{map.createTime}]]> </if>
-			<if test="map.updateBy != null and map.updateBy != ''"> and UPDATE_BY = #{map.updateBy} </if>
-			<if test="map.updateTime != null "><![CDATA[ and UPDATE_TIME = #{map.updateTime}]]> </if>
-			<if test="map.treeId != null and map.treeId != ''"> and TREE_ID = #{map.treeId} </if>
-			<if test="map.nodeLayer != null "> and NODE_LAYER = #{map.nodeLayer} </if>
-			<if test="map.nodeCode != null and map.nodeCode != ''"> and NODE_CODE = #{map.nodeCode} </if>
-			<if test="map.tenantCode != null and map.tenantCode != ''"> and TENANT_CODE = #{map.tenantCode} </if>
-			<if test="map.id != null and map.id != ''"> and ID = #{map.id} </if>
-			<if test="map.parentCode != null and map.parentCode != ''"> and PARENT_CODE = #{map.parentCode} </if>
-			<if test="map.rsCode != null and map.rsCode != ''"> and RS_CODE = #{map.rsCode} </if>
-			<if test="map.rsName != null and map.rsName != ''"> and RS_NAME = #{map.rsName} </if>
-			<if test="map.rsStatus != null and map.rsStatus != ''"> and RS_STATUS = #{map.rsStatus} </if>
-			<if test="map.rsType != null and map.rsType != ''"> and RS_TYPE = #{map.rsType} </if>
-			<if test="map.seqNo != null "> and SEQ_NO = #{map.seqNo} </if>
-			<if test="map.shortUrl != null and map.shortUrl != ''"> and SHORT_URL = #{map.shortUrl} </if>
+		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="map.idList != null and map.idList.size()>0">
-			and ID in <foreach item="item" index="index" collection="map.idList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
+			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.nodeCodeList != null and map.nodeCodeList.size()>0">
-			and NODE_CODE in <foreach item="item" index="index" collection="map.nodeCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.parentCodeIter != null and propsMap.parentCodeIter.size()>0">
+			and PARENT_CODE in <foreach item="item" index="index" collection="propsMap.parentCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.nodeLayerList != null and map.nodeLayerList.size()>0">
-			and NODE_LAYER in <foreach item="item" index="index" collection="map.nodeLayerList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.rsCodeIter != null and propsMap.rsCodeIter.size()>0">
+			and RS_CODE in <foreach item="item" index="index" collection="propsMap.rsCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.parentCodeList != null and map.parentCodeList.size()>0">
-			and PARENT_CODE in <foreach item="item" index="index" collection="map.parentCodeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.rsCodeList != null and map.rsCodeList.size()>0">
-			and RS_CODE in <foreach item="item" index="index" collection="map.rsCodeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.rsNameList != null and map.rsNameList.size()>0">
-			and RS_NAME in <foreach item="item" index="index" collection="map.rsNameList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.rsStatusList != null and map.rsStatusList.size()>0">
-			and RS_STATUS in <foreach item="item" index="index" collection="map.rsStatusList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.rsTypeList != null and map.rsTypeList.size()>0">
-			and RS_TYPE in <foreach item="item" index="index" collection="map.rsTypeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.seqNoList != null and map.seqNoList.size()>0">
-			and SEQ_NO in <foreach item="item" index="index" collection="map.seqNoList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.shortUrlList != null and map.shortUrlList.size()>0">
-			and SHORT_URL in <foreach item="item" index="index" collection="map.shortUrlList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.tenantCodeList != null and map.tenantCodeList.size()>0">
-			and TENANT_CODE in <foreach item="item" index="index" collection="map.tenantCodeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.treeIdList != null and map.treeIdList.size()>0">
-			and TREE_ID in <foreach item="item" index="index" collection="map.treeIdList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.treeIdIter != null and propsMap.treeIdIter.size()>0">
+			and TREE_ID in <foreach item="item" index="index" collection="propsMap.treeIdIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
+		</when>
+		<otherwise>
 		<!-- 防止没有参数传递，导致全部更新 -->
-		or 1=2
+		and 1=2
+		</otherwise>
+		</choose>
 		</where>
 	</update>
 	<!-- 删除 -->
 	<delete id="deleteBy" parameterType="java.util.Map">
 		delete from <include refid="table_name" />
 		<where>
-		<if test="model != null">
+		<choose>
+		<when test="entity != null or propsMap != null">
+		<if test="entity != null">
 			<!-- Equal query -->
-			<if test="model.version != null "> and VERSION = #{model.version} </if>
-			<if test="model.delFlag != null and model.delFlag != ''"> and DEL_FLAG = #{model.delFlag} </if>
-			<if test="model.createBy != null and model.createBy != ''"> and CREATE_BY = #{model.createBy} </if>
-			<if test="model.createTime != null "><![CDATA[ and CREATE_TIME = #{model.createTime}]]> </if>
-			<if test="model.updateBy != null and model.updateBy != ''"> and UPDATE_BY = #{model.updateBy} </if>
-			<if test="model.updateTime != null "><![CDATA[ and UPDATE_TIME = #{model.updateTime}]]> </if>
-			<if test="model.treeId != null and model.treeId != ''"> and TREE_ID = #{model.treeId} </if>
-			<if test="model.nodeLayer != null "> and NODE_LAYER = #{model.nodeLayer} </if>
-			<if test="model.nodeCode != null and model.nodeCode != ''"> and NODE_CODE = #{model.nodeCode} </if>
-			<if test="model.tenantCode != null and model.tenantCode != ''"> and TENANT_CODE = #{model.tenantCode} </if>
-			<if test="model.id != null and model.id != ''"> and ID = #{model.id} </if>
-			<if test="model.parentCode != null and model.parentCode != ''"> and PARENT_CODE = #{model.parentCode} </if>
-			<if test="model.rsCode != null and model.rsCode != ''"> and RS_CODE = #{model.rsCode} </if>
-			<if test="model.rsName != null and model.rsName != ''"> and RS_NAME = #{model.rsName} </if>
-			<if test="model.rsStatus != null and model.rsStatus != ''"> and RS_STATUS = #{model.rsStatus} </if>
-			<if test="model.rsType != null and model.rsType != ''"> and RS_TYPE = #{model.rsType} </if>
-			<if test="model.seqNo != null "> and SEQ_NO = #{model.seqNo} </if>
-			<if test="model.shortUrl != null and model.shortUrl != ''"> and SHORT_URL = #{model.shortUrl} </if>
+			<if test="entity.version != null "> and VERSION = #{entity.version} </if>
+			<if test="entity.delFlag != null and entity.delFlag != ''"> and DEL_FLAG = #{entity.delFlag} </if>
+			<if test="entity.createBy != null and entity.createBy != ''"> and CREATE_BY = #{entity.createBy} </if>
+			<if test="entity.createTime != null "><![CDATA[ and CREATE_TIME = #{entity.createTime}]]> </if>
+			<if test="entity.updateBy != null and entity.updateBy != ''"> and UPDATE_BY = #{entity.updateBy} </if>
+			<if test="entity.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entity.updateTime}]]> </if>
+			<if test="entity.id != null and entity.id != ''"> and ID = #{entity.id} </if>
+			<if test="entity.parentCode != null and entity.parentCode != ''"> and PARENT_CODE = #{entity.parentCode} </if>
+			<if test="entity.rsCode != null and entity.rsCode != ''"> and RS_CODE = #{entity.rsCode} </if>
+			<if test="entity.rsName != null and entity.rsName != ''"> and RS_NAME = #{entity.rsName} </if>
+			<if test="entity.rsType != null and entity.rsType != ''"> and RS_TYPE = #{entity.rsType} </if>
+			<if test="entity.seqNo != null "> and SEQ_NO = #{entity.seqNo} </if>
+			<if test="entity.shortUrl != null and entity.shortUrl != ''"> and SHORT_URL = #{entity.shortUrl} </if>
+			<if test="entity.treeId != null and entity.treeId != ''"> and TREE_ID = #{entity.treeId} </if>
 		</if>
-		<if test="map != null">
-			<!-- Equal query -->
-			<if test="map.version != null "> and VERSION = #{map.version} </if>
-			<if test="map.delFlag != null and map.delFlag != ''"> and DEL_FLAG = #{map.delFlag} </if>
-			<if test="map.createBy != null and map.createBy != ''"> and CREATE_BY = #{map.createBy} </if>
-			<if test="map.createTime != null "><![CDATA[ and CREATE_TIME = #{map.createTime}]]> </if>
-			<if test="map.updateBy != null and map.updateBy != ''"> and UPDATE_BY = #{map.updateBy} </if>
-			<if test="map.updateTime != null "><![CDATA[ and UPDATE_TIME = #{map.updateTime}]]> </if>
-			<if test="map.treeId != null and map.treeId != ''"> and TREE_ID = #{map.treeId} </if>
-			<if test="map.nodeLayer != null "> and NODE_LAYER = #{map.nodeLayer} </if>
-			<if test="map.nodeCode != null and map.nodeCode != ''"> and NODE_CODE = #{map.nodeCode} </if>
-			<if test="map.tenantCode != null and map.tenantCode != ''"> and TENANT_CODE = #{map.tenantCode} </if>
-			<if test="map.id != null and map.id != ''"> and ID = #{map.id} </if>
-			<if test="map.parentCode != null and map.parentCode != ''"> and PARENT_CODE = #{map.parentCode} </if>
-			<if test="map.rsCode != null and map.rsCode != ''"> and RS_CODE = #{map.rsCode} </if>
-			<if test="map.rsName != null and map.rsName != ''"> and RS_NAME = #{map.rsName} </if>
-			<if test="map.rsStatus != null and map.rsStatus != ''"> and RS_STATUS = #{map.rsStatus} </if>
-			<if test="map.rsType != null and map.rsType != ''"> and RS_TYPE = #{map.rsType} </if>
-			<if test="map.seqNo != null "> and SEQ_NO = #{map.seqNo} </if>
-			<if test="map.shortUrl != null and map.shortUrl != ''"> and SHORT_URL = #{map.shortUrl} </if>
+		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="map.idList != null and map.idList.size()>0">
-			and ID in <foreach item="item" index="index" collection="map.idList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
+			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.nodeCodeList != null and map.nodeCodeList.size()>0">
-			and NODE_CODE in <foreach item="item" index="index" collection="map.nodeCodeList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.parentCodeIter != null and propsMap.parentCodeIter.size()>0">
+			and PARENT_CODE in <foreach item="item" index="index" collection="propsMap.parentCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.nodeLayerList != null and map.nodeLayerList.size()>0">
-			and NODE_LAYER in <foreach item="item" index="index" collection="map.nodeLayerList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.rsCodeIter != null and propsMap.rsCodeIter.size()>0">
+			and RS_CODE in <foreach item="item" index="index" collection="propsMap.rsCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
-			<if test="map.parentCodeList != null and map.parentCodeList.size()>0">
-			and PARENT_CODE in <foreach item="item" index="index" collection="map.parentCodeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.rsCodeList != null and map.rsCodeList.size()>0">
-			and RS_CODE in <foreach item="item" index="index" collection="map.rsCodeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.rsNameList != null and map.rsNameList.size()>0">
-			and RS_NAME in <foreach item="item" index="index" collection="map.rsNameList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.rsStatusList != null and map.rsStatusList.size()>0">
-			and RS_STATUS in <foreach item="item" index="index" collection="map.rsStatusList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.rsTypeList != null and map.rsTypeList.size()>0">
-			and RS_TYPE in <foreach item="item" index="index" collection="map.rsTypeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.seqNoList != null and map.seqNoList.size()>0">
-			and SEQ_NO in <foreach item="item" index="index" collection="map.seqNoList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.shortUrlList != null and map.shortUrlList.size()>0">
-			and SHORT_URL in <foreach item="item" index="index" collection="map.shortUrlList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.tenantCodeList != null and map.tenantCodeList.size()>0">
-			and TENANT_CODE in <foreach item="item" index="index" collection="map.tenantCodeList" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="map.treeIdList != null and map.treeIdList.size()>0">
-			and TREE_ID in <foreach item="item" index="index" collection="map.treeIdList" open="(" separator="," close=") ">#{item}</foreach>
+			<if test="propsMap.treeIdIter != null and propsMap.treeIdIter.size()>0">
+			and TREE_ID in <foreach item="item" index="index" collection="propsMap.treeIdIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
+		</when>
+		<otherwise>
 		<!-- 防止没有参数传递，导致全部删除 -->
-		or 1=2
-		</where>
-	</delete>
-	<!-- 树结构相关操作 -->
-	<!-- 查询子节点列表 -->
-	<select id="selectChildrenNodes" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.entity.UupmResourceEntity">
-		select <include refid="table_columns" />
-		from <include refid="table_name"/> as t 
-		<where>
-			<if test="tenantCode != null and tenantCode != ''"> and t.TENANT_CODE = #{tenantCode} </if>
-			<if test="nodeLayer != null "><![CDATA[ and t.NODE_LAYER <= #{nodeLayer} ]]></if>
-			and t.TREE_ID = #{treeId}
-			and t.NODE_LEFT between #{nodeLeft} and #{nodeRight}
-		</where>
-		order by t.SEQ_NO asc
-	</select>
-	<!-- 查询父节点列表 -->
-	<select id="selectParentNodes" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.entity.UupmResourceEntity">
-		select <include refid="table_columns" />
-		from <include refid="table_name"/> as t 
-		<where>
-			<if test="tenantCode != null and tenantCode != ''"> and t.TENANT_CODE = #{tenantCode} </if>
-			and t.TREE_ID = #{treeId}
-			<![CDATA[ and t.NODE_LEFT < #{nodeLeft} ]]>
-			<![CDATA[ and t.NODE_RIGHT > #{nodeRight} ]]>
-		</where>
-		order by t.SEQ_NO asc
-	</select>
-	<!-- 查询节点的层号，即深度 -->
-	<select id="countLayer" parameterType="java.util.Map" resultType="java.lang.Long">
-		select count(*)
-		from <include refid="table_name"/>
-		<where>
-		<if test="tenantCode != null and tenantCode != ''"> and TENANT_CODE = #{tenantCode} </if>
-		and TREE_ID = #{treeId}
-		<![CDATA[ and NODE_LEFT <= #{nodeLeft} ]]>
-		<![CDATA[ and NODE_RIGHT >= #{nodeRight} ]]>
-		</where>
-	</select>
-	<!-- 添加新节点时，修改节点的偏序号 -->
-	<update id="updateLeftForAdd" parameterType="java.util.Map">
-		update <include refid="table_name" />
-		<set>
-		<if test="updateBy != null and updateBy != ''"> UPDATE_BY = #{updateBy}, </if>
-		<if test="updateTime != null "> UPDATE_TIME = #{updateTime}, </if>
-		VERSION = VERSION + 1, 
-		NODE_LEFT = NODE_LEFT + #{nodeStep},
-		</set>
-		<where>
-		<if test="tenantCode != null and tenantCode != ''"> and TENANT_CODE = #{tenantCode} </if>
-		and TREE_ID = #{treeId}
-		and NODE_LEFT >= #{nodeRight}
-		</where>
-	</update>
-	<!-- 添加新节点时，修改节点的偏序号 -->
-	<update id="updateRightForAdd" parameterType="java.util.Map">
-		update <include refid="table_name" />
-		<set>
-		<if test="updateBy != null and updateBy != ''"> UPDATE_BY = #{updateBy}, </if>
-		<if test="updateTime != null "> UPDATE_TIME = #{updateTime}, </if>
-		VERSION = VERSION + 1, 
-		NODE_RIGHT = NODE_RIGHT + #{nodeStep},
-		</set>
-		<where>
-		<if test="tenantCode != null and tenantCode != ''"> and TENANT_CODE = #{tenantCode} </if>
-		and TREE_ID = #{treeId}
-		and NODE_RIGHT >= #{nodeRight}
-		</where>
-	</update>
-	<!-- 删除节点时，修改节点的偏序号 -->
-	<update id="updateLeftForDel" parameterType="java.util.Map">
-		update <include refid="table_name" />
-		<set>
-		<if test="updateBy != null and updateBy != ''"> UPDATE_BY = #{updateBy}, </if>
-		<if test="updateTime != null "> UPDATE_TIME = #{updateTime}, </if>
-		VERSION = VERSION + 1, 
-		NODE_LEFT = NODE_LEFT - #{nodeStep},
-		</set>
-		<where>
-		<if test="tenantCode != null and tenantCode != ''"> and TENANT_CODE = #{tenantCode} </if>
-		and TREE_ID = #{treeId}
-		and NODE_LEFT > #{nodeLeft}
-		</where>
-	</update>
-	<!-- 删除节点时，修改节点的偏序号 -->
-	<update id="updateRightForDel" parameterType="java.util.Map">
-		update <include refid="table_name" />
-		<set>
-		<if test="updateBy != null and updateBy != ''"> UPDATE_BY = #{updateBy}, </if>
-		<if test="updateTime != null "> UPDATE_TIME = #{updateTime}, </if>
-		VERSION = VERSION + 1, 
-		NODE_RIGHT = NODE_RIGHT - #{nodeStep},
-		</set>
-		<where>
-		<if test="tenantCode != null and tenantCode != ''"> and TENANT_CODE = #{tenantCode} </if>
-		and TREE_ID = #{treeId}
-		and NODE_RIGHT > #{nodeRight}
-		</where>
-	</update>
-	<!-- 更新节点，以及子孙节点 -->
-	<update id="updateNodes" parameterType="java.util.Map">
-		update <include refid="table_name" />
-		<set>
-		<if test="model != null">
-			VERSION = VERSION + 1, 
-			<if test="model.updateBy != null and model.updateBy != ''"> UPDATE_BY = #{model.updateBy},  </if>
-			<if test="model.updateTime != null"> UPDATE_TIME = #{model.updateTime},  </if>
-		</if>
-		</set>
-		<where>
-		<if test="old != null">
-			<if test="old.tenantCode != null and old.tenantCode != ''"> and TENANT_CODE = #{old.tenantCode} </if>
-			and TREE_ID = #{old.treeId}
-			<![CDATA[ and NODE_LEFT >= #{old.nodeLeft} ]]>
-			<![CDATA[ and NODE_RIGHT <= #{old.nodeRight} ]]>
-		</if>
-		</where>
-	</update>
-	<!-- 删除节点，以及子孙节点 -->
-	<delete id="deleteNodes" parameterType="java.util.Map">
-		delete from <include refid="table_name" />
-		<where>
-		<if test="model != null">
-			<if test="model.tenantCode != null and model.tenantCode != ''"> and TENANT_CODE = #{model.tenantCode} </if>
-			and TREE_ID = #{model.treeId}
-			<![CDATA[ and NODE_LEFT >= #{model.nodeLeft} ]]>
-			<![CDATA[ and NODE_RIGHT <= #{model.nodeRight} ]]>
-		</if>
+		and 1=2
+		</otherwise>
+		</choose>
 		</where>
 	</delete>
 	<!-- ######################################################################### -->

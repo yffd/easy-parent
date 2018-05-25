@@ -24,7 +24,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	$(function() {
 		$dg_left = $('#dg_id_left');
 		// 初始化控件数据
-		$.post('/uupm/combox/findComboByDict', 
+		$.post('/uupm/combo/findDictTree', 
 				{'combo':'status,tenant-status,tenant-type,serve-type,rs-type'}, 
 				function(result) {
 					if("OK"==result.status) {
@@ -81,7 +81,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		}
 	    	},
 	    	onDblClickRow: function(rowIndex, rowData) {
-	    		findResByTenant(rowIndex, rowData);
+	    		findTenantResourceCodes(rowIndex, rowData);
             },
 	        columns: [[
 						{field: 'tenantName', title: '名称', width: 200, align: 'left'},
@@ -102,7 +102,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	function makegrid_right() {
 		$dg_right = $('#dg_id_right');
 		$dg_right.treegrid({
-			url:'uupm/resource/listAll',
+			url:'uupm/resource/findTreeAll',
 		    width: 'auto',
 		    height: $(this).height()-commonui.remainHeight-20,
 			rownumbers: true,
@@ -160,13 +160,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	// 为角色分配功能
 	function saveTenantRes() {
 		var rows_rs = $dg_right.treegrid('getSelections');//获取选中的行-多行
-		var rsCodeArr = [];
-		if(rows_rs) {
-			$.each(rows_rs, function(i, obj) {
-				rsCodeArr.push({'rsCode': obj['rsCode']});
-			});
-		}
-		if(rsCodeArr.length==0) {
+		if(!rows_rs) {
 			parent.$.messager.show({
 				title :commonui.msg_title,
 				timeout : commonui.msg_timeout,
@@ -178,8 +172,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		if(row_tenant) {
 			parent.$.messager.confirm("提示","确定要【保存设置】吗?如果操作成功，将不可恢复。",function(r){
 				if(r) {
+					var rsCodeArr = [];
+					if(rows_rs) {
+						$.each(rows_rs, function(i, obj) {
+							rsCodeArr.push(obj['rsCode']);
+						});
+					}
 					var tenant_code = row_tenant.tenantCode;
-					var data={"tenantCode":tenant_code, "resource": JSON.stringify(rsCodeArr)};
+					var data={"tenantCode":tenant_code, "rsCodes": JSON.stringify(rsCodeArr)};
 					$.post("uupm/tenant/resource/saveTenantResource", data, function(result) {
 						$.messager.show({
 							title :commonui.msg_title,
@@ -204,15 +204,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		}
 	}
 	//双击事件
-	function findResByTenant(rowIndex, rowData) {
-		$.post("uupm/tenant/resource/findResourceByTenantCode", {tenantCode:rowData.tenantCode}, function(result) {
+	function findTenantResourceCodes(rowIndex, rowData) {
+		$.post("uupm/tenant/resource/findTenantResourceCodes", {tenantCode:rowData.tenantCode}, function(result) {
 			if(result.status=='OK') {
 				$dg_right.treegrid('unselectAll');
 				var data = result.data;
-				if(data.length>0) {
+				if(data && data.length>0) {
 					$.each(data, function(i, n) {
-						var row = $dg_right.treegrid('find', n.rsCode);
-						if(row) $dg_right.treegrid('select', n.rsCode);
+						var row = $dg_right.treegrid('find', n);
+						if(row) $dg_right.treegrid('select', n);
 					});
 				} else {
 					$.messager.show({

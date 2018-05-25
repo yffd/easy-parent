@@ -2,6 +2,8 @@ package com.yffd.easy.uupm.pojo.vo;
 
 import java.util.Set;
 
+import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
+
 /**
  * @Description  简单描述该类的功能（可选）.
  * @Date		 2018年4月28日 下午2:29:48 <br/>
@@ -10,7 +12,7 @@ import java.util.Set;
  * @since		 JDK 1.7+
  * @see 	 
  */
-public class UupmLoginInfoVo extends UupmCommonVo {
+public class UupmLoginInfoVo extends UupmBasePojo {
 	private static final long serialVersionUID = -2763900513852904512L;
 
 	private String accountId;

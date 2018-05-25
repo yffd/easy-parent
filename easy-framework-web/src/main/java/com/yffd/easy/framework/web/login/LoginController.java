@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.yffd.easy.framework.web.model.RespData;
+import com.yffd.easy.framework.pojo.vo.RespData;
 import com.yffd.easy.framework.web.mvc.WebController;
 
 /**

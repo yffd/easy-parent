@@ -2,6 +2,7 @@ package com.yffd.easy.uupm.dao;
 
 import org.springframework.stereotype.Repository;
 
+import com.yffd.easy.framework.common.persist.mybatis.dao.MybatisCommonDao;
 import com.yffd.easy.uupm.entity.UupmAccountEntity;
 import com.yffd.easy.uupm.pojo.vo.UupmLoginInfoVo;
 
@@ -14,9 +15,10 @@ import com.yffd.easy.uupm.pojo.vo.UupmLoginInfoVo;
  * @see 	 
  */
 @Repository
-public class UupmAccountDao extends UupmCommonDao<UupmAccountEntity> {
+public class UupmAccountDao extends MybatisCommonDao<UupmAccountEntity> {
 
 	public UupmLoginInfoVo findLoginInfo(UupmLoginInfoVo loginInfoVo) {
-		return this.customSelectOneBy("selectLoginInfo", loginInfoVo, true);
+		return this.selectOneByCustom("findLoginInfo", loginInfoVo, true);
 	}
+	
 }

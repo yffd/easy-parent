@@ -3,12 +3,12 @@ package com.yffd.easy.framework.web.view;
 import java.util.List;
 import java.util.Map;
 
-import com.yffd.easy.common.core.converter.EasyModelConverter;
-import com.yffd.easy.common.core.page.PageParam;
-import com.yffd.easy.common.core.page.PageResult;
+import com.alibaba.fastjson.JSON;
 import com.yffd.easy.common.core.util.ValidUtils;
-import com.yffd.easy.framework.web.view.vo.DataGridVO;
-import com.yffd.easy.framework.web.view.vo.SearchVO;
+import com.yffd.easy.framework.pojo.page.PageParam;
+import com.yffd.easy.framework.pojo.page.PageResult;
+import com.yffd.easy.framework.pojo.vo.DataGridVo;
+import com.yffd.easy.framework.pojo.vo.SearchVo;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -18,7 +18,7 @@ import com.yffd.easy.framework.web.view.vo.SearchVO;
  * @since		 JDK 1.7+
  * @see 	 
  */
-public class ViewModelConverter extends EasyModelConverter {
+public class ViewModelConverter {
 	public static final Integer PAGE_LIMIT_DEFAUL = 30;
 	
 	/**
@@ -28,9 +28,9 @@ public class ViewModelConverter extends EasyModelConverter {
 	 * @param pageResult
 	 * @return
 	 */
-	public DataGridVO toDataGrid(PageResult<?> pageResult) {
+	public DataGridVo toDataGrid(PageResult<?> pageResult) {
 		if(null==pageResult) return null;
-		DataGridVO vo = new DataGridVO();
+		DataGridVo vo = new DataGridVo();
 		if(null!=pageResult.getRecordList())
 			vo.setRows(pageResult.getRecordList());
 		Long total = (long) pageResult.getPageParam().getTotalRecord();
@@ -45,9 +45,9 @@ public class ViewModelConverter extends EasyModelConverter {
 	 * @param list
 	 * @return
 	 */
-	public DataGridVO toDataGrid(List<?> list) {
+	public DataGridVo toDataGrid(List<?> list) {
 		if(null==list) return null;
-		DataGridVO vo = new DataGridVO();
+		DataGridVo vo = new DataGridVo();
 		vo.setRows(list);
 		Long total = (long) list.size();
 		vo.setTotal(total);
@@ -61,7 +61,7 @@ public class ViewModelConverter extends EasyModelConverter {
 	 * @param searchBoxVO
 	 * @return
 	 */
-	public PageParam getPageParam(SearchVO searchBoxVO) {
+	public PageParam getPageParam(SearchVo searchBoxVO) {
 		Integer pageNum = 1;
 		Integer pageLimit = PAGE_LIMIT_DEFAUL;
 		if(null==searchBoxVO) {
@@ -109,5 +109,8 @@ public class ViewModelConverter extends EasyModelConverter {
 		return new PageParam(pageNum, pageLimit);
 	}
 	
+	public <T> T getModelParam(Map<String, Object> paramMap, Class<T> clazz) {
+		return JSON.parseObject(JSON.toJSONString(paramMap), clazz);
+	}
 }
 

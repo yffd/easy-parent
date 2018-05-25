@@ -1,13 +1,16 @@
 package com.yffd.easy.uupm.service;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.yffd.easy.framework.common.dao.bak.BakICommonExtDao;
-import com.yffd.easy.framework.common.service.impl.CommonSimpleServiceImpl;
+import com.yffd.easy.common.core.util.EasyStringCheckUtils;
+import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
+import com.yffd.easy.framework.common.service.CommonService;
 import com.yffd.easy.uupm.dao.UupmOrganizationDao;
 import com.yffd.easy.uupm.entity.UupmOrganizationEntity;
 
@@ -20,45 +23,22 @@ import com.yffd.easy.uupm.entity.UupmOrganizationEntity;
  * @see 	 
  */
 @Service
-public class UupmOrganizationService extends CommonSimpleServiceImpl<UupmOrganizationEntity> {
+public class UupmOrganizationService extends CommonService<UupmOrganizationEntity> {
 
 	@Autowired
 	private UupmOrganizationDao uupmOrganizationDao;
 	
 	@Override
-	protected BakICommonExtDao<UupmOrganizationEntity> getBindDao() {
+	protected IMybatisCommonDao<UupmOrganizationEntity> getBindDao() {
 		return uupmOrganizationDao;
 	}
 
-	@Override
-	public Integer save(UupmOrganizationEntity paramPo) {
-		if("root".equals(paramPo.getParentCode())) {
-			paramPo.setDataPath("root." + paramPo.getOrgCode());
-		} else {
-			UupmOrganizationEntity param = new UupmOrganizationEntity();
-			param.setOrgCode(paramPo.getParentCode());
-			UupmOrganizationEntity parent = this.findOne(param);
-			paramPo.setDataPath(parent.getDataPath()  + "." + paramPo.getOrgCode());
-		}
-		return super.save(paramPo);
+	public Integer deleteByIds(String idStr) {
+		if(EasyStringCheckUtils.isEmpty(idStr)) return 0;
+		String[] idsArr = idStr.split(",");
+		List<String> idsList = Arrays.asList(idsArr);
+		Set<String> ids = new HashSet<String>(idsList);
+		return this.uupmOrganizationDao.deleteByIds(ids);
 	}
 	
-	public String findParentNamePath(UupmOrganizationEntity paramPo) {
-		UupmOrganizationEntity result = this.findOne(paramPo, null);
-		if(null==result) return "";
-		String dataPath = result.getDataPath();
-		String[] orgCodes = dataPath.split("\\");
-		List<UupmOrganizationEntity> resultList = this.uupmOrganizationDao.findByOrgCodes(Arrays.asList(orgCodes));
-		if(null==resultList || resultList.size()==0) return "";
-		StringBuilder sb = new StringBuilder();
-		for(String orgCode : orgCodes) {
-			for(UupmOrganizationEntity model : resultList) {
-				if(orgCode.equals(model.getOrgCode())) {
-					sb.append(model.getOrgName()).append("\\");
-				}
-			}
-		}
-		return sb.length()>0 ? sb.substring(0, sb.length()-1) : sb.toString();
-	}
-
 }

@@ -1,7 +1,10 @@
 package com.yffd.easy.uupm.dao;
 
+import java.util.Set;
+
 import org.springframework.stereotype.Repository;
 
+import com.yffd.easy.framework.common.persist.mybatis.dao.MybatisCommonDao;
 import com.yffd.easy.uupm.entity.UupmRoleEntity;
 
 /**
@@ -13,6 +16,9 @@ import com.yffd.easy.uupm.entity.UupmRoleEntity;
  * @see 	 
  */
 @Repository
-public class UupmRoleDao extends UupmCommonDao<UupmRoleEntity> {
+public class UupmRoleDao extends MybatisCommonDao<UupmRoleEntity> {
 	
+	public Integer deleteByIds(Set<String> ids) {
+		return this.deleteByProps("idIter", ids);
+	}
 }

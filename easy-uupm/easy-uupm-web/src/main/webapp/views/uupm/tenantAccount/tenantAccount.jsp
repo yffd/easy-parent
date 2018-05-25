@@ -22,7 +22,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	var $dg_account;
 	$(function() {
 		// 初始化控件数据
-		$.post('/uupm/combox/findComboByDict', 
+		$.post('/uupm/combo/findDictTree', 
 				{'combo':'status,tenant-status,tenant-type,serve-type'}, 
 				function(result) {
 					if("OK"==result.status) {
@@ -134,6 +134,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    	},
 	        columns: [[
 						{field: 'accountId', title: '账号ID', width: 200, align: 'left'},
+						{field: 'accountType', title: '账号类型', width: 200, align: 'left'},
 						{field: 'accountStatus', title: '账号状态', width: 100, align: 'left',
 							formatter: function(value, row) {
 								return utils.fmtDict($json_status, value);
@@ -165,11 +166,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	}
 	
 	// 清除搜索条件
-	function cleanSearch_user() {
-		$('#searchbox_id_account').searchbox('setValue', '');
-	}
-	function cleanSearch_role() {
+	function cleanSearch_tenant() {
 		$('#searchbox_id_tenant').searchbox('setValue', '');
+	}
+	function cleanSearch_account() {
+		$('#searchbox_id_account').searchbox('setValue', '');
 	}
 	
 	// 打开添加对话框
@@ -198,11 +199,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				text: '确定',
 				iconCls: 'icon-ok',
 				handler: function() {
-					parent.$.modalDialog.openWindow = $openWindow;//定义打开对话框的窗口
-					parent.$.modalDialog.openner = $dg_account;//定义对话框关闭要刷新的grid
 					var editForm = parent.$.modalDialog.handler.find("#form_id");
-					editForm.attr("action", "uupm/account/add");
-					editForm.submit();
+					var obj = utils.serializeObject(editForm);
+					$.post('uupm/account/add', obj, function(result) {
+						if("OK"==result.status) {
+							parent.$.modalDialog.handler.dialog('close');
+							$dg_account.datagrid('reload');
+				    	}
+						$.messager.show({
+							title :commonui.msg_title,
+							timeout : commonui.msg_timeout,
+							msg : result.msg
+						});
+					}, 'json');
 				}
 			},{
 				text: '取消',
@@ -236,11 +245,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					text: '确定',
 					iconCls: 'icon-ok',
 					handler: function() {
-						parent.$.modalDialog.openWindow = $openWindow;//定义打开对话框的窗口
-						parent.$.modalDialog.openner = $dg_account;//定义对话框关闭要刷新的grid
 						var editForm = parent.$.modalDialog.handler.find("#form_id");
-						editForm.attr("action", "uupm/account/edit");
-						editForm.submit();
+						var obj = utils.serializeObject(editForm);
+						$.post('uupm/account/edit', obj, function(result) {
+							if("OK"==result.status) {
+								parent.$.modalDialog.handler.dialog('close');
+								$dg_account.datagrid('reload');
+					    	}
+							$.messager.show({
+								title :commonui.msg_title,
+								timeout : commonui.msg_timeout,
+								msg : result.msg
+							});
+						}, 'json');
 					}
 				},{
 					text: '取消',
@@ -319,7 +336,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						<input id="searchbox_id_tenant" type="text"/>
 					</td>
 					<td style="padding-left:2px">
-						<a class="easyui-linkbutton" data-options="iconCls:'icon-clear',plain:'true'" onclick="cleanSearch_user();" href="javascript:void(0);"></a>
+						<a class="easyui-linkbutton" data-options="iconCls:'icon-clear',plain:'true'" onclick="cleanSearch_tenant();" href="javascript:void(0);"></a>
 					</td>
 				</tr>
 			</table>
@@ -350,7 +367,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						<input id="searchbox_id_account" type="text"/>
 					</td>
 					<td style="padding-left:2px">
-						<a class="easyui-linkbutton" data-options="iconCls:'icon-clear',plain:'true'" onclick="cleanSearch_user();" href="javascript:void(0);"></a>
+						<a class="easyui-linkbutton" data-options="iconCls:'icon-clear',plain:'true'" onclick="cleanSearch_account();" href="javascript:void(0);"></a>
 					</td>
 				</tr>
 			</table>

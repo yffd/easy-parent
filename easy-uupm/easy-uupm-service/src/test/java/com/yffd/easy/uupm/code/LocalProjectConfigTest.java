@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.yffd.easy.framework.common.code.geneator.CodeGenerator;
-import com.yffd.easy.framework.common.persist.mybatis.mapper.ICommonMapper;
+import com.yffd.easy.framework.common.persist.mybatis.dao.MybatisCommonDao;
+import com.yffd.easy.framework.common.service.CommonService;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -19,28 +20,33 @@ public class LocalProjectConfigTest extends CodeGenerator {
 	public static String author = "ZhangST";
 	public static boolean covered = true;
 	
-	public static String baseDirPath = "D:\\java\\git-easy\\";
-	public static String modelRootDirPath = baseDirPath + "easy-master\\easy-uupm-service\\src\\main\\java";
-	public static String modelPackageName = "com.yffd.easy.uupm.entity";
+	public static String daoPackageName = "com.yffd.easy.uupm.dao";
+	public static Class<?> daoSuperClazz = MybatisCommonDao.class;
 	
-	public static Class<?> superMapperClazz = ICommonMapper.class;
-	public static String mapperPackageName = "com.yffd.easy.uupm.mapper";
+	public static String servicePackageName = "com.yffd.easy.uupm.service";
+	public static Class<?> serviceSuperClazz = CommonService.class;
 	
-	public static String outRootDirPath_src = baseDirPath + "easy-master\\easy-uupm-service\\src";
-	public static String outRootDirPath_src_main = outRootDirPath_src + "\\main\\java";
-	public static String outRootDirPath_src_test = outRootDirPath_src + "\\test\\java";
-	public static String outRootDirPath_mapper_xml = outRootDirPath_src + "\\main\\resources\\mybatis\\mapper\\uupm";
 	
-	List<String> skipModelNamesLike = new ArrayList<String>();
+	public static String baseDirPath = "D:\\java\\git-easy\\easy-parent\\";
+	public static String javaRootDirPath = baseDirPath + "easy-uupm\\easy-uupm-service\\src\\main\\java";
+	public static String resourceRootDirPath = baseDirPath + "easy-uupm\\easy-uupm-service\\src";
+	
+	public static String outRootDirPath_dao = javaRootDirPath;
+	public static String outRootDirPath_service = javaRootDirPath;
+	public static String outRootDirPath_mapper_xml = resourceRootDirPath + "\\main\\resources\\mybatis\\mapper\\uupm";
+	
+	
+	List<String> skipModel = new ArrayList<String>();
 	{
-		skipModelNamesLike.add("EasyPersistModel");
-		skipModelNamesLike.add("BaseModel");
-	}
-	@Override
-	protected List<String> getSkipModelNamesLike() {
-		return skipModelNamesLike;
+		skipModel.add("EasyPersistModel");
+		skipModel.add("BaseModel");
 	}
 	
+	@Override
+	protected List<String> getSkipPojoList() {
+		return skipModel;
+	}
+
 	
 }
 

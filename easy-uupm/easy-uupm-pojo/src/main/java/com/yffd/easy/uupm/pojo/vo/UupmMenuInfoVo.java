@@ -1,5 +1,7 @@
 package com.yffd.easy.uupm.pojo.vo;
 
+import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
+
 /**
  * @Description  简单描述该类的功能（可选）.
  * @Date		 2018年4月28日 上午11:54:18 <br/>
@@ -8,7 +10,7 @@ package com.yffd.easy.uupm.pojo.vo;
  * @since		 JDK 1.7+
  * @see 	 
  */
-public class UupmMenuInfoVo extends UupmCommonVo {
+public class UupmMenuInfoVo extends UupmBasePojo {
 	private static final long serialVersionUID = -129579540759851462L;
 
 	private String id;
@@ -20,7 +22,7 @@ public class UupmMenuInfoVo extends UupmCommonVo {
 	private String menuIcons;
 	private String menuSeqNo;
 	private String menuType;
-	private String menuUrl;
+	private String menuShortUrl;
 	private String appContextPath;
 	private String appDomain;
 	private String appPort;
@@ -78,11 +80,11 @@ public class UupmMenuInfoVo extends UupmCommonVo {
 	public void setMenuType(String menuType) {
 		this.menuType = menuType;
 	}
-	public String getMenuUrl() {
-		return menuUrl;
+	public String getMenuShortUrl() {
+		return menuShortUrl;
 	}
-	public void setMenuUrl(String menuUrl) {
-		this.menuUrl = menuUrl;
+	public void setMenuShortUrl(String menuShortUrl) {
+		this.menuShortUrl = menuShortUrl;
 	}
 	public String getAppContextPath() {
 		return appContextPath;

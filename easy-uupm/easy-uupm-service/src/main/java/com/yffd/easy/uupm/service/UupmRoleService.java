@@ -1,10 +1,16 @@
 package com.yffd.easy.uupm.service;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.yffd.easy.framework.common.dao.bak.BakICommonExtDao;
-import com.yffd.easy.framework.common.service.impl.CommonSimpleServiceImpl;
+import com.yffd.easy.common.core.util.EasyStringCheckUtils;
+import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
+import com.yffd.easy.framework.common.service.CommonService;
 import com.yffd.easy.uupm.dao.UupmRoleDao;
 import com.yffd.easy.uupm.entity.UupmRoleEntity;
 
@@ -17,14 +23,21 @@ import com.yffd.easy.uupm.entity.UupmRoleEntity;
  * @see 	 
  */
 @Service
-public class UupmRoleService extends CommonSimpleServiceImpl<UupmRoleEntity> {
+public class UupmRoleService extends CommonService<UupmRoleEntity> {
 
 	@Autowired
 	private UupmRoleDao uupmRoleDao;
 
 	@Override
-	protected BakICommonExtDao<UupmRoleEntity> getBindDao() {
+	protected IMybatisCommonDao<UupmRoleEntity> getBindDao() {
 		return uupmRoleDao;
 	}
-
+	
+	public Integer deleteByIds(String idStr) {
+		if(EasyStringCheckUtils.isEmpty(idStr)) return 0;
+		String[] idsArr = idStr.split(",");
+		List<String> idsList = Arrays.asList(idsArr);
+		Set<String> ids = new HashSet<String>(idsList);
+		return this.uupmRoleDao.deleteByIds(ids);
+	}
 }

@@ -8,6 +8,7 @@
 
   <modules>
   <module>easy-common-core</module>
+    <module>easy-framework-pojo</module>
     <module>easy-framework-common</module>
     <module>easy-framework-web</module>
     <module>easy-uupm</module>

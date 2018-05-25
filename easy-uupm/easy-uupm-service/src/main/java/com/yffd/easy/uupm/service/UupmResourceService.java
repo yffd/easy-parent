@@ -1,14 +1,18 @@
 package com.yffd.easy.uupm.service;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
-import com.yffd.easy.framework.core.common.mapper.ICommonMapper;
-import com.yffd.easy.framework.core.common.service.CommonTreeServiceAbstract;
-import com.yffd.easy.framework.core.exception.BizException;
+import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
+import com.yffd.easy.framework.common.service.CommonService;
+import com.yffd.easy.uupm.dao.UupmResourceDao;
 import com.yffd.easy.uupm.entity.UupmResourceEntity;
-import com.yffd.easy.uupm.mapper.IUupmResourceMapper;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -19,29 +23,22 @@ import com.yffd.easy.uupm.mapper.IUupmResourceMapper;
  * @see 	 
  */
 @Service
-public class UupmResourceService extends CommonTreeServiceAbstract<UupmResourceEntity> {
+public class UupmResourceService extends CommonService<UupmResourceEntity> {
 
 	@Autowired
-	private IUupmResourceMapper uupmResourceMapper;
+	private UupmResourceDao uupmResourceDao;
 	
 	@Override
-	public ICommonMapper<UupmResourceEntity> getMapper() {
-		return this.uupmResourceMapper;
+	protected IMybatisCommonDao<UupmResourceEntity> getBindDao() {
+		return this.uupmResourceDao;
 	}
-
-	@Override
-	public Class<?> getMapperClass() {
-		return IUupmResourceMapper.class;
+	
+	public Integer deleteByIds(String idStr) {
+		if(EasyStringCheckUtils.isEmpty(idStr)) return 0;
+		String[] idsArr = idStr.split(",");
+		List<String> idsList = Arrays.asList(idsArr);
+		Set<String> ids = new HashSet<String>(idsList);
+		return this.uupmResourceDao.deleteByIds(ids);
 	}
-
-	@Override
-	public boolean exsist(UupmResourceEntity model) {
-		if(null==model || EasyStringCheckUtils.isEmpty(model.getTenantCode()) 
-				|| EasyStringCheckUtils.isEmpty(model.getRsCode())) throw BizException.BIZ_PARAMS_IS_EMPTY();
-		UupmResourceEntity paramModel = new UupmResourceEntity();
-		paramModel.setRsCode(model.getRsCode());
-		return super.exsist(model);
-	}
-
 	
 }

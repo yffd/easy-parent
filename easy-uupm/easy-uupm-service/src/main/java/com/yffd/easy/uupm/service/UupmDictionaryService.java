@@ -1,14 +1,18 @@
 package com.yffd.easy.uupm.service;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
-import com.yffd.easy.framework.core.common.mapper.ICommonMapper;
-import com.yffd.easy.framework.core.common.service.CommonTreeServiceAbstract;
-import com.yffd.easy.framework.core.exception.BizException;
+import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
+import com.yffd.easy.framework.common.service.CommonService;
+import com.yffd.easy.uupm.dao.UupmDictionaryDao;
 import com.yffd.easy.uupm.entity.UupmDictionaryEntity;
-import com.yffd.easy.uupm.mapper.IUupmDictionaryMapper;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -19,28 +23,21 @@ import com.yffd.easy.uupm.mapper.IUupmDictionaryMapper;
  * @see 	 
  */
 @Service
-public class UupmDictionaryService extends CommonTreeServiceAbstract<UupmDictionaryEntity> {
+public class UupmDictionaryService extends CommonService<UupmDictionaryEntity> {
 
 	@Autowired
-	private IUupmDictionaryMapper uupmDictionaryMapper;
+	private UupmDictionaryDao uupmDictionaryDao;
 	
 	@Override
-	public ICommonMapper<UupmDictionaryEntity> getMapper() {
-		return this.uupmDictionaryMapper;
+	protected IMybatisCommonDao<UupmDictionaryEntity> getBindDao() {
+		return this.uupmDictionaryDao;
 	}
 
-	@Override
-	public Class<?> getMapperClass() {
-		return IUupmDictionaryMapper.class;
+	public Integer deleteByIds(String idStr) {
+		if(EasyStringCheckUtils.isEmpty(idStr)) return 0;
+		String[] idsArr = idStr.split(",");
+		List<String> idsList = Arrays.asList(idsArr);
+		Set<String> ids = new HashSet<String>(idsList);
+		return this.uupmDictionaryDao.deleteByIds(ids);
 	}
-
-	@Override
-	public boolean exsist(UupmDictionaryEntity model) {
-		if(null==model || EasyStringCheckUtils.isEmpty(model.getTenantCode()) 
-				|| EasyStringCheckUtils.isEmpty(model.getKeyCode())) throw BizException.BIZ_PARAMS_IS_EMPTY();
-		UupmDictionaryEntity paramModel = new UupmDictionaryEntity();
-		paramModel.setKeyCode(model.getKeyCode());
-		return super.exsist(model);
-	}
-
 }

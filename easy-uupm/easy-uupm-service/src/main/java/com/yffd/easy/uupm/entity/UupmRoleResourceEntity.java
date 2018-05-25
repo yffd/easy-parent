@@ -6,6 +6,8 @@
 
 package com.yffd.easy.uupm.entity;
 
+import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
+
 /**
  * 
  * @Description  角色-资源关系信息.
@@ -15,19 +17,12 @@ package com.yffd.easy.uupm.entity;
  * @since		 JDK 1.7+
  * @see
  */
-public class UupmRoleResourceEntity extends UupmCommonEntity {
+public class UupmRoleResourceEntity extends UupmBasePojo {
 	
-	private static final long serialVersionUID = -7211576246824481573L;
-	private String tenantCode;		//租户编号
+	private static final long serialVersionUID = 1L;
 	private String rsCode;			//功能编号
 	private String roleCode;		//角色编号
 	
-	public String getTenantCode() {
-		return tenantCode;
-	}
-	public void setTenantCode(String tenantCode) {
-		this.tenantCode = tenantCode;
-	}
 	public String getRsCode() {
 		return rsCode;
 	}

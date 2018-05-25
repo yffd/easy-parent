@@ -6,6 +6,8 @@
 
 package com.yffd.easy.uupm.entity;
 
+import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
+
 /**
  * 
  * @Description  租户资源配置信息.
@@ -15,9 +17,9 @@ package com.yffd.easy.uupm.entity;
  * @since		 JDK 1.7+
  * @see
  */
-public class UupmTenantResourceEntity extends UupmCommonEntity {
+public class UupmTenantResourceEntity extends UupmBasePojo {
 	
-	private static final long serialVersionUID = 4500908604698251160L;
+	private static final long serialVersionUID = 1L;
 	private String tenantCode;	//租户编号
 	private String rsCode;		//系统资源编号
 	

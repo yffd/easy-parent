@@ -13,62 +13,53 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <jsp:include page="/common/layout/script.jsp"></jsp:include>
 
 <script type="text/javascript">
-	var $json_status = [ {id:"", text:"全部", "selected": true} ];
 	var $openWindow = this;// 当前窗口
 	var $dg_left;
 	var $dg_right;
 	$(function() {
-		// 初始化控件数据
-		$.post('/uupm/combox/findComboByDict', 
-				{'combo':'status'}, 
-				function(result) {
-					if("OK"==result.status) {
-						var jsonData = result.data;
-						$json_status = $json_status.concat(jsonData['combo']['status'][0]['children']);
-						// 初始化datagrid组件
-						makeGrid_left();
-						makeGrid_right();
-					}
-				}, 'json');
+		// 初始化datagrid组件
+		makeGrid_left();
+		makeGrid_right();
 	});
 	
 	function makeGrid_left() {
 		$dg_left = $('#dg_id_left');
-		$dg_left.treegrid({
-			url:'uupm/dictionary/listRoot',
+		$dg_left.datagrid({
+			url:'uupm/dictionary/listCategory',
 		    width: 'auto',
 		    height: $(this).height()-commonui.remainHeight-20,
 		    fit:true,
-			rownumbers: false,
+			pagination: true,
+			pageSize: commonui.pageSize,
+			rownumbers: true,
 			animate: true,
 			collapsible: true,
 			fitColumns: true,
-			fit:true,
 			border: false,
 			striped: true,
 			singleSelect: true,
-			showHeader: false,
+			showHeader: true,
 			toolbar: '#tb_id_left',
-			idField: 'id',
-			treeField: 'keyName',
 		    loadFilter: function(result) {
 		    	if("OK"==result.status) {
-		    		return result.data || [];
+		    		return result.data || {'total':0, 'rows':[]};
 		    	} else {
 		    		$.messager.show({
 						title :commonui.msg_title,
 						timeout : commonui.msg_timeout,
 						msg : result.msg
 					});
-		    		return [];
+		    		return {'total':0, 'rows':[]};
 	    		}
 	    	},
-			onClickRow: function(row) {
-				$dg_right.treegrid('options').url='uupm/dictionary/listChildren';
+	    	onClickRow: function(rowIndex, rowData) {
+				$dg_right.treegrid('options').url='uupm/dictionary/listCategoryTree';
 				$dg_right.treegrid('loadData', {'status':'OK',data:[]});
-	    		$dg_right.treegrid('reload', {'treeId': row.treeId, 'keyCode':row.keyCode});
+	    		$dg_right.treegrid('reload', {'category':rowData.category});
 			},
-			frozenColumns: [[{field: 'keyName', title: '', width:parseInt($(this).width())}]]
+			columns: [[{field: 'keyName', title: '名称', width:200},
+			           {field: 'keyCode', title: '编号', width:200}
+			]]
 		});
 	}
 	function makeGrid_right() {
@@ -109,32 +100,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					top: e.pageY
 				});
 			},
-			frozenColumns: [[
-							 {field: 'operate', title: '操作', width: 100, align: 'center',
-								 formatter: function(value, row) {
-									 var text = " 激活状态 ";
-									 var style = "color: green";
-									 if('active'==row.valueStatus) {
-										 text = " 冻结状态 ";
-										 style = "color: red";
-									 }
-									 var a1 = '[<a href="javascript:void(0);" onClick="updateStatus(\''+row.treeId+'\',\''+row.keyCode+'\',\''+row.valueStatus+'\');" width="100" style="'+style+'">'+text+'</a>]';
-									 return a1 + '&nbsp;';
-								 }	
-							 }
-	    	                 ]],
 	        columns: [[
 						{field: 'keyName', title: '名称', width:100,align: 'left'},
 						{field: 'keyCode', title: '编号', width: 100, align: 'left'},
-						{field: 'treeId', title: '树ID', width: 100, align: 'left'},
-						{field: 'parentCode', title: '父编号', width: 100, align: 'left'},
 						{field: 'seqNo', title: '序号', width: 100, align: 'left'},
-						{field: 'valueStatus', title: '状态', width: 100, align: 'left',
-							formatter: function(value, row) {
-								return utils.fmtDict($json_status, value);
-							}
-						},
-						{field: 'valueContent', title: '值', width: 200, align: 'left'}
+						{field: 'keyValue', title: '值', width: 200, align: 'left'}
 	                   ]]
 		});
 	}
@@ -149,7 +119,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			href: 'views/uupm/dictionary/dictionaryEditDlg.jsp',
 			onLoad:function() {
 				var editForm = parent.$.modalDialog.handler.find("#form_id");
-				setComboForSelected(editForm);
 				var parentCode=editForm.find('input[name="parentCode"]');
 				parentCode.val("root");
 				parentCode.attr('readonly',true);
@@ -160,10 +129,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				handler: function() {
 					var editForm = parent.$.modalDialog.handler.find("#form_id");
 					var obj = utils.serializeObject(editForm);
-					$.post('uupm/dictionary/addRoot', obj, function(result) {
+					$.post('uupm/dictionary/addCategory', obj, function(result) {
 						if("OK"==result.status) {
 							parent.$.modalDialog.handler.dialog('close');
-							$dg_left.treegrid('reload');
+							$dg_left.datagrid('reload');
 				    	}
 						$.messager.show({
 							title :commonui.msg_title,
@@ -185,7 +154,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
 	// 打开修改对话框
 	function openEditDlg() {
-		var row = $dg_left.treegrid('getSelected');
+		var row = $dg_left.datagrid('getSelected');
 		if(row) {
 			parent.$.modalDialog({
 				title: "编辑",
@@ -194,7 +163,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				href: 'views/uupm/dictionary/dictionaryEditDlg.jsp',
 				onLoad:function(){
 					var editForm = parent.$.modalDialog.handler.find("#form_id");
-					setComboForSelected(editForm);
 					editForm.form("load", row);
 					editForm.find('input[name="keyCode"]').attr('readonly',true);
 					editForm.find('input[name="parentCode"]').attr('readonly',true);
@@ -208,7 +176,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						$.post('uupm/dictionary/edit', obj, function(result) {
 							if("OK"==result.status) {
 								parent.$.modalDialog.handler.dialog('close');
-								$dg_left.treegrid('reload');
+								$dg_left.datagrid('reload');
 					    	}
 							$.messager.show({
 								title :commonui.msg_title,
@@ -237,14 +205,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
 	// 删除
 	function removeFunc() {
-		var row = $dg_left.treegrid('getSelected');
+		var row = $dg_left.datagrid('getSelected');
 		if(row) {
 			parent.$.messager.confirm("提示","确定要删除该记录吗?",function(r){  
 			    if(r) {
-			    	$.post("uupm/dictionary/del", {'treeId': row.treeId, 'keyCode': row.keyCode}, function(result) {
+			    	$.post("uupm/dictionary/delById", {'id': row.id}, function(result) {
 						if(result.status=='OK') {
-							$dg_left.treegrid('remove', row.id); //分类：移除row
-							$dg_right.treegrid('reload', {});
+							var rowIndex = $dg_left.datagrid('getRowIndex', row);
+							$dg_left.datagrid('deleteRow', rowIndex);//分类：移除row
+							var root = $dg_right.treegrid('getRoot');
+							$dg_right.treegrid('remove', root['id']);
+// 							$dg_right.treegrid('reload', {});
 						}
 						$.messager.show({
 							title :commonui.msg_title,
@@ -267,7 +238,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
 	// 打开添加对话框
 	function openAddDlg_right() {
-		var row_left = $dg_left.treegrid('getSelected');
+		var row_left = $dg_left.datagrid('getSelected');
 		var row_right = $dg_right.treegrid('getSelected');
 		var row = row_right || row_left;
 		if(row) {
@@ -279,11 +250,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				onLoad:function() {
 					if(row) {
 						var editForm = parent.$.modalDialog.handler.find("#form_id");
-						setComboForSelected(editForm);
 						var parentCode=editForm.find('input[name="parentCode"]');
 						parentCode.val(row.keyCode);
 						parentCode.attr('readonly',true);
-						editForm.find('input[name="treeId"]').val(row.treeId);
+						editForm.find('input[name="category"]').val(row.category);
 					}
 				},
 				buttons: [{
@@ -292,7 +262,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					handler: function() {
 						var editForm = parent.$.modalDialog.handler.find("#form_id");
 						var obj = utils.serializeObject(editForm);
-						$.post('uupm/dictionary/addChild', obj, function(result) {
+						$.post('uupm/dictionary/add', obj, function(result) {
 							if("OK"==result.status) {
 								parent.$.modalDialog.handler.dialog('close');
 								$dg_right.treegrid('reload');
@@ -333,7 +303,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				href: 'views/uupm/dictionary/dictionaryEditDlg.jsp',
 				onLoad:function(){
 					var editForm = parent.$.modalDialog.handler.find("#form_id");
-					setComboForSelected(editForm);
 					editForm.form("load", row);
 					editForm.find('input[name="keyCode"]').attr('readonly',true);
 					editForm.find('input[name="parentCode"]').attr('readonly',true);
@@ -380,7 +349,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		if(row) {
 			parent.$.messager.confirm("提示","确定要删除该记录吗?",function(r){  
 			    if(r) {
-			    	$.post("uupm/dictionary/del", {'treeId': row.treeId, 'keyCode': row.keyCode}, function(result) {
+			    	var arr_id = iterNode(row);
+			    	var ids = arr_id.join(",");
+			    	$.post("uupm/dictionary/delByIds", {'ids': ids}, function(result) {
 						if(result.status=='OK') {
 							$dg_right.treegrid('remove', row.id);
 						}
@@ -400,33 +371,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			});
 		}
 	}
-	// 修改状态
-	function updateStatus(treeId, keyCode, valueStatus) {
-		var tmp='active';
-		if('active'==valueStatus) tmp='inactive';
-		$.post("uupm/dictionary/editStatus", {'treeId':treeId, 'keyCode':keyCode, 'valueStatus':tmp}, function(result) {
-			if(result.status=='OK') {
-				$dg_right.treegrid('reload');
+	
+	// 递归获取tree的id
+	function iterNode(pNode) {
+		var arrs = [];
+		if(pNode) {
+			arrs.push(pNode.id);
+			if(pNode.children) {
+				$.each(pNode.children, function(i, obj){
+					arrs = arrs.concat(iterNode(obj));
+				});
 			}
-			$.messager.show({
-				title :commonui.msg_title,
-				timeout : commonui.msg_timeout,
-				msg : result.msg
-			});
-		}, "json");
-	}
-	// 设置控件选中
-	function setComboForSelected(selectForm) {
-		selectForm.find('input[name="valueStatus"]').combobox({
-			editable:false,
-			panelHeight: 120,
-			valueField:'id',
-		    textField:'text',
-		    data: $.grep($json_status, function(n,i){
-		    	if(i==1) n['selected']=true;
-		    	return i > 0;
-		    })
-		});
+		}
+		return arrs;
 	}
 	// 展开
 	function expandAll_right() {

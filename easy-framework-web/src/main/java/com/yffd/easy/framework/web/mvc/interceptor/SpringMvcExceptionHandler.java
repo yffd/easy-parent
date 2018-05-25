@@ -14,8 +14,8 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
+import com.yffd.easy.framework.pojo.vo.RespData;
 import com.yffd.easy.framework.web.enums.WebCommonEnum;
-import com.yffd.easy.framework.web.model.RespData;
 
 /**
  * @Description  简单描述该类的功能（可选）.

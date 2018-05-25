@@ -1,10 +1,13 @@
 package com.yffd.easy.uupm.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import com.yffd.easy.framework.common.persist.mybatis.dao.MybatisCommonDao;
+import com.yffd.easy.uupm.entity.UupmResourceEntity;
 import com.yffd.easy.uupm.entity.UupmTenantResourceEntity;
 
 /**
@@ -16,9 +19,11 @@ import com.yffd.easy.uupm.entity.UupmTenantResourceEntity;
  * @see 	 
  */
 @Repository
-public class UupmTenantResourceDao extends UupmCommonDao<UupmTenantResourceEntity> {
+public class UupmTenantResourceDao extends MybatisCommonDao<UupmTenantResourceEntity> {
 
-	public List<Map<String, Object>> findTenantResource(Map<String, Object> paramMap) {
-		return this.customSelectListBy("selectTenantResource", paramMap, true);
+	public List<UupmResourceEntity> findResourceForTenant(String tenantCode) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("tenantCode", tenantCode);
+		return this.selectListByCustom("selectResourceForTenant", paramMap, true);
 	}
 }

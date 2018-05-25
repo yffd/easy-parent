@@ -16,7 +16,6 @@
   <properties>
     <easy.uupm.pojo.version>0.0.1-SNAPSHOT</easy.uupm.pojo.version>
 <!--     <easy.common.dubbo.version>0.0.1-SNAPSHOT</easy.common.dubbo.version> -->
-    <easy.framework.common.version>0.0.1-SNAPSHOT</easy.framework.common.version>
   </properties>
   
   <dependencies>
@@ -31,11 +30,6 @@
 <!-- 	  	<version>${easy.common.dubbo.version}</version> -->
 <!-- 	  	<type>pom</type> -->
 <!--   	</dependency> -->
-  	<dependency>
-  		<groupId>com.yffd.easy</groupId>
-  		<artifactId>easy-framework-common</artifactId>
-	  	<version>${easy.framework.common.version}</version>
-  	</dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

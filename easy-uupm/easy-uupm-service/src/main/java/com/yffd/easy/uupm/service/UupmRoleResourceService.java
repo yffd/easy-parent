@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yffd.easy.framework.common.dao.bak.BakICommonExtDao;
-import com.yffd.easy.framework.common.service.impl.CommonSimpleServiceImpl;
+import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
+import com.yffd.easy.framework.common.service.CommonService;
 import com.yffd.easy.uupm.dao.UupmRoleResourceDao;
 import com.yffd.easy.uupm.entity.UupmRoleResourceEntity;
 import com.yffd.easy.uupm.entity.UupmUserRoleEntity;
@@ -25,13 +25,13 @@ import com.yffd.easy.uupm.entity.UupmUserRoleEntity;
  * @see 	 
  */
 @Service
-public class UupmRoleResourceService extends CommonSimpleServiceImpl<UupmRoleResourceEntity> {
+public class UupmRoleResourceService extends CommonService<UupmRoleResourceEntity> {
 
 	@Autowired
 	private UupmRoleResourceDao uupmRoleResourceDao;
 	
 	@Override
-	protected BakICommonExtDao<UupmRoleResourceEntity> getBindDao() {
+	protected IMybatisCommonDao<UupmRoleResourceEntity> getBindDao() {
 		return uupmRoleResourceDao;
 	}
 
@@ -47,18 +47,6 @@ public class UupmRoleResourceService extends CommonSimpleServiceImpl<UupmRoleRes
 		this.delete(entity);
 	}
 	
-	public Set<String> findRsCode(String roleCode) {
-		UupmRoleResourceEntity paramModel = new UupmRoleResourceEntity();
-		paramModel.setRoleCode(roleCode);
-		List<UupmRoleResourceEntity> resultList = this.findList(paramModel, null);
-		if(null==resultList ||resultList.size()==0) return null;
-		Set<String> rsCodes = new HashSet<String>();
-		for(UupmRoleResourceEntity model : resultList) {
-			rsCodes.add(model.getRsCode());
-		}
-		return rsCodes;
-	}
-	
 	public Set<String> findRsCode(Set<String> roleCodes) {
 		List<UupmRoleResourceEntity> resultList = this.uupmRoleResourceDao.findByRoleCodes(roleCodes);
 		if(null==resultList ||resultList.size()==0) return null;
@@ -69,12 +57,37 @@ public class UupmRoleResourceService extends CommonSimpleServiceImpl<UupmRoleRes
 		return rsCodes;
 	}
 	
-	public List<UupmRoleResourceEntity> findResources(List<UupmUserRoleEntity> userRoleList) {
-		if(null==userRoleList || userRoleList.size()==0) return null;
-		List<String> roleCodeList = new ArrayList<String>();
-		for(UupmUserRoleEntity model : userRoleList) {
-			roleCodeList.add(model.getRoleCode());
+	public Set<String> findRoleResourceCodes(String tenantCode, String roleCode) {
+		UupmRoleResourceEntity entity = new UupmRoleResourceEntity();
+		entity.setTenantCode(tenantCode);
+		entity.setRoleCode(roleCode);
+		List<UupmRoleResourceEntity> listResult = this.findList(entity);
+		Set<String> rsCodes = new HashSet<String>();
+		for(UupmRoleResourceEntity model : listResult) {
+			rsCodes.add(model.getRsCode());
 		}
-		return this.uupmRoleResourceDao.findByResourceCodes(roleCodeList);
+		return rsCodes;
 	}
+	
+//	public Set<String> findRsCode(String roleCode) {
+//		UupmRoleResourceEntity paramModel = new UupmRoleResourceEntity();
+//		paramModel.setRoleCode(roleCode);
+//		List<UupmRoleResourceEntity> resultList = this.findList(paramModel);
+//		if(null==resultList ||resultList.size()==0) return null;
+//		Set<String> rsCodes = new HashSet<String>();
+//		for(UupmRoleResourceEntity model : resultList) {
+//			rsCodes.add(model.getRsCode());
+//		}
+//		return rsCodes;
+//	}
+	
+	
+//	public List<UupmRoleResourceEntity> findResources(List<UupmUserRoleEntity> userRoleList) {
+//		if(null==userRoleList || userRoleList.size()==0) return null;
+//		Set<String> roleCodeSet = new HashSet<String>();
+//		for(UupmUserRoleEntity model : userRoleList) {
+//			roleCodeSet.add(model.getRoleCode());
+//		}
+//		return this.uupmRoleResourceDao.findByResourceCodes(roleCodeSet);
+//	}
 }

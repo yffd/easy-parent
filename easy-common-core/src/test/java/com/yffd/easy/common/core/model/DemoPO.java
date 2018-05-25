@@ -76,6 +76,11 @@ public class DemoPO implements Serializable {
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
+	@Override
+	public String toString() {
+		return "DemoPO [id=" + id + ", userName=" + userName + ", age=" + age + ", state=" + state + ", sex=" + sex
+				+ ", isActive=" + isActive + ", startTime=" + startTime + ", endTime=" + endTime + "]";
+	}
 
 }
 

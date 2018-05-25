@@ -2,7 +2,7 @@ package com.yffd.easy.uupm.pojo.bo;
 
 import java.io.Serializable;
 
-import com.yffd.easy.common.core.pojo.IPOJO;
+import com.yffd.easy.framework.pojo.IPOJO;
 
 /**
  * @Description  简单描述该类的功能（可选）.

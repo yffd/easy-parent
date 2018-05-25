@@ -21,7 +21,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	$(function() {
 		$dg_left = $('#dg_id_left');
 		// 初始化控件数据
-		$.post('/uupm/combox/findComboByDict', 
+		$.post('/uupm/combo/findDictTree', 
 				{'combo':'status,rs-type'}, 
 				function(result) {
 					if("OK"==result.status) {
@@ -74,7 +74,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		}
 	    	},
 	    	onDblClickRow: function(rowIndex, rowData) {
-	    		findResByRole(rowIndex, rowData);
+	    		findRoleResourceCodes(rowIndex, rowData);
             },
 	        columns: [[
 						{field: 'roleName', title: '名称', width: 200, align: 'left'},
@@ -124,7 +124,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    	},
 	    	onContextMenu: function(e, node){
 				e.preventDefault();
-				$dg_right.treegrid('select', node.nodeCode);
+				$dg_right.treegrid('select', node.rsCode);
 				$('#mm_id_right').menu('show', {
 					left: e.pageX,
 					top: e.pageY
@@ -155,13 +155,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	// 为角色分配功能
 	function saveRoleRes() {
 		var rows_rs = $dg_right.treegrid('getSelections');//获取选中的行-多行
-		var rsCodeArr = [];
-		if(rows_rs) {
-			$.each(rows_rs, function(i, obj) {
-				rsCodeArr.push({'tenantCode': obj['tenantCode'], 'rsCode': obj['rsCode']});
-			});
-		}
-		if(rsCodeArr.length==0) {
+		if(!rows_rs) {
 			parent.$.messager.show({
 				title :commonui.msg_title,
 				timeout : commonui.msg_timeout,
@@ -171,8 +165,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		}
 		var row_role = $dg_left.datagrid('getSelected');//获取选中的行-单行
 		if(row_role) {
+			var rsCodeArr = [];
+			if(rows_rs) {
+				$.each(rows_rs, function(i, obj) {
+					rsCodeArr.push(obj['rsCode']);
+				});
+			}
 			var role_code = row_role.roleCode;
-			var data={"roleCode":role_code, "resource": JSON.stringify(rsCodeArr)};
+			var data={"roleCode":role_code, "rsCodes": JSON.stringify(rsCodeArr)};
 			$.post("uupm/role/resource/saveRoleResource", data, function(result) {
 						$.messager.show({
 							title :commonui.msg_title,
@@ -195,15 +195,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		}
 	}
 	//双击事件
-	function findResByRole(rowIndex, rowData) {
-		$.post("uupm/role/resource/findResourceByRoleCode", {'tenantCode': rowData.tenantCode, 'roleCode': rowData.roleCode}, function(result) {
+	function findRoleResourceCodes(rowIndex, rowData) {
+		$.post("uupm/role/resource/findRoleResourceCodes", {'roleCode': rowData.roleCode}, function(result) {
 			if(result.status=='OK') {
 				$dg_right.treegrid('unselectAll');
 				var data = result.data;
 				if(data.length>0) {
 					$.each(data, function(i, n) {
-						var row = $dg_right.treegrid('find', n.rsCode);
-						if(row) $dg_right.treegrid('select', n.rsCode);
+						var row = $dg_right.treegrid('find', n);
+						if(row) $dg_right.treegrid('select', n);
 					});
 				} else {
 					$.messager.show({
