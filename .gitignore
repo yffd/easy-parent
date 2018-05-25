@@ -20,3 +20,9 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+easy-framework-common/.settings/
+easy-uupm/easy-uupm-web/.settings/
+easy-uupm/easy-uupm-pojo/.settings/
+easy-uupm/easy-uupm-service/.settings/
+easy-common-core/.settings/
+easy-framework-web/.settings/

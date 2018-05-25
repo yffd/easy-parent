@@ -1,0 +1,18 @@
+package ##PACKAGE_NAME##;
+
+import org.springframework.stereotype.Repository;
+##IMPORT_SUPER_CLASS_FULL_NAME##
+import ##POJO_FULL_NAME##;
+
+/**
+ * @Description  简单描述该类的功能（可选）.
+ * @Date		 ##DATE## <br/>
+ * @author		 ##AUTHOR## <br/>
+ * @version		 1.0
+ * @since		 JDK 1.7+
+ * @see 	 
+ */
+@Repository
+##CLASS_HEAD## {
+
+}
