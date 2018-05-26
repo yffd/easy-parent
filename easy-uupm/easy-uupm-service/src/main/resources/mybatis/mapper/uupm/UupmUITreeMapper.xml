@@ -8,7 +8,7 @@
 	<!-- ######################################################################### -->
 	
 	<!-- 表名 -->
-	<sql id="table_name"> uupm_tree </sql>
+	<sql id="table_name"> uupm_ui_tree </sql>
 	<!-- 列名 -->
 	<sql id="table_columns">
 		t.VERSION as version, t.DEL_FLAG as delFlag, t.CREATE_BY as createBy, t.CREATE_TIME as createTime, t.UPDATE_BY as updateBy, 

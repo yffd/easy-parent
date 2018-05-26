@@ -22,7 +22,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	function makeGrid() {
 		$dg = $('#dg_id');
 		$dg.treegrid({
-			url: 'uupm/organization/findTree',
+			url: 'uupm/organization/listTree',
 		    width: 'auto',
 		    height: $(this).height()-commonui.remainHeight-20-$('#tb_id').height(),
 			rownumbers: true,
@@ -49,7 +49,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    	},
 	    	onContextMenu: function(e, node){
 				e.preventDefault();
-				$dg.treegrid('select', node.id_);
+				$dg.treegrid('select', node.id);
 				$('#mm_id').menu('show', {
 					left: e.pageX,
 					top: e.pageY
@@ -62,7 +62,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						{field: 'orgCode', title: '编号', width: 100, align: 'left'},
 						{field: 'parentCode', title: '父编号', width: 100, align: 'left'},
 						{field: 'parentName', title: '父名称', width: 100, align: 'left'},
-						{field: 'dataPath', title: '路径', width: 100, align: 'left'},
+						{field: 'treeId', title: '树ID', width: 100, align: 'left'},
 						{field: 'seqNo', title: '类型', width: 100, align: 'left'},
 						{field: 'remark', title: '备注', width: 100, align: 'left'},
 	                   ]]
@@ -181,7 +181,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		if(row) {
 			parent.$.messager.confirm("提示","确定要删除记录吗?",function(r){  
 			    if(r) {
-			    	var arr_id = getChildrenId(row);
+			    	var arr_id = iterNode(row);
 			    	var ids = arr_id.join(",");
 			    	$.post("uupm/organization/delBatch", {'ids':ids}, function(result) {
 						if(result.status=='OK') {
@@ -203,14 +203,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			});
 		}
 	}
-	// 递归获取tree的code
-	function getChildrenId(treeNode) {
+	// 递归获取tree的id
+	function iterNode(pNode) {
 		var arrs = [];
-		if(treeNode) {
-			arrs.push(treeNode.id);
-			if(treeNode.children) {
-				$.each(treeNode.children, function(i, obj){
-					arrs = arrs.concat(getChildrenId(obj));
+		if(pNode) {
+			arrs.push(pNode.id);
+			if(pNode.children) {
+				$.each(pNode.children, function(i, obj){
+					arrs = arrs.concat(iterNode(obj));
 				});
 			}
 		}

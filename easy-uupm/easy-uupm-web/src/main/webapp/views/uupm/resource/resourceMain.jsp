@@ -113,12 +113,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	        columns: [[
 	                   	{field: 'rsName', title: '名称', width:200,align: 'left'},
 						{field: 'rsCode', title: '编号', width: 100, align: 'left'},
+						{field: 'treeId', title: '树ID', width: 100, align: 'left'},
 						{field: 'rsType', title: '类型', width: 100, align: 'left',
 							formatter: function(value, row) {
 								return utils.fmtDict($json_rsType, value);
 							}	
 						},
-						{field: 'treeId', title: '树ID', width: 100, align: 'left'},
 						{field: 'seqNo', title: '序号', width: 100, align: 'left'},
 						{field: 'shortUrl', title: '短链接', width: 200, align: 'left'}
 	                   ]]

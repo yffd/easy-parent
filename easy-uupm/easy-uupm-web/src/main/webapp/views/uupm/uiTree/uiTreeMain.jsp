@@ -104,7 +104,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						{field: 'dataName', title: '名称', width:100,align: 'left'},
 						{field: 'dataCode', title: '编号', width: 100, align: 'left'},
 						{field: 'treeId', title: '树ID', width: 100, align: 'left'},
-						{field: 'dataNo', title: '序号', width: 100, align: 'left'}
+						{field: 'seqNo', title: '序号', width: 100, align: 'left'}
 	                   ]]
 		});
 	}

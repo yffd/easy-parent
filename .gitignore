@@ -26,3 +26,7 @@ easy-uupm/easy-uupm-pojo/.settings/
 easy-uupm/easy-uupm-service/.settings/
 easy-common-core/.settings/
 easy-framework-web/.settings/
+*.project
+.settings/
+*.classpath
+*.gitignore
