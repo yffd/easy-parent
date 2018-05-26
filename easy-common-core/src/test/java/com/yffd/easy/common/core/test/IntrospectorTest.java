@@ -14,7 +14,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.yffd.easy.common.core.model.DemoPO;
 import com.yffd.easy.common.core.util.EasyNamingFormatUtils;
 
 /**

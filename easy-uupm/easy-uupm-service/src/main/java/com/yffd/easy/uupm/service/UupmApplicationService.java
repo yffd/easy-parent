@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
 import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
-import com.yffd.easy.framework.common.service.CommonService;
+import com.yffd.easy.framework.pojo.login.LoginInfo;
 import com.yffd.easy.uupm.dao.UupmApplicationDao;
 import com.yffd.easy.uupm.entity.UupmApplicationEntity;
 import com.yffd.easy.uupm.exception.UupmBizException;
@@ -21,7 +21,7 @@ import com.yffd.easy.uupm.exception.UupmBizException;
  * @see 	 
  */
 @Service
-public class UupmApplicationService extends CommonService<UupmApplicationEntity> {
+public class UupmApplicationService extends UupmBaseService<UupmApplicationEntity> {
 
 	@Autowired
 	private UupmApplicationDao uupmApplicationDao;
@@ -32,17 +32,17 @@ public class UupmApplicationService extends CommonService<UupmApplicationEntity>
 	}
 
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-	public int saveAppCfg(UupmApplicationEntity model) {
+	public int saveAppCfg(UupmApplicationEntity model, LoginInfo loginInfo) {
 		if(null==model) throw UupmBizException.BIZ_PARAMS_IS_EMPTY();
 		this.deleteByAppCode(model.getAppCode());
-		return this.save(model);
+		return this.save(model, loginInfo);
 	}
 	
 	public int deleteByAppCode(String appCode) {
 		if(EasyStringCheckUtils.isEmpty(appCode)) throw UupmBizException.BIZ_PARAMS_IS_EMPTY();
 		UupmApplicationEntity model = new UupmApplicationEntity();
 		model.setAppCode(appCode);
-		return this.delete(model);
+		return this.delete(model, null);
 	}
 	
 }

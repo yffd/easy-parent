@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
 import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
-import com.yffd.easy.framework.common.service.CommonService;
 import com.yffd.easy.uupm.dao.UupmOrganizationDao;
 import com.yffd.easy.uupm.entity.UupmOrganizationEntity;
 
@@ -23,7 +22,7 @@ import com.yffd.easy.uupm.entity.UupmOrganizationEntity;
  * @see 	 
  */
 @Service
-public class UupmOrganizationService extends CommonService<UupmOrganizationEntity> {
+public class UupmOrganizationService extends UupmBaseService<UupmOrganizationEntity> {
 
 	@Autowired
 	private UupmOrganizationDao uupmOrganizationDao;

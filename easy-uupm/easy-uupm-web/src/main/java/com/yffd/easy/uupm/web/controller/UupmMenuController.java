@@ -2,16 +2,12 @@ package com.yffd.easy.uupm.web.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.yffd.easy.common.core.util.EasyStringCheckUtils;
 import com.yffd.easy.framework.pojo.vo.RespData;
-import com.yffd.easy.uupm.entity.UupmMenuEntity;
 import com.yffd.easy.uupm.pojo.factory.UupmMenuInfoFactory;
 import com.yffd.easy.uupm.pojo.vo.UupmMenuInfoVo;
 import com.yffd.easy.uupm.pojo.vo.UupmTreeMenuVo;
@@ -48,13 +44,6 @@ public class UupmMenuController extends UupmBaseController {
 		return this.successAjax();
 	}
 	
-	@RequestMapping(value="/findOne", method=RequestMethod.POST)
-	public RespData findOne(UupmMenuEntity model) {
-		if(null==model || EasyStringCheckUtils.isEmpty(model.getId())) return this.error("参数无效");
-		UupmMenuEntity result = this.uupmMenuService.findOne(model);
-		return this.successAjax(result);
-	}
-	
 	@RequestMapping(value="/saveMenuForAdmin", method=RequestMethod.POST)
 	public RespData saveMenuForAdmin() {
 //		String tenantCode = "admin";
@@ -69,46 +58,46 @@ public class UupmMenuController extends UupmBaseController {
 		return this.successAjax();
 	}
 	
-	@RequestMapping(value="/add", method=RequestMethod.POST)
-	public RespData add(UupmMenuEntity model) {
-		if(null==model) return this.error("参数无效");
-		// 存在校验
-		UupmMenuEntity paramModel = new UupmMenuEntity();
-		// TODO 租户编号
-		paramModel.setTenantCode("admin");
-		paramModel.setMenuCode(model.getMenuCode());
-		UupmMenuEntity resultModel = this.uupmMenuService.findOne(paramModel);
-		if(null!=resultModel) return this.error("数据已存在");
-		int result = this.uupmMenuService.save(model);
-		if(result==0) return this.error("添加失败");
-		return this.successAjax();
-	}
-	
-	@RequestMapping(value="/edit", method=RequestMethod.POST)
-	public RespData edit(UupmMenuEntity model) {
-		if(null==model || EasyStringCheckUtils.isEmpty(model.getId())) return this.error("参数无效");
-		UupmMenuEntity modelOld = new UupmMenuEntity();
-		modelOld.setId(model.getId());
-		int result = this.uupmMenuService.update(model, modelOld);
-		if(result==0) return this.error("更新失败");
-		return this.successAjax();
-	}
-	
-	@RequestMapping(value="/delById", method=RequestMethod.POST)
-	public RespData delById(String id) {
-		if(EasyStringCheckUtils.isEmpty(id)) return this.errorAjax("参数无效");
-//		int result = this.uupmMenuService.deleteById(id);
-//		if(result==0) return this.error("删除失败");
-		return this.successAjax();
-	}
-	
-	@RequestMapping(value="/delBatch", method=RequestMethod.POST)
-	public RespData delBatch(HttpServletRequest req) {
-		String idStr = req.getParameter("ids");
-		if(EasyStringCheckUtils.isEmpty(idStr)) return this.error("参数无效");
-//		int result = this.uupmMenuService.deleteByIds(idStr);
-//		if(result==0) return this.error("删除失败");
-		return this.successAjax();
-	}
+//	@RequestMapping(value="/add", method=RequestMethod.POST)
+//	public RespData add(UupmMenuEntity model) {
+//		if(null==model) return this.error("参数无效");
+//		// 存在校验
+//		UupmMenuEntity paramModel = new UupmMenuEntity();
+//		// TODO 租户编号
+//		paramModel.setTenantCode("admin");
+//		paramModel.setMenuCode(model.getMenuCode());
+//		UupmMenuEntity resultModel = this.uupmMenuService.findOne(paramModel);
+//		if(null!=resultModel) return this.error("数据已存在");
+//		int result = this.uupmMenuService.save(model);
+//		if(result==0) return this.error("添加失败");
+//		return this.successAjax();
+//	}
+//	
+//	@RequestMapping(value="/edit", method=RequestMethod.POST)
+//	public RespData edit(UupmMenuEntity model) {
+//		if(null==model || EasyStringCheckUtils.isEmpty(model.getId())) return this.error("参数无效");
+//		UupmMenuEntity modelOld = new UupmMenuEntity();
+//		modelOld.setId(model.getId());
+//		int result = this.uupmMenuService.update(model, modelOld);
+//		if(result==0) return this.error("更新失败");
+//		return this.successAjax();
+//	}
+//	
+//	@RequestMapping(value="/delById", method=RequestMethod.POST)
+//	public RespData delById(String id) {
+//		if(EasyStringCheckUtils.isEmpty(id)) return this.errorAjax("参数无效");
+////		int result = this.uupmMenuService.deleteById(id);
+////		if(result==0) return this.error("删除失败");
+//		return this.successAjax();
+//	}
+//	
+//	@RequestMapping(value="/delBatch", method=RequestMethod.POST)
+//	public RespData delBatch(HttpServletRequest req) {
+//		String idStr = req.getParameter("ids");
+//		if(EasyStringCheckUtils.isEmpty(idStr)) return this.error("参数无效");
+////		int result = this.uupmMenuService.deleteByIds(idStr);
+////		if(result==0) return this.error("删除失败");
+//		return this.successAjax();
+//	}
 	
 }

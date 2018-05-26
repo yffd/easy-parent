@@ -20,6 +20,8 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.yffd.easy.framework.common.pojo.factory.CommonPojoFactory;
+
 /**
  * @Description  代码生成器.
  * @Date		 2018年2月6日 上午10:07:51 <br/>
@@ -28,7 +30,7 @@ import java.util.List;
  * @since		 JDK 1.7+
  * @see 	 
  */
-public class CodeGenerator {
+public class CodeGenerator extends CommonPojoFactory {
 	private static final SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
 	private String pojoSuffix = "Entity";
 	private List<String> pojoPropsNameGroupList = new ArrayList<String>();

@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yffd.easy.framework.common.exception.CommonBizException;
 import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
-import com.yffd.easy.framework.common.service.CommonService;
 import com.yffd.easy.uupm.dao.UupmTenantDao;
 import com.yffd.easy.uupm.entity.UupmAccountEntity;
 import com.yffd.easy.uupm.entity.UupmTenantEntity;
@@ -21,7 +20,7 @@ import com.yffd.easy.uupm.entity.UupmTenantEntity;
  * @see 	 
  */
 @Service
-public class UupmTenantService extends CommonService<UupmTenantEntity> {
+public class UupmTenantService extends UupmBaseService<UupmTenantEntity> {
 
 	@Autowired
 	private UupmAccountService uupmAccountService;
@@ -40,12 +39,12 @@ public class UupmTenantService extends CommonService<UupmTenantEntity> {
 		if(null==model) throw CommonBizException.BIZ_PARAMS_IS_EMPTY();
 		int num = this.getBindDao().save(model);
 		// 生成账号
-		UupmAccountEntity account = new UupmAccountEntity();
-		account.setAccountId(model.getTenantCode());
-		account.setAccountPwd("123456");
-		account.setAccountStatus("active");
-		account.setAccountType("default");
-		this.uupmAccountService.save(account);
+//		UupmAccountEntity account = new UupmAccountEntity();
+//		account.setAccountId(model.getTenantCode());
+//		account.setAccountPwd("123456");
+//		account.setAccountStatus("active");
+//		account.setAccountType("default");
+//		this.uupmAccountService.save(account);
 		return num;
 	}
 

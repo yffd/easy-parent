@@ -5,9 +5,9 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.yffd.easy.common.core.model.A;
-import com.yffd.easy.common.core.model.B;
-import com.yffd.easy.common.core.model.DemoPO;
+import com.yffd.easy.common.core.test.A;
+import com.yffd.easy.common.core.test.B;
+import com.yffd.easy.common.core.test.DemoPO;
 
 /**
  * @Description  简单描述该类的功能（可选）.

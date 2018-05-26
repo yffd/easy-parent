@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.yffd.easy.framework.common.code.geneator.CodeGenerator;
 import com.yffd.easy.framework.common.persist.mybatis.dao.MybatisCommonDao;
-import com.yffd.easy.framework.common.service.CommonService;
+import com.yffd.easy.framework.common.service.impl.CommonServiceImpl;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -24,7 +24,7 @@ public class LocalProjectConfigTest extends CodeGenerator {
 	public static Class<?> daoSuperClazz = MybatisCommonDao.class;
 	
 	public static String servicePackageName = "com.yffd.easy.uupm.service";
-	public static Class<?> serviceSuperClazz = CommonService.class;
+	public static Class<?> serviceSuperClazz = CommonServiceImpl.class;
 	
 	
 	public static String baseDirPath = "D:\\java\\git-easy\\easy-parent\\";

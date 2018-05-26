@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
 import com.yffd.easy.framework.common.exception.CommonBizException;
 import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
-import com.yffd.easy.framework.common.service.CommonService;
 import com.yffd.easy.uupm.dao.UupmUserRoleDao;
 import com.yffd.easy.uupm.entity.UupmUserRoleEntity;
 
@@ -23,7 +22,7 @@ import com.yffd.easy.uupm.entity.UupmUserRoleEntity;
  * @see 	 
  */
 @Service
-public class UupmUserRoleService extends CommonService<UupmUserRoleEntity> {
+public class UupmUserRoleService extends UupmBaseService<UupmUserRoleEntity> {
 
 	@Autowired
 	private UupmUserRoleDao uupmUserRoleDao;
@@ -33,25 +32,25 @@ public class UupmUserRoleService extends CommonService<UupmUserRoleEntity> {
 		return uupmUserRoleDao;
 	}
 
-	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-	public void saveUserRole(String tennantCode, String userCode, List<UupmUserRoleEntity> modelList) {
-		this.delByUserCode(tennantCode, userCode);
-		this.save(modelList);
-	}
-	
-	public void delByUserCode(String tenantCode, String userCode) {
-		UupmUserRoleEntity entity = new UupmUserRoleEntity();
-		entity.setTenantCode(tenantCode);
-		entity.setUserCode(userCode);
-		this.getBindDao().delete(entity );
-	}
-	
-	public List<UupmUserRoleEntity> findRoles(UupmUserRoleEntity paramModel) {
-		if(null==paramModel || EasyStringCheckUtils.isEmpty(paramModel.getUserCode()))
-			throw CommonBizException.BIZ_PARAMS_IS_EMPTY();
-		List<UupmUserRoleEntity> resultList = this.findList(paramModel);
-		return resultList;
-	}
+//	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+//	public void saveUserRole(String tennantCode, String userCode, List<UupmUserRoleEntity> modelList) {
+//		this.delByUserCode(tennantCode, userCode);
+//		this.save(modelList);
+//	}
+//	
+//	public void delByUserCode(String tenantCode, String userCode) {
+//		UupmUserRoleEntity entity = new UupmUserRoleEntity();
+//		entity.setTenantCode(tenantCode);
+//		entity.setUserCode(userCode);
+//		this.getBindDao().delete(entity );
+//	}
+//	
+//	public List<UupmUserRoleEntity> findRoles(UupmUserRoleEntity paramModel) {
+//		if(null==paramModel || EasyStringCheckUtils.isEmpty(paramModel.getUserCode()))
+//			throw CommonBizException.BIZ_PARAMS_IS_EMPTY();
+//		List<UupmUserRoleEntity> resultList = this.findList(paramModel);
+//		return resultList;
+//	}
 //	public Set<String> findRoleCodes(UupmUserRoleModel paramModel) {
 //		if(null==paramModel || EasyStringCheckUtils.isEmpty(paramModel.getUserCode())) {}
 //		List<UupmUserRoleModel> resultList = this.findList(paramModel, null);

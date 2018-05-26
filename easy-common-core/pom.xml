@@ -14,18 +14,11 @@
   <url>http://maven.apache.org</url>
   
   <properties>
-    <commons.beanutils.version>1.9.3</commons.beanutils.version>
     <fastjson.version>1.1.39</fastjson.version>
     <commons.lang3.version>3.3.2</commons.lang3.version>
   </properties>
   
   <dependencies>
-
-	<dependency>
-		<groupId>commons-beanutils</groupId>
-		<artifactId>commons-beanutils</artifactId>
-		<version>${commons.beanutils.version}</version>
-	</dependency>
 	<dependency>
  		<groupId>com.alibaba</groupId>
 		<artifactId>fastjson</artifactId>

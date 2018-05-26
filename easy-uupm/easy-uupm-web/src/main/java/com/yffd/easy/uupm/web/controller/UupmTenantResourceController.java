@@ -1,8 +1,6 @@
 package com.yffd.easy.uupm.web.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,14 +11,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
 import com.yffd.easy.framework.pojo.vo.RespData;
 import com.yffd.easy.uupm.entity.UupmResourceEntity;
-import com.yffd.easy.uupm.entity.UupmTenantResourceEntity;
 import com.yffd.easy.uupm.pojo.factory.UupmResourceFactory;
 import com.yffd.easy.uupm.pojo.vo.easyui.UupmUIResTreeVo;
-import com.yffd.easy.uupm.service.UupmResourceService;
 import com.yffd.easy.uupm.service.UupmTenantResourceService;
 import com.yffd.easy.uupm.web.base.UupmBaseController;
 
@@ -41,7 +36,7 @@ public class UupmTenantResourceController extends UupmBaseController {
 	@Autowired
 	private UupmResourceFactory uupmResourceModelFactory;
 	
-	// 租户授权
+	// 租户资源授权
 	@RequestMapping(value="/saveTenantResource", method=RequestMethod.POST)
 	public RespData saveTenantResource(HttpServletRequest req) {
 		String tenantCode = req.getParameter("tenantCode");
@@ -49,17 +44,8 @@ public class UupmTenantResourceController extends UupmBaseController {
 		if(EasyStringCheckUtils.isEmpty(tenantCode) || EasyStringCheckUtils.isEmpty(rsCodes)) return this.errorAjax("参数错误");
 		List<String> rsCodesList = JSON.parseArray(rsCodes, String.class);
 		if(null==rsCodesList || rsCodesList.size()==0) return this.errorAjax("参数错误");
-		List<UupmTenantResourceEntity> modelList = new ArrayList<UupmTenantResourceEntity>();
-		for(String rsCode : rsCodesList) {
-			UupmTenantResourceEntity model = new UupmTenantResourceEntity();
-			model.setTenantCode(tenantCode);
-			model.setRsCode(rsCode);
-			this.initAddProps(model);
-			modelList.add(model);
-		}
-		if(modelList.size()==0) return this.errorAjax("参数错误");
-		
-		this.uupmTenantResourceService.saveTenantResource(tenantCode, modelList);
+		int result = this.uupmTenantResourceService.saveTenantResource(tenantCode, rsCodesList, getLoginInfo());
+		if(result==0) return this.errorAjax("授权失败");
 		return this.successAjax();
 	}
 		
@@ -67,7 +53,7 @@ public class UupmTenantResourceController extends UupmBaseController {
 	@RequestMapping(value="/findTenantResourceCodes", method=RequestMethod.POST)
 	public RespData findTenantResourceCodes(String tenantCode) {
 		if(EasyStringCheckUtils.isEmpty(tenantCode)) return this.errorAjax("参数错误");
-		Set<String> result = this.uupmTenantResourceService.findResourceCodesByTenantCode(tenantCode);
+		Set<String> result = this.uupmTenantResourceService.findRsCodesByTenantCode(tenantCode);
 		return this.successAjax(result);
 	}
 	

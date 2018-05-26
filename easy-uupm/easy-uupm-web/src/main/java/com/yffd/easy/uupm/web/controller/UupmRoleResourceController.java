@@ -42,36 +42,23 @@ public class UupmRoleResourceController extends UupmBaseController {
 	@Autowired
 	private UupmRoleResourceService uupmRoleResourceService;
 	
-	// 角色授权
+	// 角色资源授权
 	@RequestMapping(value="/saveRoleResource", method=RequestMethod.POST)
 	public RespData saveRoleResource(HttpServletRequest req) {
-		String tenantCode = this.getLoginInfo().getTenantCode();
 		String roleCode = req.getParameter("roleCode");
 		String rsCodes = req.getParameter("rsCodes");
 		if(EasyStringCheckUtils.isEmpty(roleCode) || EasyStringCheckUtils.isEmpty(rsCodes)) return this.errorAjax("参数错误");
 		List<String> rsCodesList = JSON.parseArray(rsCodes, String.class);
 		if(null==rsCodesList || rsCodesList.size()==0) return this.errorAjax("参数错误");
-		List<UupmRoleResourceEntity> modelList = new ArrayList<UupmRoleResourceEntity>();
-		for(String rsCode : rsCodesList) {
-			UupmRoleResourceEntity model = new UupmRoleResourceEntity();
-			model.setTenantCode(tenantCode);
-			model.setRoleCode(roleCode);
-			model.setRsCode(rsCode);
-			this.initAddProps(model);
-			modelList.add(model);
-		}
-		if(modelList.size()==0) return this.errorAjax("参数错误");
-		
-		this.uupmRoleResourceService.saveRoleResource(roleCode, modelList);
+		this.uupmRoleResourceService.saveRoleResource(roleCode, rsCodesList, getLoginInfo());
 		return this.successAjax();
 	}
 	
 	// 查找某租户下的某角色已拥有的资源编号
-	@RequestMapping(value="/findRoleResourceCodes", method=RequestMethod.POST)
-	public RespData findRoleResourceCodes(String roleCode) {
-		String tenantCode = this.getLoginInfo().getTenantCode();
-		if(EasyStringCheckUtils.isEmpty(tenantCode) || EasyStringCheckUtils.isEmpty(roleCode)) return this.errorAjax("参数错误");
-		Set<String> result = this.uupmRoleResourceService.findRoleResourceCodes(tenantCode, roleCode);
+	@RequestMapping(value="/findRsCodesByRoleCode", method=RequestMethod.POST)
+	public RespData findRsCodesByRoleCode(String roleCode) {
+		if(EasyStringCheckUtils.isEmpty(roleCode)) return this.errorAjax("参数错误");
+		Set<String> result = this.uupmRoleResourceService.findRsCodesByRoleCode(roleCode, getLoginInfo());
 		return this.successAjax(result);
 	}
 		

@@ -2,8 +2,6 @@ package com.yffd.easy.uupm.web.controller;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,8 +37,7 @@ public class UupmRoleController extends UupmBaseController {
 	public RespData findPage(@RequestParam Map<String, Object> paramMap) {
 		PageParam paramPage = this.getPageParam(paramMap);
 		UupmRoleEntity paramModel = this.getModelParam(paramMap, UupmRoleEntity.class);
-		paramModel.setTenantCode(this.getLoginInfo().getTenantCode());	// 租户信息
-		PageResult<UupmRoleEntity> pageResult = this.uupmRoleService.findPage(paramModel, paramPage);
+		PageResult<UupmRoleEntity> pageResult = this.uupmRoleService.findPage(paramModel, paramPage, getLoginInfo());
 		DataGridVo dataGridVO = this.toDataGrid(pageResult);
 		return this.successAjax(dataGridVO);
 	}
@@ -48,44 +45,39 @@ public class UupmRoleController extends UupmBaseController {
 	@RequestMapping(value="/add", method=RequestMethod.POST)
 	public RespData add(UupmRoleEntity paramModel) {
 		if(EasyStringCheckUtils.isEmpty(paramModel.getRoleCode())) return this.errorAjax("参数无效");
-		paramModel.setTenantCode(this.getLoginInfo().getTenantCode());	// 租户信息
 		UupmRoleEntity model = new UupmRoleEntity();
-		model.setTenantCode(paramModel.getTenantCode());
 		model.setRoleCode(paramModel.getRoleCode());
-		boolean exsist = this.uupmRoleService.exsist(model);
+		boolean exsist = this.uupmRoleService.exsist(model, getLoginInfo());
 		if(exsist) return this.error("编号已存在");
-		this.initAddProps(paramModel);
-		int result = this.uupmRoleService.save(paramModel);
-		if(result==0) return this.error("添加失败");
+		int result = this.uupmRoleService.save(paramModel, getLoginInfo());
+		if(result==0) return this.errorAjax("添加失败");
 		return this.successAjax();
 	}
 	
-	@RequestMapping(value="/edit", method=RequestMethod.POST)
-	public RespData edit(UupmRoleEntity paramModel) {
+	@RequestMapping(value="/update", method=RequestMethod.POST)
+	public RespData update(UupmRoleEntity paramModel) {
 		if(EasyStringCheckUtils.isEmpty(paramModel.getId())) return this.errorAjax("参数无效");
 		UupmRoleEntity modelOld = new UupmRoleEntity();
 		modelOld.setId(paramModel.getId());
-		this.initUpdateProps(paramModel);
-		int result = this.uupmRoleService.update(paramModel, modelOld);
-		if(result==0) return this.error("更新失败");
+		int result = this.uupmRoleService.update(paramModel, modelOld, getLoginInfo());
+		if(result==0) return this.errorAjax("更新失败");
 		return this.successAjax();
 	}
 	
-	@RequestMapping(value="/del", method=RequestMethod.POST)
-	public RespData del(UupmRoleEntity paramModel) {
+	@RequestMapping(value="/delById", method=RequestMethod.POST)
+	public RespData delById(UupmRoleEntity paramModel) {
 		if(EasyStringCheckUtils.isEmpty(paramModel.getId())) return this.errorAjax("参数无效");
 		UupmRoleEntity model = new UupmRoleEntity();
 		model.setId(paramModel.getId());
-		int result = this.uupmRoleService.delete(model);
-		if(result==0) return this.error("删除失败");
+		int result = this.uupmRoleService.delete(model, getLoginInfo());
+		if(result==0) return this.errorAjax("删除失败");
 		return this.successAjax();
 	}
 	
-	@RequestMapping(value="/delBatch", method=RequestMethod.POST)
-	public RespData delBatch(HttpServletRequest req) {
-		String idStr = req.getParameter("ids");
-		if(EasyStringCheckUtils.isEmpty(idStr)) return this.errorAjax("参数无效");
-		int result = this.uupmRoleService.deleteByIds(idStr);
+	@RequestMapping(value="/delByIds", method=RequestMethod.POST)
+	public RespData delByIds(String ids) {
+		if(EasyStringCheckUtils.isEmpty(ids)) return this.errorAjax("参数无效");
+		int result = this.uupmRoleService.deleteByIds(ids);
 		if(result==0) return this.error("删除失败");
 		return this.successAjax();
 	}

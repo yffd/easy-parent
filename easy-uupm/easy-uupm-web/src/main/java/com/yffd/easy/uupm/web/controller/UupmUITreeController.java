@@ -42,7 +42,7 @@ public class UupmUITreeController extends UupmBaseController {
 		PageParam paramPage = this.getPageParam(paramMap);
 		UupmUITreeEntity entity = new UupmUITreeEntity();
 		entity.setParentCode("root");
-		PageResult<UupmUITreeEntity> pageResult = this.uupmUITreeService.findPage(entity, paramPage);
+		PageResult<UupmUITreeEntity> pageResult = this.uupmUITreeService.findPage(entity, paramPage, getLoginInfo());
 		DataGridVo dataGridVO = this.toDataGrid(pageResult);
 		return this.successAjax(dataGridVO);
 		
@@ -54,7 +54,7 @@ public class UupmUITreeController extends UupmBaseController {
 		if(EasyStringCheckUtils.isEmpty(treeId)) return this.successAjax();
 		UupmUITreeEntity entity = new UupmUITreeEntity();
 		entity.setTreeId(treeId);
-		List<UupmUITreeEntity> listResult = this.uupmUITreeService.findList(entity);
+		List<UupmUITreeEntity> listResult = this.uupmUITreeService.findList(entity, getLoginInfo());
 		if(null!=listResult && !listResult.isEmpty()) {
 			List<UupmUIComboTreeVo> treeList = this.uupmUITreeFactory.buildMultiTree(listResult, treeId);
 			return this.successAjax(treeList);
@@ -67,13 +67,16 @@ public class UupmUITreeController extends UupmBaseController {
 		if(EasyStringCheckUtils.isEmpty(paramModel.getDataCode())) return this.errorAjax("参数无效");
 		UupmUITreeEntity entity = new UupmUITreeEntity();	// 存在判断
 		entity.setDataCode(paramModel.getDataCode());
-		boolean exsist = this.uupmUITreeService.exsist(entity);
+		boolean exsist = this.uupmUITreeService.exsist(entity, getLoginInfo());
 		if(exsist) return this.errorAjax("编号已存在");
 		paramModel.setTreeId(paramModel.getDataCode());	// 设treeId=dataCode
 		paramModel.setParentCode("root");
-		this.initAddProps(paramModel);
-		this.uupmUITreeService.save(paramModel);
-		return this.successAjax();
+		int num = this.uupmUITreeService.save(paramModel, getLoginInfo());
+		if(num>0) {
+			return this.successAjax();
+		} else {
+			return this.errorAjax("添加失败");
+		}
 	}
 	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
@@ -83,15 +86,11 @@ public class UupmUITreeController extends UupmBaseController {
 				|| EasyStringCheckUtils.isEmpty(paramModel.getParentCode())) return this.errorAjax("参数无效");
 		UupmUITreeEntity entity = new UupmUITreeEntity();	// 存在判断
 		entity.setDataCode(paramModel.getDataCode());		// 编号全局唯一
-		boolean exsist = this.uupmUITreeService.exsist(entity);
+		boolean exsist = this.uupmUITreeService.exsist(entity, getLoginInfo());
 		if(exsist) return this.errorAjax("编号已存在");	
-		this.initAddProps(paramModel);
-		int num = this.uupmUITreeService.save(paramModel);
-		if(num>0) {
-			return this.successAjax();
-		} else {
-			return this.errorAjax("添加失败");
-		}
+		int result = this.uupmUITreeService.save(paramModel, getLoginInfo());
+		if(result==0) return this.errorAjax("添加失败");
+		return this.successAjax();
 	}
 	
 	@RequestMapping(value="/update", method=RequestMethod.POST)
@@ -101,13 +100,9 @@ public class UupmUITreeController extends UupmBaseController {
 		UupmUITreeEntity entityOld = new UupmUITreeEntity();
 		entityOld.setTreeId(paramModel.getTreeId());
 		entityOld.setDataCode(paramModel.getDataCode());
-		this.initUpdateProps(paramModel);
-		int num = this.uupmUITreeService.update(paramModel, entityOld);
-		if(num>0) {
-			return this.successAjax();
-		} else {
-			return this.errorAjax("修改失败");
-		}
+		int result = this.uupmUITreeService.update(paramModel, entityOld, getLoginInfo());
+		if(result==0) return this.errorAjax("修改失败");
+		return this.successAjax();
 	}
 	
 	@RequestMapping(value="/delTree", method=RequestMethod.POST)
@@ -116,24 +111,18 @@ public class UupmUITreeController extends UupmBaseController {
 		if(EasyStringCheckUtils.isEmpty(treeId)) return this.errorAjax("参数无效");
 		UupmUITreeEntity entity = new UupmUITreeEntity();
 		entity.setTreeId(treeId);
-		int num = this.uupmUITreeService.delete(entity);
-		if(num>0) {
-			return this.successAjax();
-		} else {
-			return this.errorAjax("删除失败");
-		}
+		int result = this.uupmUITreeService.delete(entity, getLoginInfo());
+		if(result==0) return this.errorAjax("删除失败");
+		return this.successAjax();
 	}
 	
 	@RequestMapping(value="/delByIds", method=RequestMethod.POST)
 	public RespData delByIds(@RequestParam Map<String, Object> paramMap) {
 		String ids = (String) paramMap.get("ids");
 		if(EasyStringCheckUtils.isEmpty(ids)) return this.errorAjax("参数无效");
-		int num = this.uupmUITreeService.deleteByIds(ids);
-		if(num>0) {
-			return this.successAjax();
-		} else {
-			return this.errorAjax("删除失败");
-		}
+		int result = this.uupmUITreeService.deleteByIds(ids);
+		if(result==0) return this.errorAjax("删除失败");
+		return this.successAjax();
 	}
 	
 }

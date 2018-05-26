@@ -26,19 +26,20 @@ public class ShiroLoginService implements ILoginService {
 	
 	@Override
 	public LoginInfo getLoginInfo(String accountId) {
-		UupmLoginInfoVo loginInfoVo = this.uupmAccountService.findLoginInfo(accountId);
-		LoginInfo loginInfo = new LoginInfo();
-		loginInfo.setTenantCode((String) loginInfoVo.getTenantCode());
-		loginInfo.setUserCode((String) loginInfoVo.getUserCode());
-		loginInfo.setOrgCode((String) loginInfoVo.getOrgCode());
-		loginInfo.setOrgName((String) loginInfoVo.getOrgName());
-		loginInfo.setRoles((Set<String>) loginInfoVo.getRoleCodes());
-		loginInfo.setResources((Set<String>) loginInfoVo.getResourceCodes());
-		loginInfo.setAccountId((String) loginInfoVo.getAccountId());
-		loginInfo.setAccountPwd((String) loginInfoVo.getAccountPwd());
-		loginInfo.setAccountSalt((String) loginInfoVo.getSalt());
-		loginInfo.setAccountStatus((String) loginInfoVo.getAccountStatus());
-		return loginInfo;
+//		UupmLoginInfoVo loginInfoVo = this.uupmAccountService.findLoginInfo(accountId);
+//		LoginInfo loginInfo = new LoginInfo();
+//		loginInfo.setTenantCode((String) loginInfoVo.getTenantCode());
+//		loginInfo.setUserCode((String) loginInfoVo.getUserCode());
+//		loginInfo.setOrgCode((String) loginInfoVo.getOrgCode());
+//		loginInfo.setOrgName((String) loginInfoVo.getOrgName());
+//		loginInfo.setRoles((Set<String>) loginInfoVo.getRoleCodes());
+//		loginInfo.setResources((Set<String>) loginInfoVo.getResourceCodes());
+//		loginInfo.setAccountId((String) loginInfoVo.getAccountId());
+//		loginInfo.setAccountPwd((String) loginInfoVo.getAccountPwd());
+//		loginInfo.setAccountSalt((String) loginInfoVo.getSalt());
+//		loginInfo.setAccountStatus((String) loginInfoVo.getAccountStatus());
+//		return loginInfo;
+		return null;
 	}
 
 }

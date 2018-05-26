@@ -7,10 +7,8 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
-import com.yffd.easy.framework.common.persist.entity.CommonEntity;
 import com.yffd.easy.framework.pojo.login.LoginInfo;
-import com.yffd.easy.framework.web.mvc.WebController;
-import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
+import com.yffd.easy.framework.web.mvc.WebDataController;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -20,7 +18,7 @@ import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
  * @since		 JDK 1.7+
  * @see 	 
  */
-public class UupmBaseController extends WebController {
+public class UupmBaseController extends WebDataController {
 	protected static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	@InitBinder
@@ -37,35 +35,35 @@ public class UupmBaseController extends WebController {
 		return info;
 	}
 
-	public void initAddProps(CommonEntity entity) {
-		entity.setVersion(0);
-		entity.setDelFlag("0");
-		entity.setCreateTime(new Date());
-		entity.setCreateBy(this.getLoginInfo().getUserCode());
-	}
-	
-	public void initUpdateProps(CommonEntity entity) {
-		entity.setUpdateTime(new Date());
-		entity.setUpdateBy(this.getLoginInfo().getUserCode());
-	}
-	
-	public void initAddProps(UupmBasePojo entity) {
-		entity.setVersion(0);
-		entity.setDelFlag("0");
-		entity.setCreateTime(new Date());
-		entity.setCreateBy(this.getLoginInfo().getUserCode());
-		entity.setTenantCode(entity.getTenantCode());
-	}
-	
-	public void initUpdateProps(UupmBasePojo entity) {
-		entity.setUpdateTime(new Date());
-		entity.setUpdateBy(this.getLoginInfo().getUserCode());
-		entity.setTenantCode(entity.getTenantCode());
-	}
-	
-	public void initQueryProps(UupmBasePojo entity) {
-		entity.setTenantCode(entity.getTenantCode());
-	}
+//	public void initAddProps(CommonEntity entity) {
+//		entity.setVersion(0);
+//		entity.setDelFlag("0");
+//		entity.setCreateTime(new Date());
+//		entity.setCreateBy(this.getLoginInfo().getUserCode());
+//	}
+//	
+//	public void initUpdateProps(CommonEntity entity) {
+//		entity.setUpdateTime(new Date());
+//		entity.setUpdateBy(this.getLoginInfo().getUserCode());
+//	}
+//	
+//	public void initAddProps(UupmBasePojo entity) {
+//		entity.setVersion(0);
+//		entity.setDelFlag("0");
+//		entity.setCreateTime(new Date());
+//		entity.setCreateBy(this.getLoginInfo().getUserCode());
+//		entity.setTenantCode(entity.getTenantCode());
+//	}
+//	
+//	public void initUpdateProps(UupmBasePojo entity) {
+//		entity.setUpdateTime(new Date());
+//		entity.setUpdateBy(this.getLoginInfo().getUserCode());
+//		entity.setTenantCode(entity.getTenantCode());
+//	}
+//	
+//	public void initQueryProps(UupmBasePojo entity) {
+//		entity.setTenantCode(entity.getTenantCode());
+//	}
 	
 }
 

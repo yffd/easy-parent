@@ -1,8 +1,9 @@
-package com.yffd.easy.framework.common.service;
+package com.yffd.easy.framework.common.service.impl;
 
 import java.util.List;
 
 import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
+import com.yffd.easy.framework.common.service.ISimpleService;
 import com.yffd.easy.framework.pojo.page.PageParam;
 import com.yffd.easy.framework.pojo.page.PageResult;
 
@@ -14,7 +15,7 @@ import com.yffd.easy.framework.pojo.page.PageResult;
  * @since		 JDK 1.7+
  * @see 	 
  */
-public abstract class BaseService<E> implements IBaseService<E> {
+public abstract class SimpleServiceImpl<E> implements ISimpleService<E> {
 
 	protected abstract IMybatisCommonDao<E> getBindDao();
 	

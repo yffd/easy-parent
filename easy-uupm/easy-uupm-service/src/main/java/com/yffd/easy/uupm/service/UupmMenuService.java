@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
-import com.yffd.easy.framework.common.service.CommonService;
 import com.yffd.easy.uupm.dao.UupmMenuDao;
 import com.yffd.easy.uupm.entity.UupmMenuEntity;
 import com.yffd.easy.uupm.pojo.vo.UupmMenuInfoVo;
@@ -20,7 +19,7 @@ import com.yffd.easy.uupm.pojo.vo.UupmMenuInfoVo;
  * @see 	 
  */
 @Service
-public class UupmMenuService extends CommonService<UupmMenuEntity> {
+public class UupmMenuService extends UupmBaseService<UupmMenuEntity> {
 
 	@Autowired
 	private UupmMenuDao uupmMenuDao;

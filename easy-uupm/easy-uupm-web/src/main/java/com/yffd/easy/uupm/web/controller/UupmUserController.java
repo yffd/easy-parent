@@ -33,48 +33,48 @@ public class UupmUserController extends UupmBaseController {
 	@Autowired
 	private UupmUserService uupmUserService;
 	
-	@RequestMapping(value="/findPage", method=RequestMethod.POST)
-	public RespData findPage(@RequestParam Map<String, Object> paramMap) {
-		PageParam paramPage = this.getPageParam(paramMap);
-		UupmUserInfoVo paramModel = this.getModelParam(paramMap, UupmUserInfoVo.class);
-		paramModel.setTenantCode(this.getLoginInfo().getTenantCode());	// 租户信息
-		PageResult<UupmUserInfoVo> pageResult = this.uupmUserService.findUserInfoPage(paramModel, paramPage);
-		DataGridVo dataGridVO = this.toDataGrid(pageResult);
-		return this.successAjax(dataGridVO);
-	}
-	
-	@RequestMapping(value="/add", method=RequestMethod.POST)
-	public RespData add(UupmUserEntity paramModel) {
-		if(EasyStringCheckUtils.isEmpty(paramModel.getUserCode())) return this.errorAjax("参数无效");
-		paramModel.setTenantCode(this.getLoginInfo().getTenantCode());	// 租户信息
-		UupmUserEntity model = new UupmUserEntity();	// 存在校验
-		model.setTenantCode(paramModel.getTenantCode());
-		model.setUserCode(paramModel.getUserCode());
-		boolean exsist = this.uupmUserService.exsist(model);
-		if(exsist) return this.errorAjax("编号已存在");
-		int result = this.uupmUserService.addUserWithAccount(paramModel);
-		if(result==0) return this.errorAjax("添加失败");
-		return this.successAjax();
-	}
-	
-	@RequestMapping(value="/edit", method=RequestMethod.POST)
-	public RespData edit(UupmUserEntity paramModel) {
-		if(EasyStringCheckUtils.isEmpty(paramModel.getId())) return this.errorAjax("参数无效");
-		UupmUserEntity modelOld = new UupmUserEntity();
-		modelOld.setId(paramModel.getId());
-		int result = this.uupmUserService.update(paramModel, modelOld);
-		if(result==0) return this.error("更新失败");
-		return this.successAjax();
-	}
-	
-	@RequestMapping(value="/del", method=RequestMethod.POST)
-	public RespData del(UupmUserEntity paramModel) {
-		if(EasyStringCheckUtils.isEmpty(paramModel.getId())) return this.errorAjax("参数无效");
-		UupmUserEntity model = new UupmUserEntity();
-		model.setId(paramModel.getId());
-		int result = this.uupmUserService.delete(model);
-		if(result==0) return this.errorAjax("删除失败");
-		return this.successAjax();
-	}
+//	@RequestMapping(value="/findPage", method=RequestMethod.POST)
+//	public RespData findPage(@RequestParam Map<String, Object> paramMap) {
+//		PageParam paramPage = this.getPageParam(paramMap);
+//		UupmUserInfoVo paramModel = this.getModelParam(paramMap, UupmUserInfoVo.class);
+//		paramModel.setTenantCode(this.getLoginInfo().getTenantCode());	// 租户信息
+//		PageResult<UupmUserInfoVo> pageResult = this.uupmUserService.findUserInfoPage(paramModel, paramPage);
+//		DataGridVo dataGridVO = this.toDataGrid(pageResult);
+//		return this.successAjax(dataGridVO);
+//	}
+//	
+//	@RequestMapping(value="/add", method=RequestMethod.POST)
+//	public RespData add(UupmUserEntity paramModel) {
+//		if(EasyStringCheckUtils.isEmpty(paramModel.getUserCode())) return this.errorAjax("参数无效");
+//		paramModel.setTenantCode(this.getLoginInfo().getTenantCode());	// 租户信息
+//		UupmUserEntity model = new UupmUserEntity();	// 存在校验
+//		model.setTenantCode(paramModel.getTenantCode());
+//		model.setUserCode(paramModel.getUserCode());
+//		boolean exsist = this.uupmUserService.exsist(model);
+//		if(exsist) return this.errorAjax("编号已存在");
+//		int result = this.uupmUserService.addUserWithAccount(paramModel);
+//		if(result==0) return this.errorAjax("添加失败");
+//		return this.successAjax();
+//	}
+//	
+//	@RequestMapping(value="/edit", method=RequestMethod.POST)
+//	public RespData edit(UupmUserEntity paramModel) {
+//		if(EasyStringCheckUtils.isEmpty(paramModel.getId())) return this.errorAjax("参数无效");
+//		UupmUserEntity modelOld = new UupmUserEntity();
+//		modelOld.setId(paramModel.getId());
+//		int result = this.uupmUserService.update(paramModel, modelOld);
+//		if(result==0) return this.error("更新失败");
+//		return this.successAjax();
+//	}
+//	
+//	@RequestMapping(value="/del", method=RequestMethod.POST)
+//	public RespData del(UupmUserEntity paramModel) {
+//		if(EasyStringCheckUtils.isEmpty(paramModel.getId())) return this.errorAjax("参数无效");
+//		UupmUserEntity model = new UupmUserEntity();
+//		model.setId(paramModel.getId());
+//		int result = this.uupmUserService.delete(model);
+//		if(result==0) return this.errorAjax("删除失败");
+//		return this.successAjax();
+//	}
 	
 }

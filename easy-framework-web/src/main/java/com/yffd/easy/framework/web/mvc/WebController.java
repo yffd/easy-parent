@@ -7,7 +7,6 @@ import org.apache.shiro.subject.Subject;
 import com.yffd.easy.framework.pojo.login.LoginInfo;
 import com.yffd.easy.framework.pojo.vo.RespData;
 import com.yffd.easy.framework.web.enums.WebCommonEnum;
-import com.yffd.easy.framework.web.view.ViewModelConverter;
 
 /**
  * @Description  web控制转发器基类.
@@ -17,7 +16,7 @@ import com.yffd.easy.framework.web.view.ViewModelConverter;
  * @since		 JDK 1.7+
  * @see 	 
  */
-public abstract class WebController extends ViewModelConverter {
+public abstract class WebController {
 	public static final String KEY_SESSION_LOGIN_INFO = "_LOGIN_INFO";
 	
 	/**

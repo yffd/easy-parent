@@ -8,7 +8,7 @@ package com.yffd.easy.uupm.entity;
 
 import java.util.Date;
 
-import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
+import com.yffd.easy.framework.common.persist.entity.CommonEntity;
 
 /**
  * 
@@ -19,7 +19,7 @@ import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
  * @since		 JDK 1.7+
  * @see
  */
-public class UupmTenantEntity extends UupmBasePojo {
+public class UupmTenantEntity extends CommonEntity {
 	
 	private static final long serialVersionUID = 1L;
 	

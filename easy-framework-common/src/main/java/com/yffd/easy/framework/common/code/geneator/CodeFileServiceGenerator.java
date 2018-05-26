@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.util.Date;
 
 import com.yffd.easy.framework.common.persist.entity.CommonPartialTreeEntity;
-import com.yffd.easy.framework.common.service.CommonService;
+import com.yffd.easy.framework.common.service.impl.CommonServiceImpl;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -125,7 +125,7 @@ public class CodeFileServiceGenerator extends CodeGenerator {
 		CodeFileServiceGenerator generator = new CodeFileServiceGenerator();
 		String author = "ZhangST";
 		Class<?> pojoClazz = CommonPartialTreeEntity.class;
-		Class<?> superClazz = CommonService.class;
+		Class<?> superClazz = CommonServiceImpl.class;
 		String packageName = "com.yffd.easy.xxx.service";
 		String daoPackageName = "com.yffd.easy.xxx.dao";
 		generator.writeToConsole(pojoClazz, superClazz, packageName, daoPackageName, author);

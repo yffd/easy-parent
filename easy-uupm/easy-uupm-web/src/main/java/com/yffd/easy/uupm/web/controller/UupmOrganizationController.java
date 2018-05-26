@@ -3,8 +3,6 @@ package com.yffd.easy.uupm.web.controller;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,8 +37,7 @@ public class UupmOrganizationController extends UupmBaseController {
 	@RequestMapping(value="/listTree", method=RequestMethod.POST)
 	public RespData listTree(@RequestParam Map<String, Object> paramMap) {
 		UupmOrganizationEntity paramModel = this.getModelParam(paramMap, UupmOrganizationEntity.class);
-		this.initQueryProps(paramModel);
-		List<UupmOrganizationEntity> listResult = this.uupmOrganizationService.findList(paramModel);
+		List<UupmOrganizationEntity> listResult = this.uupmOrganizationService.findList(paramModel, getLoginInfo());
 		if(null!=listResult && !listResult.isEmpty()) {
 			List<UupmUIOrgTreeVo> treeList = this.uupmOrganizationModelFactory.buildMultiTree(listResult);
 			return this.successAjax(treeList);
@@ -55,11 +52,9 @@ public class UupmOrganizationController extends UupmBaseController {
 				|| EasyStringCheckUtils.isEmpty(paramModel.getParentCode())) return this.error("参数无效");
 		UupmOrganizationEntity entity = new UupmOrganizationEntity();	// 存在校验
 		entity.setOrgCode(paramModel.getOrgCode());
-		this.initQueryProps(entity);
-		boolean exsist = this.uupmOrganizationService.exsist(entity);
-		if(exsist) return this.error("数据已存在");
-		this.initAddProps(paramModel);
-		this.uupmOrganizationService.save(paramModel);
+		boolean exsist = this.uupmOrganizationService.exsist(entity, getLoginInfo());
+		if(exsist) return this.error("编号已存在");
+		this.uupmOrganizationService.save(paramModel, getLoginInfo());
 		return this.successAjax();
 	}
 	
@@ -70,8 +65,7 @@ public class UupmOrganizationController extends UupmBaseController {
 		UupmOrganizationEntity entityOld = new UupmOrganizationEntity();
 		entityOld.setTreeId(paramModel.getTreeId());
 		entityOld.setOrgCode(paramModel.getOrgCode());
-		this.initUpdateProps(paramModel);
-		this.uupmOrganizationService.update(paramModel, entityOld);
+		this.uupmOrganizationService.update(paramModel, entityOld, getLoginInfo());
 		return this.successAjax();
 	}
 	
@@ -81,13 +75,12 @@ public class UupmOrganizationController extends UupmBaseController {
 		if(EasyStringCheckUtils.isEmpty(treeId)) return this.errorAjax("参数无效");
 		UupmOrganizationEntity entity = new UupmOrganizationEntity();
 		entity.setTreeId(treeId);
-		this.uupmOrganizationService.delete(entity);
+		this.uupmOrganizationService.delete(entity, getLoginInfo());
 		return this.successAjax();
 	}
 	
 	@RequestMapping(value="/delByIds", method=RequestMethod.POST)
-	public RespData delByIds(@RequestParam Map<String, Object> paramMap) {
-		String ids = (String) paramMap.get("ids");
+	public RespData delByIds(String ids) {
 		if(EasyStringCheckUtils.isEmpty(ids)) return this.errorAjax("参数无效");
 		int result = this.uupmOrganizationService.deleteByIds(ids);
 		if(result==0) return this.error("删除失败");

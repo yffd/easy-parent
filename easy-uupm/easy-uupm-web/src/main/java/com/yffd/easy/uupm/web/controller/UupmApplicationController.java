@@ -40,7 +40,7 @@ public class UupmApplicationController extends UupmBaseController {
 		if(EasyStringCheckUtils.isEmpty(appCode)) return this.errorAjax("参数无效");
 		UupmApplicationEntity entity = new UupmApplicationEntity();
 		entity.setAppCode(appCode);
-		UupmApplicationEntity result = this.uupmApplicationService.findOne(entity);
+		UupmApplicationEntity result = this.uupmApplicationService.findOne(entity, getLoginInfo());
 		if(null==result) result = new UupmApplicationEntity();
 		List<PropertyGridVo> listResult = this.uupmPropertyGridModelFactory.createPropertyGridForApp(result);
 		DataGridVo dataGridVO = this.toDataGrid(listResult);
@@ -50,7 +50,7 @@ public class UupmApplicationController extends UupmBaseController {
 	@RequestMapping(value="/saveAppCfg", method=RequestMethod.POST)
 	public RespData saveAppCfg(UupmApplicationEntity paramModel) {
 		if(null==paramModel || EasyStringCheckUtils.isEmpty(paramModel.getAppCode())) return this.error("参数无效");
-		int result = this.uupmApplicationService.saveAppCfg(paramModel);
+		int result = this.uupmApplicationService.saveAppCfg(paramModel, getLoginInfo());
 		if(result==0) return this.error("保存配置失败");
 		return this.successAjax();
 	}

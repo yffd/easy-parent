@@ -7,7 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.yffd.easy.common.core.util.EasyJavaBeanUtils;
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
 import com.yffd.easy.framework.common.persist.entity.CommonPartialTreeEntity;
 
@@ -36,7 +35,7 @@ public class CodeMapperSqlGenerator extends CodeGenerator {
 			// 过滤属性
 			if(this.skipPropsName(propertyTypeClazz, propertyName)) continue;
 						
-			String columnName = EasyJavaBeanUtils.property2column(propertyName);
+			String columnName = this.property2column(propertyName);
 			if(null==columnName || "".equals(columnName)) continue;
 			
 			if(null!=tableAliasName && !"".equals(tableAliasName)) {
@@ -98,7 +97,7 @@ public class CodeMapperSqlGenerator extends CodeGenerator {
 				continue;
 			}
 			
-			String columnName = EasyJavaBeanUtils.property2column(propertyName);
+			String columnName = this.property2column(propertyName);
 			if(null==columnName || "".equals(columnName)) continue;
 			
 			if(null!=tableAliasName && !"".equals(tableAliasName)) {
@@ -166,7 +165,7 @@ public class CodeMapperSqlGenerator extends CodeGenerator {
 			// 过滤属性
 			if(this.skipPropsNameForUpdate(propertyTypeClazz, propertyName)) continue;
 						
-			String columnName = EasyJavaBeanUtils.property2column(propertyName);
+			String columnName = this.property2column(propertyName);
 			if(null==columnName || "".equals(columnName)) continue;
 			// set字段
 			if("id".equals(propertyName) || "createBy".equals(propertyName) || "createTime".equals(propertyName)) {
@@ -344,7 +343,7 @@ public class CodeMapperSqlGenerator extends CodeGenerator {
 	public String tableName(Class<?> pojoClazz) {
 		String name = pojoClazz.getSimpleName();
 		name = this.fmtPojoName(pojoClazz, null, null);
-		name = EasyJavaBeanUtils.property2column(name);
+		name = this.property2column(name);
 		name = name.toLowerCase();
 		StringBuilder sb = new StringBuilder();
 		sb.append("<!-- 表名 -->").append("\r\n");
@@ -391,7 +390,7 @@ public class CodeMapperSqlGenerator extends CodeGenerator {
 			String propertyName = entry.getKey();
 			// 过滤属性
 			if(!this.filterPropsName(propertyTypeClazz, propertyName)) continue;
-			String columnName = EasyJavaBeanUtils.property2column(propertyName);
+			String columnName = this.property2column(propertyName);
 			if(null==columnName || "".equals(columnName)) continue;
 			if(null!=tableAliasName && !"".equals(tableAliasName)) {
 				columnName = tableAliasName + "." + columnName;
@@ -476,7 +475,7 @@ public class CodeMapperSqlGenerator extends CodeGenerator {
 			// 过滤属性
 			if("id".equals(propertyName)) continue;
 			if(!this.filterPropsName(propertyTypeClazz, propertyName)) continue;
-			String columnName = EasyJavaBeanUtils.property2column(propertyName);
+			String columnName = this.property2column(propertyName);
 			if(null==columnName || "".equals(columnName)) continue;
 			columns.append(columnName).append(", ");
 			params.append("#{").append(propertyName).append("}, ");
@@ -521,7 +520,7 @@ public class CodeMapperSqlGenerator extends CodeGenerator {
 			// 过滤属性
 			if("id".equals(propertyName)) continue;
 			if(!this.filterPropsName(propertyTypeClazz, propertyName)) continue;
-			String columnName = EasyJavaBeanUtils.property2column(propertyName);
+			String columnName = this.property2column(propertyName);
 			if(null==columnName || "".equals(columnName)) continue;
 			columns.append(columnName).append(", ");
 			params.append("#{item.").append(propertyName).append("},");

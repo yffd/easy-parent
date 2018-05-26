@@ -1,5 +1,6 @@
 package com.yffd.easy.uupm.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,7 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
-import com.yffd.easy.framework.common.service.CommonService;
+import com.yffd.easy.framework.pojo.login.LoginInfo;
 import com.yffd.easy.uupm.dao.UupmTenantResourceDao;
 import com.yffd.easy.uupm.entity.UupmResourceEntity;
 import com.yffd.easy.uupm.entity.UupmTenantResourceEntity;
@@ -24,7 +25,7 @@ import com.yffd.easy.uupm.entity.UupmTenantResourceEntity;
  * @see 	 
  */
 @Service
-public class UupmTenantResourceService extends CommonService<UupmTenantResourceEntity> {
+public class UupmTenantResourceService extends UupmBaseService<UupmTenantResourceEntity> {
 
 	@Autowired
 	private UupmTenantResourceDao uupmTenantResourceDao;
@@ -35,9 +36,17 @@ public class UupmTenantResourceService extends CommonService<UupmTenantResourceE
 	}
 
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-	public void saveTenantResource(String tenantCode, List<UupmTenantResourceEntity> modelList) {
+	public int saveTenantResource(String tenantCode, List<String> rsCodesList, LoginInfo loginInfo) {
 		this.delByTenantCode(tenantCode);
-		this.save(modelList);
+		List<UupmTenantResourceEntity> modelList = new ArrayList<UupmTenantResourceEntity>();
+		for(String rsCode : rsCodesList) {
+			UupmTenantResourceEntity model = new UupmTenantResourceEntity();
+			model.setTenantCode(tenantCode);
+			model.setRsCode(rsCode);
+			modelList.add(model);
+		}
+		if(modelList.size()==0) return 0;
+		return this.save(modelList, loginInfo);
 	}
 	
 	public void delByTenantCode(String tenantCode) {
@@ -65,10 +74,10 @@ public class UupmTenantResourceService extends CommonService<UupmTenantResourceE
 	 * @param tenantCode
 	 * @return
 	 */
-	public Set<String> findResourceCodesByTenantCode(String tenantCode) {
+	public Set<String> findRsCodesByTenantCode(String tenantCode) {
 		UupmTenantResourceEntity entity = new UupmTenantResourceEntity();
 		entity.setTenantCode(tenantCode);
-		List<UupmTenantResourceEntity> list = this.findList(entity);
+		List<UupmTenantResourceEntity> list = this.findList(entity, null);
 		if(null==list || list.size()==0) return null;
 		Set<String> codes = new HashSet<String>();
 		for(UupmTenantResourceEntity rs : list) {

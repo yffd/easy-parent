@@ -11,10 +11,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
-import com.yffd.easy.framework.common.service.CommonService;
+import com.yffd.easy.framework.pojo.login.LoginInfo;
 import com.yffd.easy.uupm.dao.UupmRoleResourceDao;
 import com.yffd.easy.uupm.entity.UupmRoleResourceEntity;
-import com.yffd.easy.uupm.entity.UupmUserRoleEntity;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -25,7 +24,7 @@ import com.yffd.easy.uupm.entity.UupmUserRoleEntity;
  * @see 	 
  */
 @Service
-public class UupmRoleResourceService extends CommonService<UupmRoleResourceEntity> {
+public class UupmRoleResourceService extends UupmBaseService<UupmRoleResourceEntity> {
 
 	@Autowired
 	private UupmRoleResourceDao uupmRoleResourceDao;
@@ -36,15 +35,22 @@ public class UupmRoleResourceService extends CommonService<UupmRoleResourceEntit
 	}
 
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-	public void saveRoleResource(String roleCode, List<UupmRoleResourceEntity> modelList) {
-		this.delByRoleCode(roleCode);
-		this.save(modelList);
+	public void saveRoleResource(String roleCode, List<String> rsCodesList, LoginInfo loginInfo) {
+		this.delByRoleCode(roleCode, loginInfo);
+		List<UupmRoleResourceEntity> modelList = new ArrayList<UupmRoleResourceEntity>();
+		for(String rsCode : rsCodesList) {
+			UupmRoleResourceEntity model = new UupmRoleResourceEntity();
+			model.setRoleCode(roleCode);
+			model.setRsCode(rsCode);
+			modelList.add(model);
+		}
+		this.save(modelList, loginInfo);
 	}
 	
-	public void delByRoleCode(String roleCode) {
+	public void delByRoleCode(String roleCode, LoginInfo loginInfo) {
 		UupmRoleResourceEntity entity = new UupmRoleResourceEntity();
 		entity.setRoleCode(roleCode);
-		this.delete(entity);
+		this.delete(entity, loginInfo);
 	}
 	
 	public Set<String> findRsCode(Set<String> roleCodes) {
@@ -57,11 +63,10 @@ public class UupmRoleResourceService extends CommonService<UupmRoleResourceEntit
 		return rsCodes;
 	}
 	
-	public Set<String> findRoleResourceCodes(String tenantCode, String roleCode) {
+	public Set<String> findRsCodesByRoleCode(String roleCode, LoginInfo loginInfo) {
 		UupmRoleResourceEntity entity = new UupmRoleResourceEntity();
-		entity.setTenantCode(tenantCode);
 		entity.setRoleCode(roleCode);
-		List<UupmRoleResourceEntity> listResult = this.findList(entity);
+		List<UupmRoleResourceEntity> listResult = this.findList(entity, loginInfo);
 		Set<String> rsCodes = new HashSet<String>();
 		for(UupmRoleResourceEntity model : listResult) {
 			rsCodes.add(model.getRsCode());

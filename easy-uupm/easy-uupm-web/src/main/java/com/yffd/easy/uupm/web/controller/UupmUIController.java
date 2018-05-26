@@ -50,7 +50,7 @@ public class UupmUIController extends UupmBaseController {
 		for(String treeId : treeIdArr) {
 			UupmUITreeEntity entity = new UupmUITreeEntity();
 			entity.setTreeId(treeId);
-			List<UupmUITreeEntity> listResult = this.uupmUITreeService.findList(entity);
+			List<UupmUITreeEntity> listResult = this.uupmUITreeService.findList(entity, getLoginInfo());
 			if(null==listResult || listResult.size()==0) continue;
 			List<UupmUIBaseTreeVo> treeList = this.uupmComboTreeModelFactory.buildComboTree(listResult, treeId);
 			resultMap.put(treeId, treeList);

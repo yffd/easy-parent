@@ -1,4 +1,4 @@
-package com.yffd.easy.common.core.util;
+package com.yffd.easy.framework.common.pojo.factory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,7 +6,7 @@ import java.util.Map;
 import org.apache.commons.beanutils.BeanUtils;
 import org.junit.Test;
 
-import com.yffd.easy.common.core.model.DemoPO;
+import com.yffd.easy.framework.common.pojo.model.DemoPO;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -16,8 +16,9 @@ import com.yffd.easy.common.core.model.DemoPO;
  * @since		 JDK 1.7+
  * @see 	 
  */
-public class EasyJavaBeanUtilsTest {
+public class CommonPojoFactoryTest {
 
+	private CommonPojoFactory pojoFactory = new CommonPojoFactory();
 	@Test
 	public void copyPropertiesTest() throws Exception {
 		Map<String, Object> mapData = new HashMap<String, Object>();
@@ -43,17 +44,17 @@ public class EasyJavaBeanUtilsTest {
 	}
 	
 	@Test
-	public void copy2beanWithSamePropertiesTest() throws Exception {
+	public void copyProperties1Test() throws Exception {
 		Map<String, Object> mapData = new HashMap<String, Object>();
 		mapData.put("userName", "白牛");
 		mapData.put("age", "13");
 		mapData.put("sex", false);
 		mapData.put("startTime", "2017-12-14");
-//		DemoDTO dto = EasyJavaBeanUtils.map2bean(mapData, DemoDTO.class);
-//		DemoDTO dto = EasyJavaBeanUtils.copyProperties(mapData, DemoDTO.class);
+//		DemoDTO dto = pojoFactory.map2pojo(mapData, DemoDTO.class);
+//		DemoDTO dto = pojoFactory.copyProperties(mapData, DemoDTO.class);
 //		System.out.println(dto);
 		
-		DemoPO po = EasyJavaBeanUtils.copyProperties(mapData, DemoPO.class);
+		DemoPO po = pojoFactory.copyProperties(mapData, DemoPO.class);
 		System.out.println(po.getUserName());
 		System.out.println(po.getStartTime());
 		
@@ -61,7 +62,7 @@ public class EasyJavaBeanUtilsTest {
 		DemoPO tmp = new DemoPO();
 		tmp.setUserName("张三");
 		System.out.println(tmp);
-		Map<String, Object> map = EasyJavaBeanUtils.copyProperties(tmp, HashMap.class);
+		Map<String, Object> map = pojoFactory.copyProperties(tmp, HashMap.class);
 		System.out.println(map);
 	}
 }
