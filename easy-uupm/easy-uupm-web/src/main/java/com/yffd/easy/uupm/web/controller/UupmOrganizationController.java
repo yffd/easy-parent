@@ -45,6 +45,20 @@ public class UupmOrganizationController extends UupmBaseController {
 		return this.successAjax();
 	}
 	
+	@RequestMapping(value="/addRoot", method=RequestMethod.POST)
+	public RespData addRoot(UupmOrganizationEntity paramModel) {
+		if(EasyStringCheckUtils.isEmpty(paramModel.getOrgCode())) return this.errorAjax("参数无效");
+		UupmOrganizationEntity entity = new UupmOrganizationEntity();	// 存在判断
+		entity.setOrgCode(paramModel.getOrgCode());
+		boolean exsist = this.uupmOrganizationService.exsist(entity, getLoginInfo());
+		if(exsist) return this.errorAjax("编号已存在");
+		paramModel.setTreeId(paramModel.getOrgCode());	// 设treeId=orgCode
+		paramModel.setParentCode("root");
+		int result = this.uupmOrganizationService.save(paramModel, getLoginInfo());
+		if(result==0) return this.errorAjax("添加失败");
+		return this.successAjax();
+	}
+	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
 	public RespData add(UupmOrganizationEntity paramModel) {
 		if(EasyStringCheckUtils.isEmpty(paramModel.getTreeId()) 

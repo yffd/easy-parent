@@ -230,7 +230,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		if(row) {
 			parent.$.messager.confirm("提示","确定要删除该记录吗？如果该节点有子节点，将会级联删除其子节点。",function(r){  
 			    if(r) {
-			    	$.post("uupm/resource/delTree", {'treeId': row.treeId}, function(result) {
+			    	$.post("uupm/resource/delByTreeId", {'treeId': row.treeId}, function(result) {
 						if(result.status=='OK') {
 							var rowIndex = $dg_left.datagrid('getRowIndex', row);
 							$dg_left.datagrid('deleteRow', rowIndex);
@@ -370,9 +370,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		if(row) {
 			parent.$.messager.confirm("提示","确定要删除该记录吗？如果该节点有子节点，将会级联删除其子节点。",function(r){  
 			    if(r) {
-			    	var arr_id = iterNode(row);
-			    	var ids = arr_id.join(",");
-			    	$.post("uupm/resource/delByIds", {'ids': ids}, function(result) {
+			    	var rsCodeArr = iterNode(row, 'rsCode');
+			    	$.post("uupm/resource/delByRsCodes", {'rsCodes': JSON.stringify(rsCodeArr)}, function(result) {
 						if(result.status=='OK') {
 							$dg_right.treegrid('remove', row.id);
 						}
@@ -393,14 +392,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		}
 	}
 	
-	// 递归获取tree的id
-	function iterNode(pNode) {
+	// 递归获取tree的propName
+	function iterNode(pNode, propName) {
 		var arrs = [];
 		if(pNode) {
-			arrs.push(pNode.id);
+			arrs.push(pNode[propName]);
 			if(pNode.children) {
 				$.each(pNode.children, function(i, obj){
-					arrs = arrs.concat(iterNode(obj));
+					arrs = arrs.concat(iterNode(obj, propName));
 				});
 			}
 		}

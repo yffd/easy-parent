@@ -19,12 +19,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	var $dg_right;
 	$(function() {
 		// 初始化控件数据
-		$.post('/uupm/combox/findComboByDict', 
-				{'combo':'status'}, 
+		$.post('/uupm/ui/listComboTree', 
+				{'treeIds':'status'}, 
 				function(result) {
 					if("OK"==result.status) {
 						var jsonData = result.data;
-						$json_status = $json_status.concat(jsonData['combo']['status'][0]['children']);
+						$json_status = $json_status.concat(jsonData['status']);
 						// 初始化datagrid组件
 						makeGrid_left();	
 						makeGrid_right();
@@ -36,7 +36,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	function makeGrid_left() {
 		$dg_left = $('#dg_id_left');
 		$dg_left.datagrid({
-		    url:'uupm/user/findPage',
+		    url:'uupm/user/listPage',
 		    width: 'auto',
 		    height: $(this).height()-commonui.remainHeight-20-$('#tb_id_left').height(),
 		    pagination: true,
@@ -61,17 +61,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		}
 	    	},
 	    	onDblClickRow: function(rowIndex, rowData) {
-	    		findRoleByUser(rowIndex, rowData);
+	    		findRoleByUserCode(rowIndex, rowData);
             },
 	        columns: [[
 						{field: 'userName', title: '名称', width: 100, align: 'left'},
 						{field: 'userCode', title: '编号', width: 100, align: 'left'},
 						{field: 'orgName', title: '机构名称', width: 100, align: 'left'},
-						{field: 'accountStatus', title: '账户状态', width: 100, align: 'left',
-							formatter: function(value, row) {
-								return utils.fmtDict($json_status, value);
-							}	
-						}
+						{field: 'orgCode', title: '机构编号', width: 100, align: 'left'}
 	                   ]]
 		});
 		
@@ -89,7 +85,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	function makeGrid_right() {
 		$dg_right = $('#dg_id_right');
 		$dg_right.datagrid({
-		    url:'uupm/role/findPage',
+		    url:'uupm/role/listPage',
 		    width: 'auto',
 		    height: $(this).height()-commonui.remainHeight-20-$('#tb_id_right').height(),
 			pagination: true,
@@ -144,13 +140,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	// 为用户分配角色
 	function saveUserRole() {
 		var rows_role = $dg_right.datagrid('getSelections');//获取选中的行-多行
-		var roleCodeArr = [];
-		if(rows_role) {
-			$.each(rows_role, function(i, obj) {
-				roleCodeArr.push({'roleCode': obj['roleCode']});
-			});
-		}
-		if(roleCodeArr.length==0) {
+		if(!rows_role) {
 			parent.$.messager.show({
 				title :commonui.msg_title,
 				timeout : commonui.msg_timeout,
@@ -160,9 +150,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		}
 		var row_user = $dg_left.datagrid('getSelected');//获取选中的行-单行
 		if(row_user) {
-			var tenantCode = row_user.tenantCode;
+			var roleCodeArr = [];
+			$.each(rows_role, function(i, obj) {
+				roleCodeArr.push(obj['roleCode']);
+			});
 			var userCode = row_user.userCode;
-			var data={"tenantCode": tenantCode, "userCode":userCode, "roleCodes": JSON.stringify(roleCodeArr)};
+			var data={"userCode":userCode, "roleCodes": JSON.stringify(roleCodeArr)};
 			$.post("uupm/user/role/saveUserRole", data, function(result) {
 						$.messager.show({
 							title :commonui.msg_title,
@@ -185,8 +178,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		}
 	}
 	//双击事件
-	function findRoleByUser(rowIndex, rowData) {
-		$.post("uupm/user/role/findRoleByUserCode", {'tenantCode': rowData.tenantCode, userCode:rowData.userCode}, function(result) {
+	function findRoleByUserCode(rowIndex, rowData) {
+		$.post("uupm/user/role/findRoleByUserCode", {userCode:rowData.userCode}, function(result) {
 			if(result.status=='OK') {
 				$dg_right.datagrid('unselectAll');
 				var data = result.data;

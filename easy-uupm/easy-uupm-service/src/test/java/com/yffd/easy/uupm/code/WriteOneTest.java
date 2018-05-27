@@ -7,6 +7,7 @@ import com.yffd.easy.framework.common.code.geneator.CodeFileMapperXmlGenerator;
 import com.yffd.easy.framework.common.code.geneator.CodeFileServiceGenerator;
 import com.yffd.easy.framework.common.code.geneator.CodeMapperSqlGenerator;
 import com.yffd.easy.framework.common.code.geneator.CodeMapperSqlTreeGenerator;
+import com.yffd.easy.uupm.entity.UupmAccountEntity;
 import com.yffd.easy.uupm.entity.UupmMenuEntity;
 import com.yffd.easy.uupm.entity.UupmResourceEntity;
 import com.yffd.easy.uupm.entity.UupmUITreeEntity;
@@ -69,7 +70,7 @@ public class WriteOneTest extends LocalProjectConfigTest {
 	@Test
 	public void writeToMapper() {
 		// TODO
-		Class<?> pojoClazz = UupmUITreeEntity.class;
+		Class<?> pojoClazz = UupmAccountEntity.class;
 		String sqlNamespace = daoGenerator.fmtDaoFullName(daoPackageName, pojoClazz);
 		mapperXmlGenerator.writeToFile(pojoClazz, sqlNamespace, outRootDirPath_mapper_xml, covered);
 	}
@@ -77,7 +78,7 @@ public class WriteOneTest extends LocalProjectConfigTest {
 	@Test
 	public void consoleToMapper() {
 		// TODO
-		Class<?> pojoClazz = UupmMenuEntity.class;
+		Class<?> pojoClazz = UupmAccountEntity.class;
 		String sqlNamespace = daoGenerator.fmtDaoFullName(daoPackageName, pojoClazz);
 		mapperXmlGenerator.writeToConsole(pojoClazz, sqlNamespace);
 	}

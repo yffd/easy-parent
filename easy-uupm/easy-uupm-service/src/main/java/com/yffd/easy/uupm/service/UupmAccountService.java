@@ -43,17 +43,21 @@ public class UupmAccountService extends UupmBaseService<UupmAccountEntity> {
 	@Autowired
 	private UupmOrganizationService uupmOrganizationService;
 	
-//	public PageResult<UupmAccountEntity> findAdminAccount(UupmAccountEntity paramModel, LoginInfo loginInfo, PageParam paramPage) {
-//		paramModel.setAccountType("admin");
-//		return this.findPage(paramModel, loginInfo, paramPage);
-//	}
-//	
-//	public int addAccount(UupmAccountEntity model, String encryptPwd, String salt) {
-//		model.setSalt(salt);
-//		model.setAccountPwd(encryptPwd);
-//		return this.getBindDao().save(model);
-//	}
-//	
+	public PageResult<UupmAccountEntity> findTenantAccount(UupmAccountEntity paramModel, PageParam paramPage, LoginInfo loginInfo) {
+		paramModel.setAccountType("tenant");
+		return this.findPage(paramModel, paramPage, loginInfo);
+	}
+	
+	public int addTenantAccount(UupmAccountEntity entity, LoginInfo loginInfo) {
+		entity.setAccountType("tenant");
+		return this.save(entity, loginInfo);
+	}
+	
+	public int addDefaultAccount(UupmAccountEntity entity, LoginInfo loginInfo) {
+		entity.setAccountType("default");
+		return this.save(entity, loginInfo);
+	}
+	
 //	public UupmLoginInfoVo findLoginInfo(String accountId) {
 //		UupmLoginInfoVo paramVo = new UupmLoginInfoVo();
 //		paramVo.setAccountId(accountId);

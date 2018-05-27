@@ -61,7 +61,7 @@ public class UupmTenantResourceController extends UupmBaseController {
 	@RequestMapping(value="/findTenantResource", method=RequestMethod.POST)
 	public RespData findTenantResource() {
 		String tenantCode = this.getLoginInfo().getTenantCode();
-		List<UupmResourceEntity> result = this.uupmTenantResourceService.findResourceByTenantCode(tenantCode);
+		List<UupmResourceEntity> result = this.uupmTenantResourceService.findTenantResource(tenantCode);
 		if(null!=result && !result.isEmpty()) {
 			List<UupmUIResTreeVo> treeList = this.uupmResourceModelFactory.buildMultiTree(result);
 			return this.successAjax(treeList);

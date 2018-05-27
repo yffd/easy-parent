@@ -35,26 +35,6 @@ public class UupmTenantResourceService extends UupmBaseService<UupmTenantResourc
 		return this.uupmTenantResourceDao;
 	}
 
-	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-	public int saveTenantResource(String tenantCode, List<String> rsCodesList, LoginInfo loginInfo) {
-		this.delByTenantCode(tenantCode);
-		List<UupmTenantResourceEntity> modelList = new ArrayList<UupmTenantResourceEntity>();
-		for(String rsCode : rsCodesList) {
-			UupmTenantResourceEntity model = new UupmTenantResourceEntity();
-			model.setTenantCode(tenantCode);
-			model.setRsCode(rsCode);
-			modelList.add(model);
-		}
-		if(modelList.size()==0) return 0;
-		return this.save(modelList, loginInfo);
-	}
-	
-	public void delByTenantCode(String tenantCode) {
-		UupmTenantResourceEntity entity = new UupmTenantResourceEntity();
-		entity.setTenantCode(tenantCode);
-		this.getBindDao().delete(entity);
-	}
-	
 	/**
 	 * 某租户所拥有的所有资源
 	 * @Date	2018年5月23日 上午11:30:33 <br/>
@@ -62,9 +42,8 @@ public class UupmTenantResourceService extends UupmBaseService<UupmTenantResourc
 	 * @param tenantCode
 	 * @return
 	 */
-	public List<UupmResourceEntity> findResourceByTenantCode(String tenantCode) {
-		List<UupmResourceEntity> list = this.uupmTenantResourceDao.findResourceForTenant(tenantCode);
-		return list;
+	public List<UupmResourceEntity> findTenantResource(String tenantCode) {
+		return this.uupmTenantResourceDao.selectTenantResource(tenantCode);
 	}
 	
 	/**
@@ -85,4 +64,29 @@ public class UupmTenantResourceService extends UupmBaseService<UupmTenantResourc
 		}
 		return codes;
 	}
+	
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public int saveTenantResource(String tenantCode, List<String> rsCodesList, LoginInfo loginInfo) {
+		this.delByTenantCode(tenantCode);
+		List<UupmTenantResourceEntity> modelList = new ArrayList<UupmTenantResourceEntity>();
+		for(String rsCode : rsCodesList) {
+			UupmTenantResourceEntity model = new UupmTenantResourceEntity();
+			model.setTenantCode(tenantCode);
+			model.setRsCode(rsCode);
+			modelList.add(model);
+		}
+		if(modelList.size()==0) return 0;
+		return this.save(modelList, loginInfo);
+	}
+	
+	public int delByTenantCode(String tenantCode) {
+		UupmTenantResourceEntity entity = new UupmTenantResourceEntity();
+		entity.setTenantCode(tenantCode);
+		return this.delete(entity, null);
+	}
+	
+	public int delByRsCodes(Set<String> rsCodes) {
+		return this.uupmTenantResourceDao.delByRsCodes(rsCodes);
+	}
+	
 }

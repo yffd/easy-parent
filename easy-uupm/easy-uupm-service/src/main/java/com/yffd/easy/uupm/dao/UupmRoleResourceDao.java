@@ -22,8 +22,5 @@ public class UupmRoleResourceDao extends MybatisCommonDao<UupmRoleResourceEntity
 	public List<UupmRoleResourceEntity> findByRoleCodes(Set<String> roleCodes) {
 		return this.selectListByProps("roleCodeIter", roleCodes, null);
 	}
-//	
-//	public List<UupmRoleResourceEntity> findByResourceCodes(Set<String> resourceCodes) {
-//		return this.selectListByProps("rsCodeIter", resourceCodes, null);
-//	}
+
 }

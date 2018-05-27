@@ -3,7 +3,6 @@
 <div class="easyui-layout" data-options="fit:true,border:false">
 	<div data-options="region:'center',border:false" class="edit-form-div">
 		<form id="form_id" method="post" style="width:100%;height:100%;">
-			<input name="id" value="" type="hidden"/>
 			<fieldset>
 				<table class="edit-form-table">
 					<tr>

@@ -13,7 +13,6 @@ import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
 public class UupmUserInfoVo extends UupmBasePojo {
 	
 	private static final long serialVersionUID = 1L;
-	private String id;
 	private String userCode;		//用户编号
 	private String userName;		//用户名称
 	private String orgCode;			//机构编号
@@ -23,12 +22,6 @@ public class UupmUserInfoVo extends UupmBasePojo {
 	private String accountStatus;
 	private String accountType;
 	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 	public String getUserCode() {
 		return userCode;
 	}

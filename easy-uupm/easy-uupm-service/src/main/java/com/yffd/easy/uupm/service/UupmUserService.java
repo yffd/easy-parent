@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yffd.easy.framework.common.exception.CommonBizException;
 import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
+import com.yffd.easy.framework.pojo.login.LoginInfo;
 import com.yffd.easy.framework.pojo.page.PageParam;
 import com.yffd.easy.framework.pojo.page.PageResult;
 import com.yffd.easy.uupm.dao.UupmUserDao;
@@ -36,21 +37,16 @@ public class UupmUserService extends UupmBaseService<UupmUserEntity> {
 		return uupmUserDao;
 	}
 	
-	public PageResult<UupmUserInfoVo> findUserInfoPage(UupmUserInfoVo userInfo, PageParam pageParam) {
+	public PageResult<UupmUserInfoVo> findUserInfoPage(UupmUserInfoVo userInfo, PageParam pageParam, LoginInfo loginInfo) {
+		this.beforeSetPropertiesForQuery(userInfo, loginInfo);
 		return this.uupmUserDao.findUserInfoPage(userInfo, pageParam);
 	}
 	
-//	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-//	public int addUserWithAccount(UupmUserEntity model) {
-//		if(null==model) throw CommonBizException.BIZ_PARAMS_IS_EMPTY();
-//		int num = this.uupmUserDao.save(model);
-//		// 生成账号
-//		UupmAccountEntity account = new UupmAccountEntity();
-//		account.setAccountId(model.getUserCode());
-//		account.setAccountPwd("123456");
-//		account.setAccountStatus("active");
-//		account.setAccountType("default");
-//		this.uupmAccountService.save(account);
-//		return num;
-//	}
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public int addUserWithAccount(UupmUserEntity user, UupmAccountEntity account, LoginInfo loginInfo) {
+		int result = this.save(user, loginInfo);
+		// 生成普通账号
+		this.uupmAccountService.addDefaultAccount(account, loginInfo);
+		return result;
+	}
 }

@@ -36,44 +36,43 @@ public class UupmUIFactory {
 	}
 	
 	
-//	public List<UupmTreeBaseVo> buildTreeForOrg(List<UupmOrganizationEntity> list) {
-//		return this.buildTreeForOrg(list, "root");
-//	}
-//	
-//	public List<UupmTreeBaseVo> buildTreeForOrg(List<UupmOrganizationEntity> list, String rootPidValue) {
-//		UupmOrganizationEntity rootNode = new UupmOrganizationEntity();
-//		rootNode.setOrgCode(rootPidValue);
-//		UupmTreeBaseVo tree = this.buildTreeForOrg(list, rootNode);
-//		return (List<UupmTreeBaseVo>) tree.getChildren();
-//	}
-//	
-//	public UupmTreeBaseVo buildTreeForOrg(List<UupmOrganizationEntity> list, UupmOrganizationEntity rootNode) {
-//		return orgTreeBuilder.buildTree(list, rootNode);
-//	}
+	public List<UupmUIBaseTreeVo> buildOrgComboTree(List<UupmOrganizationEntity> list) {
+		return this.buildOrgComboTree(list, "root");
+	}
+	
+	public List<UupmUIBaseTreeVo> buildOrgComboTree(List<UupmOrganizationEntity> list, String parentCode) {
+		UupmOrganizationEntity rootNode = new UupmOrganizationEntity();
+		rootNode.setOrgCode(parentCode);
+		UupmUIBaseTreeVo tree = this.buildOrgComboTree(list, rootNode);
+		return (List<UupmUIBaseTreeVo>) tree.getChildren();
+	}
+	
+	public UupmUIBaseTreeVo buildOrgComboTree(List<UupmOrganizationEntity> list, UupmOrganizationEntity rootNode) {
+		return orgTreeBuilder.buildTree(list, rootNode);
+	}
 	
 	
-//	public EasyCustomTreeBuilder<UupmOrganizationEntity, UupmTreeBaseVo> orgTreeBuilder = new EasyCustomTreeBuilder<UupmOrganizationEntity, UupmTreeBaseVo>() {
-//
-//		@Override
-//		protected Object getIdValue(UupmOrganizationEntity node) {
-//			return node.getOrgCode();
-//		}
-//
-//		@Override
-//		protected Object getPidValue(UupmOrganizationEntity node) {
-//			return node.getParentCode();
-//		}
-//
-//		@Override
-//		protected UupmTreeBaseVo getTreeNode(UupmOrganizationEntity node) {
-//			UupmTreeBaseVo treeNode = new UupmTreeBaseVo();
-//			treeNode.setState("open");
-//			treeNode.setText(node.getOrgName());
-//			treeNode.setId(node.getOrgCode());
-//			return treeNode;
-//		}
-//
-//	};
+	public EasyCustomTreeBuilder<UupmOrganizationEntity, UupmUIBaseTreeVo> orgTreeBuilder = new EasyCustomTreeBuilder<UupmOrganizationEntity, UupmUIBaseTreeVo>() {
+
+		@Override
+		protected Object getIdValue(UupmOrganizationEntity node) {
+			return node.getOrgCode();
+		}
+
+		@Override
+		protected Object getPidValue(UupmOrganizationEntity node) {
+			return node.getParentCode();
+		}
+
+		@Override
+		protected UupmUIBaseTreeVo getTreeNode(UupmOrganizationEntity node) {
+			UupmUIBaseTreeVo treeNode = new UupmUIBaseTreeVo();
+			treeNode.setText(node.getOrgName());
+			treeNode.setId(node.getOrgCode());
+			return treeNode;
+		}
+
+	};
 	
 	public EasyCustomTreeBuilder<UupmUITreeEntity, UupmUIBaseTreeVo> uiTreeBuilder = new EasyCustomTreeBuilder<UupmUITreeEntity, UupmUIBaseTreeVo>() {
 		

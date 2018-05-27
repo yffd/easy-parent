@@ -34,9 +34,9 @@ public class UupmAccountEntity extends UupmBasePojo {
     private Integer visitCount; 	// 登录次数
     private Date visitFirst; 		// 第一次登录时间
     private Date visitPrevious; 	// 上一次登录时间
-    private Date visitLast; 		// 最后一次登录时间
-
-    public String getAccountId() {
+    private Date visitLast; 
+//    private String userCode;
+	public String getAccountId() {
 		return accountId;
 	}
 	public void setAccountId(String accountId) {

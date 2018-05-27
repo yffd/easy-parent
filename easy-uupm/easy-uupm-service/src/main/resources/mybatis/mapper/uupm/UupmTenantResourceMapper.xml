@@ -184,10 +184,10 @@
 	<!-- ##########################   common sql end    ########################## -->
 	<!-- ######################################################################### -->
 
-	<select id="selectResourceForTenant" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.entity.UupmResourceEntity">
+	<select id="selectTenantResource" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.entity.UupmResourceEntity">
 		select 
-		t.RS_CODE as rsCode, t.RS_NAME as rsName, t.RS_STATUS as rsStatus, 
-		t.SHORT_URL as shortUrl, t.RS_TYPE as rsType, t.PARENT_CODE as parentCode, t.SEQ_NO as seqNo
+		t.PARENT_CODE as parentCode, t.RS_CODE as rsCode, t.RS_NAME as rsName, 
+		t.RS_TYPE as rsType, t.SEQ_NO as seqNo, t.SHORT_URL as shortUrl, t.TREE_ID as treeId
 		from uupm_tenant_resource t1 left join uupm_resource t on t1.RS_CODE = t.RS_CODE
 		where t.RS_CODE is not null and t1.TENANT_CODE = #{tenantCode}
 		ORDER BY t.SEQ_NO asc, t.CREATE_TIME desc

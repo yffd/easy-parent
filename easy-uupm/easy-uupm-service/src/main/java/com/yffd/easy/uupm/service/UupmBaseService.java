@@ -17,10 +17,10 @@ public abstract class UupmBaseService<POJO> extends CommonServiceImpl<POJO> {
 	public void beforeSetPropertiesForQuery(POJO pojo, LoginInfo loginInfo) {
 		if(null==pojo) return;
 		if(pojo instanceof UupmBasePojo) {
-			UupmBasePojo entity = (UupmBasePojo) pojo;
-			if(null!=loginInfo && EasyStringCheckUtils.isEmpty(entity.getTenantCode()))
-				entity.setTenantCode(loginInfo.getTenantCode());
-			if(EasyStringCheckUtils.isEmpty(entity.getTenantCode())) 
+			UupmBasePojo model = (UupmBasePojo) pojo;
+			if(null!=loginInfo && EasyStringCheckUtils.isEmpty(model.getTenantCode()))
+				model.setTenantCode(loginInfo.getTenantCode());
+			if(EasyStringCheckUtils.isEmpty(model.getTenantCode())) 
 				LOG.warn("租户信息未指定");
 		}
 	}
@@ -29,21 +29,21 @@ public abstract class UupmBaseService<POJO> extends CommonServiceImpl<POJO> {
 	public void beforeSetPropertiesForAdd(POJO pojo, LoginInfo loginInfo) {
 		if(null==pojo) return;
 		if(pojo instanceof UupmBasePojo) {
-			UupmBasePojo entity = (UupmBasePojo) pojo;
-			entity.setVersion(0);
-			entity.setDelFlag("0");
-			entity.setCreateTime(new Date());
-			if(null!=loginInfo) entity.setCreateBy(loginInfo.getUserCode());
-			if(null!=loginInfo && EasyStringCheckUtils.isEmpty(entity.getTenantCode()))
-				entity.setTenantCode(loginInfo.getTenantCode());
-			if(EasyStringCheckUtils.isEmpty(entity.getTenantCode())) 
+			UupmBasePojo model = (UupmBasePojo) pojo;
+			model.setVersion(0);
+			model.setDelFlag("0");
+			model.setCreateTime(new Date());
+			if(null!=loginInfo) model.setCreateBy(loginInfo.getUserCode());
+			if(null!=loginInfo && EasyStringCheckUtils.isEmpty(model.getTenantCode()))
+				model.setTenantCode(loginInfo.getTenantCode());
+			if(EasyStringCheckUtils.isEmpty(model.getTenantCode())) 
 				LOG.warn("租户信息未指定");
 		} else if(pojo instanceof CommonEntity) {
-			CommonEntity entity = (CommonEntity) pojo;
-			entity.setVersion(0);
-			entity.setDelFlag("0");
-			entity.setCreateTime(new Date());
-			entity.setCreateBy(loginInfo.getUserCode());
+			CommonEntity model = (CommonEntity) pojo;
+			model.setVersion(0);
+			model.setDelFlag("0");
+			model.setCreateTime(new Date());
+			model.setCreateBy(loginInfo.getUserCode());
 		}
 	}
 
@@ -51,17 +51,17 @@ public abstract class UupmBaseService<POJO> extends CommonServiceImpl<POJO> {
 	public void beforeSetPropertiesForUpdate(POJO pojo, LoginInfo loginInfo) {
 		if(null==pojo) return;
 		if(pojo instanceof UupmBasePojo) {
-			UupmBasePojo entity = (UupmBasePojo) pojo;
-			entity.setUpdateTime(new Date());
-			if(null!=loginInfo) entity.setCreateBy(loginInfo.getUserCode());
-			if(null!=loginInfo && EasyStringCheckUtils.isEmpty(entity.getTenantCode()))
-				entity.setTenantCode(loginInfo.getTenantCode());
-			if(EasyStringCheckUtils.isEmpty(entity.getTenantCode())) 
+			UupmBasePojo model = (UupmBasePojo) pojo;
+			model.setUpdateTime(new Date());
+			if(null!=loginInfo) model.setCreateBy(loginInfo.getUserCode());
+			if(null!=loginInfo && EasyStringCheckUtils.isEmpty(model.getTenantCode()))
+				model.setTenantCode(loginInfo.getTenantCode());
+			if(EasyStringCheckUtils.isEmpty(model.getTenantCode())) 
 				LOG.warn("租户信息未指定");
 		} else if(pojo instanceof CommonEntity) {
-			CommonEntity entity = (CommonEntity) pojo;
-			entity.setUpdateTime(new Date());
-			entity.setUpdateBy(loginInfo.getUserCode());
+			CommonEntity model = (CommonEntity) pojo;
+			model.setUpdateTime(new Date());
+			model.setUpdateBy(loginInfo.getUserCode());
 		}
 	}
 
@@ -69,12 +69,19 @@ public abstract class UupmBaseService<POJO> extends CommonServiceImpl<POJO> {
 	public void beforeSetPropertiesForDelete(POJO pojo, LoginInfo loginInfo) {
 		if(null==pojo) return;
 		if(pojo instanceof UupmBasePojo) {
-			UupmBasePojo entity = (UupmBasePojo) pojo;
-			if(null!=loginInfo && EasyStringCheckUtils.isEmpty(entity.getTenantCode()))
-				entity.setTenantCode(loginInfo.getTenantCode());
-			if(EasyStringCheckUtils.isEmpty(entity.getTenantCode())) 
+			UupmBasePojo model = (UupmBasePojo) pojo;
+			if(null!=loginInfo && EasyStringCheckUtils.isEmpty(model.getTenantCode()))
+				model.setTenantCode(loginInfo.getTenantCode());
+			if(EasyStringCheckUtils.isEmpty(model.getTenantCode())) 
 				LOG.warn("租户信息未指定");
 		}
+	}
+	
+	public void beforeSetPropertiesForQuery(UupmBasePojo pojo, LoginInfo loginInfo) {
+		if(null!=loginInfo && EasyStringCheckUtils.isEmpty(pojo.getTenantCode()))
+			pojo.setTenantCode(loginInfo.getTenantCode());
+		if(EasyStringCheckUtils.isEmpty(pojo.getTenantCode())) 
+			LOG.warn("租户信息未指定");
 	}
 
 }

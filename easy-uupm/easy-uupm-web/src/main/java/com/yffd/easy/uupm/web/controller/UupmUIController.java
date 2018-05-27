@@ -36,8 +36,8 @@ public class UupmUIController extends UupmBaseController {
 	
 	@Autowired
 	private UupmUITreeService uupmUITreeService;
-//	@Autowired
-//	private UupmOrganizationService uupmOrganizationService;
+	@Autowired
+	private UupmOrganizationService uupmOrganizationService;
 	@Autowired
 	private UupmUIFactory uupmComboTreeModelFactory;
 	
@@ -48,9 +48,9 @@ public class UupmUIController extends UupmBaseController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		String[] treeIdArr = treeIds.split(",");
 		for(String treeId : treeIdArr) {
-			UupmUITreeEntity entity = new UupmUITreeEntity();
-			entity.setTreeId(treeId);
-			List<UupmUITreeEntity> listResult = this.uupmUITreeService.findList(entity, getLoginInfo());
+			UupmUITreeEntity model = new UupmUITreeEntity();
+			model.setTreeId(treeId);
+			List<UupmUITreeEntity> listResult = this.uupmUITreeService.findList(model, getLoginInfo());
 			if(null==listResult || listResult.size()==0) continue;
 			List<UupmUIBaseTreeVo> treeList = this.uupmComboTreeModelFactory.buildComboTree(listResult, treeId);
 			resultMap.put(treeId, treeList);
@@ -58,17 +58,16 @@ public class UupmUIController extends UupmBaseController {
 		return this.successAjax(resultMap);
 	}
 	
-//	@RequestMapping(value="/listOrgComboBoxTree", method=RequestMethod.POST)
-//	public RespData listOrgComboBoxTree() {
-//		UupmOrganizationEntity entity = new UupmOrganizationEntity();
-//		entity.setTenantCode(this.getLoginInfo().getTenantCode());
-//		List<UupmOrganizationEntity> result = this.uupmOrganizationService.findList(entity);
-//		if(null!=result && !result.isEmpty()) {
-//			List<UupmTreeBaseVo> treeList = this.uupmComboTreeModelFactory.buildTreeForOrg(result);
-//			return this.successAjax(treeList);
-//		}
-//		return this.successAjax();
-//	}
+	@RequestMapping(value="/listOrgComboTree", method=RequestMethod.POST)
+	public RespData listOrgComboTree() {
+		UupmOrganizationEntity entity = new UupmOrganizationEntity();
+		List<UupmOrganizationEntity> listResult = this.uupmOrganizationService.findList(entity, getLoginInfo());
+		if(null!=listResult && !listResult.isEmpty()) {
+			List<UupmUIBaseTreeVo> treeList = this.uupmComboTreeModelFactory.buildOrgComboTree(listResult);
+			return this.successAjax(treeList);
+		}
+		return this.successAjax();
+	}
 	
 }
 

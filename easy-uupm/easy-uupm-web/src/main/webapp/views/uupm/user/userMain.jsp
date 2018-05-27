@@ -18,12 +18,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	var $dg;
 	$(function() {
 		// 初始化控件数据
-		$.post('/uupm/combox/findComboByDict', 
-				{'combo':'status'}, 
+		$.post('/uupm/ui/listComboTree', 
+				{'treeIds':'status'}, 
 				function(result) {
 					if("OK"==result.status) {
 						var jsonData = result.data;
-						$json_status = $json_status.concat(jsonData['combo']['status'][0]['children']);
+						$json_status = $json_status.concat(jsonData['status']);
 						// 初始化datagrid组件
 						makeGrid();	
 					}
@@ -34,7 +34,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	function makeGrid() {
 		$dg = $('#dg_id');
 		$dg.datagrid({
-		    url:'uupm/user/findPage',
+		    url:'uupm/user/listPage',
 		    width: 'auto',
 		    height: $(this).height()-commonui.remainHeight-$('.search-form-div').height(),
 			pagination: true,
@@ -108,9 +108,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	// 清除搜索条件
 	function cleanSearch() {
 		$('#searchForm_id input').val('');
-		
-		var val = $('#loginStatus_id').combobox('getData');
-		$('#loginStatus_id').combobox('select',val[0]['id']);
 	}
 	
 	// 打开添加对话框
@@ -119,7 +116,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			title: "添加",
 			width: 800,
 			height: 400,
-			href: 'views/uupm/user/userEditDlg.jsp',
+			href: 'views/uupm/user/userEdit.jsp',
 			onLoad:function(){
 				parent.$.modalDialog.handler.checkedFirst=true;
 			},
@@ -127,11 +124,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				text: '确定',
 				iconCls: 'icon-ok',
 				handler: function() {
-					parent.$.modalDialog.openWindow = $openWindow;//定义打开对话框的窗口
-					parent.$.modalDialog.openner = $dg;//定义对话框关闭要刷新的grid
 					var editForm = parent.$.modalDialog.handler.find("#form_id");
-					editForm.attr("action", "uupm/user/add");
-					editForm.submit();
+					var obj = utils.serializeObject(editForm);
+					$.post('uupm/user/add', obj, function(result) {
+						if("OK"==result.status) {
+							parent.$.modalDialog.handler.dialog('close');
+							$dg.datagrid('reload');
+				    	}
+						$.messager.show({
+							title :commonui.msg_title,
+							timeout : commonui.msg_timeout,
+							msg : result.msg
+						});
+					}, 'json');
 				}
 			},{
 				text: '取消',
@@ -152,7 +157,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				title: "编辑",
 				width: 600,
 				height: 400,
-				href: 'views/uupm/user/userEditDlg.jsp',
+				href: 'views/uupm/user/userEdit.jsp',
 				onLoad:function(){
 					var editForm = parent.$.modalDialog.handler.find("#form_id");
 					editForm.form("load", row);
@@ -163,11 +168,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					text: '确定',
 					iconCls: 'icon-ok',
 					handler: function() {
-						parent.$.modalDialog.openWindow = $openWindow;//定义打开对话框的窗口
-						parent.$.modalDialog.openner = $dg;//定义对话框关闭要刷新的grid
 						var editForm = parent.$.modalDialog.handler.find("#form_id");
-						editForm.attr("action", "uupm/user/edit");
-						editForm.submit();
+						var obj = utils.serializeObject(editForm);
+						$.post('uupm/user/update', obj, function(result) {
+							if("OK"==result.status) {
+								parent.$.modalDialog.handler.dialog('close');
+								$dg.datagrid('reload');
+					    	}
+							$.messager.show({
+								title :commonui.msg_title,
+								timeout : commonui.msg_timeout,
+								msg : result.msg
+							});
+						}, 'json');
 					}
 				},{
 					text: '取消',

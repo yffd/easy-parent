@@ -16,7 +16,6 @@ public class CommonPagePojoFactory extends CommonPojoFactory {
 			if(null!=tmp) list.add(tmp);
 		}
 		return list;
-		
 	}
 	
 	public <T> List<T> map2pojo(List<Map<String, Object>> origMapList, Class<T> destPojoClazz) {

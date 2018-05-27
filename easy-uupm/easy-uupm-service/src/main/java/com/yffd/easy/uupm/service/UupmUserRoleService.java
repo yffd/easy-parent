@@ -1,5 +1,6 @@
 package com.yffd.easy.uupm.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yffd.easy.common.core.util.EasyStringCheckUtils;
-import com.yffd.easy.framework.common.exception.CommonBizException;
 import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
+import com.yffd.easy.framework.pojo.login.LoginInfo;
 import com.yffd.easy.uupm.dao.UupmUserRoleDao;
 import com.yffd.easy.uupm.entity.UupmUserRoleEntity;
 
@@ -32,19 +32,25 @@ public class UupmUserRoleService extends UupmBaseService<UupmUserRoleEntity> {
 		return uupmUserRoleDao;
 	}
 
-//	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-//	public void saveUserRole(String tennantCode, String userCode, List<UupmUserRoleEntity> modelList) {
-//		this.delByUserCode(tennantCode, userCode);
-//		this.save(modelList);
-//	}
-//	
-//	public void delByUserCode(String tenantCode, String userCode) {
-//		UupmUserRoleEntity entity = new UupmUserRoleEntity();
-//		entity.setTenantCode(tenantCode);
-//		entity.setUserCode(userCode);
-//		this.getBindDao().delete(entity );
-//	}
-//	
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public int saveUserRole(String userCode, List<String> roleCodesList, LoginInfo loginInfo) {
+		this.delByUserCode(userCode, loginInfo);
+		List<UupmUserRoleEntity> modelList = new ArrayList<UupmUserRoleEntity>();
+		for(String roleCode : roleCodesList) {
+			UupmUserRoleEntity model = new UupmUserRoleEntity();
+			model.setUserCode(userCode);
+			model.setRoleCode(roleCode);
+			modelList.add(model);
+		}
+		return this.save(modelList, loginInfo);
+	}
+	
+	public void delByUserCode(String userCode, LoginInfo loginInfo) {
+		UupmUserRoleEntity entity = new UupmUserRoleEntity();
+		entity.setUserCode(userCode);
+		this.delete(entity, loginInfo);
+	}
+	
 //	public List<UupmUserRoleEntity> findRoles(UupmUserRoleEntity paramModel) {
 //		if(null==paramModel || EasyStringCheckUtils.isEmpty(paramModel.getUserCode()))
 //			throw CommonBizException.BIZ_PARAMS_IS_EMPTY();

@@ -21,15 +21,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	$(function() {
 		$dg = $('#dg_id');
 		// 初始化控件数据
-		$.post('/uupm/combo/findDictTree', 
-				{'combo':'status'},
+		$.post('/uupm/ui/listComboTree', 
+				{'treeIds':'status'},
 				function(result) {
 					if("OK"==result.status) {
 						var jsonData = result.data;
-						$json_status = $json_status.concat(jsonData['combo']['status'][0]['children']);
+						$json_status = $json_status.concat(jsonData['status']);
 						
 						makeGrid_left();	// 初始化datagrid组件
-						$json_status[0]['selected']=true;
 						$combobox_roleStatus = $('input[name="roleStatus"]').combobox({
 							editable:false,
 							panelHeight: 120,
@@ -45,7 +44,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	// 初始化datagrid组件
 	function makeGrid_left() {
 		$dg.datagrid({
-		    url:'uupm/role/findPage',
+		    url:'uupm/role/listPage',
 		    width: 'auto',
 		    height: $(this).height()-commonui.remainHeight-$('.search-form-div').height(),
 			pagination: true,
@@ -115,7 +114,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			title: "添加",
 			width: 800,
 			height: 400,
-			href: 'views/uupm/role/roleEditDlg.jsp',
+			href: 'views/uupm/role/roleEdit.jsp',
 			onLoad:function(){
 				var editForm = parent.$.modalDialog.handler.find("#form_id");
 				setComboForSelected(editForm);
@@ -157,7 +156,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				title: "编辑",
 				width: 800,
 				height: 400,
-				href: 'views/uupm/role/roleEditDlg.jsp',
+				href: 'views/uupm/role/roleEdit.jsp',
 				onLoad:function(){
 					var editForm = parent.$.modalDialog.handler.find("#form_id");
 					setComboForSelected(editForm);
@@ -170,7 +169,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					handler: function() {
 						var editForm = parent.$.modalDialog.handler.find("#form_id");
 						var obj = utils.serializeObject(editForm);
-						$.post('uupm/role/edit', obj, function(result) {
+						$.post('uupm/role/update', obj, function(result) {
 							if("OK"==result.status) {
 								parent.$.modalDialog.handler.dialog('close');
 								$dg.datagrid('reload');

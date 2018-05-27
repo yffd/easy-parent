@@ -42,7 +42,7 @@ public class UupmRoleResourceController extends UupmBaseController {
 	@Autowired
 	private UupmRoleResourceService uupmRoleResourceService;
 	
-	// 角色资源授权
+	// 某租户下的某角色资源授权
 	@RequestMapping(value="/saveRoleResource", method=RequestMethod.POST)
 	public RespData saveRoleResource(HttpServletRequest req) {
 		String roleCode = req.getParameter("roleCode");
@@ -50,7 +50,8 @@ public class UupmRoleResourceController extends UupmBaseController {
 		if(EasyStringCheckUtils.isEmpty(roleCode) || EasyStringCheckUtils.isEmpty(rsCodes)) return this.errorAjax("参数错误");
 		List<String> rsCodesList = JSON.parseArray(rsCodes, String.class);
 		if(null==rsCodesList || rsCodesList.size()==0) return this.errorAjax("参数错误");
-		this.uupmRoleResourceService.saveRoleResource(roleCode, rsCodesList, getLoginInfo());
+		int result = this.uupmRoleResourceService.saveRoleResource(roleCode, rsCodesList, getLoginInfo());
+		if(result==0) return this.errorAjax("授权失败");
 		return this.successAjax();
 	}
 	

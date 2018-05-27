@@ -22,14 +22,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	$(function() {
 		$dg = $('#dg_id');
 		// 初始化控件数据
-		$.post('/uupm/combo/findDictTree', 
-				{'combo':'tenant-status,tenant-type,serve-type'}, 
+		$.post('/uupm/ui/listComboTree', 
+				{'treeIds':'tenant-status,tenant-type,serve-type'}, 
 				function(result) {
 					if("OK"==result.status) {
 						var jsonData = result.data;
-						$json_tenantStatus = $json_tenantStatus.concat(jsonData['combo']['tenant-status'][0]['children']);
-						$json_tenantType = $json_tenantType.concat(jsonData['combo']['tenant-type'][0]['children']);
-						$json_serveType = $json_serveType.concat(jsonData['combo']['serve-type'][0]['children']);
+						$json_tenantStatus = $json_tenantStatus.concat(jsonData['tenant-status']);
+						$json_tenantType = $json_tenantType.concat(jsonData['tenant-type']);
+						$json_serveType = $json_serveType.concat(jsonData['serve-type']);
 						// 初始化datagrid组件
 						makeGrid();	
 						
@@ -62,7 +62,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	// 初始化datagrid组件
 	function makeGrid() {
 		$dg.datagrid({
-		    url:'uupm/tenant/findPage',
+		    url:'uupm/tenant/listPage',
 		    width: 'auto',
 		    height: $(this).height()-commonui.remainHeight-$('.search-form-div').height(),
 			pagination: true,
@@ -146,7 +146,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			title: "添加",
 			width: 800,
 			height: 400,
-			href: 'views/uupm/tenant/tenantEditDlg.jsp',
+			href: 'views/uupm/tenant/tenantEdit.jsp',
 			onLoad:function(){
 				var editForm = parent.$.modalDialog.handler.find("#form_id");
 				editForm.find("#startTime").val(new Date().format("yyyy-MM-dd HH:mm:ss"));
@@ -156,11 +156,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				text: '确定',
 				iconCls: 'icon-ok',
 				handler: function() {
-					parent.$.modalDialog.openWindow = $openWindow;//定义打开对话框的窗口
-					parent.$.modalDialog.openner = $dg;//定义对话框关闭要刷新的grid
 					var editForm = parent.$.modalDialog.handler.find("#form_id");
-					editForm.attr("action", "uupm/tenant/add");
-					editForm.submit();
+					var obj = utils.serializeObject(editForm);
+					$.post('uupm/tenant/add', obj, function(result) {
+						if("OK"==result.status) {
+							parent.$.modalDialog.handler.dialog('close');
+							$dg.datagrid('reload');
+				    	}
+						$.messager.show({
+							title :commonui.msg_title,
+							timeout : commonui.msg_timeout,
+							msg : result.msg
+						});
+					}, 'json');
 				}
 			},{
 				text: '取消',
@@ -181,7 +189,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				title: "编辑",
 				width: 600,
 				height: 400,
-				href: 'views/uupm/tenant/tenantEditDlg.jsp',
+				href: 'views/uupm/tenant/tenantEdit.jsp',
 				onLoad:function(){
 					var editForm = parent.$.modalDialog.handler.find("#form_id");
 					setComboForSelected(editForm);
@@ -194,11 +202,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					text: '确定',
 					iconCls: 'icon-ok',
 					handler: function() {
-						parent.$.modalDialog.openWindow = $openWindow;//定义打开对话框的窗口
-						parent.$.modalDialog.openner = $dg;//定义对话框关闭要刷新的grid
 						var editForm = parent.$.modalDialog.handler.find("#form_id");
-						editForm.attr("action", "uupm/tenant/edit");
-						editForm.submit();
+						var obj = utils.serializeObject(editForm);
+						$.post('uupm/tenant/update', obj, function(result) {
+							if("OK"==result.status) {
+								parent.$.modalDialog.handler.dialog('close');
+								$dg.datagrid('reload');
+					    	}
+							$.messager.show({
+								title :commonui.msg_title,
+								timeout : commonui.msg_timeout,
+								msg : result.msg
+							});
+						}, 'json');
 					}
 				},{
 					text: '取消',
@@ -212,8 +228,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		} else {
 			$.messager.show({
 				title :commonui.msg_title,
-				msg : "请选择一行记录!",
-				timeout : commonui.msg_timeout
+				timeout : commonui.msg_timeout,
+				msg : "请选择一行记录!"
 			});
 		}
 	}
@@ -224,21 +240,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		if(row) {
 			parent.$.messager.confirm("提示","确定要删除记录吗?",function(r){  
 			    if(r) {
-			    	$.post("uupm/tenant/delById", {id:row.id}, function(result) {
+			    	$.post("uupm/tenant/delByTenantCode", {tenantCode:row.tenantCode}, function(result) {
 						if(result.status=='OK') {
 							var rowIndex = $dg.datagrid('getRowIndex', row);
 							$dg.datagrid('deleteRow', rowIndex);
 						}
 						$.messager.show({
 							title :commonui.msg_title,
-							msg : result.msg,
-							timeout : commonui.msg_timeout
+							timeout : commonui.msg_timeout,
+							msg : result.msg
 						});
 					}, "JSON").error(function() {
 						$.messager.show({
 							title :commonui.msg_title,
-							msg : result.msg,
-							timeout : commonui.msg_timeout
+							timeout : commonui.msg_timeout,
+							msg : result.msg
 						});
 					});
 			    }  
@@ -246,8 +262,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		} else {
 			$.messager.show({
 				title :commonui.msg_title,
-				msg : "请选择一行记录!",
-				timeout : commonui.msg_timeout
+				timeout : commonui.msg_timeout,
+				msg : "请选择一行记录!"
 			});
 		}
 	}

@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yffd.easy.uupm.dao.UupmAccountDao">
 
-
 	<!-- ######################################################################### -->
 	<!-- #########################   common sql begin    ######################### -->
 	<!-- ######################################################################### -->
@@ -12,9 +11,9 @@
 	<!-- 列名 -->
 	<sql id="table_columns">
 		t.VERSION as version, t.DEL_FLAG as delFlag, t.CREATE_BY as createBy, t.CREATE_TIME as createTime, t.UPDATE_BY as updateBy, 
-		t.UPDATE_TIME as updateTime, t.TENANT_CODE as tenantCode, t.ID as id, t.ACCOUNT_ID as accountId, t.ACCOUNT_PWD as accountPwd, 
-		t.ACCOUNT_STATUS as accountStatus, t.ACCOUNT_TYPE as accountType, t.NICK_NAME as nickName, t.ONLINE as online, t.SALT as salt, 
-		t.VISIT_COUNT as visitCount, t.VISIT_FIRST as visitFirst, t.VISIT_IP as visitIp, t.VISIT_LAST as visitLast, t.VISIT_PREVIOUS as visitPrevious
+		t.UPDATE_TIME as updateTime, t.ID as id, t.ACCOUNT_ID as accountId, t.ACCOUNT_PWD as accountPwd, t.ACCOUNT_STATUS as accountStatus, 
+		t.ACCOUNT_TYPE as accountType, t.NICK_NAME as nickName, t.ONLINE as online, t.SALT as salt, t.VISIT_COUNT as visitCount, 
+		t.VISIT_FIRST as visitFirst, t.VISIT_IP as visitIp, t.VISIT_LAST as visitLast, t.VISIT_PREVIOUS as visitPrevious
 	</sql>
 	<!-- 分页条件 -->
 	<sql id="conditions_limit"><if test="page != null"> limit #{page.startIndex}, #{page.pageLimit} </if></sql>
@@ -35,7 +34,6 @@
 			<if test="entity.createTime != null "><![CDATA[ and t.CREATE_TIME = #{entity.createTime}]]> </if>
 			<if test="entity.updateBy != null and entity.updateBy != ''"> and t.UPDATE_BY = #{entity.updateBy} </if>
 			<if test="entity.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{entity.updateTime}]]> </if>
-			<if test="entity.tenantCode != null and entity.tenantCode != ''"> and t.TENANT_CODE = #{entity.tenantCode} </if>
 			<if test="entity.id != null and entity.id != ''"> and t.ID = #{entity.id} </if>
 			<if test="entity.accountId != null and entity.accountId != ''"> and t.ACCOUNT_ID = #{entity.accountId} </if>
 			<if test="entity.accountPwd != null and entity.accountPwd != ''"> and t.ACCOUNT_PWD = #{entity.accountPwd} </if>
@@ -53,38 +51,11 @@
 		</if>
 		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
-			and t.TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
 			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
 			and t.ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 			<if test="propsMap.accountIdIter != null and propsMap.accountIdIter.size()>0">
 			and t.ACCOUNT_ID in <foreach item="item" index="index" collection="propsMap.accountIdIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.accountPwdIter != null and propsMap.accountPwdIter.size()>0">
-			and t.ACCOUNT_PWD in <foreach item="item" index="index" collection="propsMap.accountPwdIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.accountStatusIter != null and propsMap.accountStatusIter.size()>0">
-			and t.ACCOUNT_STATUS in <foreach item="item" index="index" collection="propsMap.accountStatusIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.accountTypeIter != null and propsMap.accountTypeIter.size()>0">
-			and t.ACCOUNT_TYPE in <foreach item="item" index="index" collection="propsMap.accountTypeIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.nickNameIter != null and propsMap.nickNameIter.size()>0">
-			and t.NICK_NAME in <foreach item="item" index="index" collection="propsMap.nickNameIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.onlineIter != null and propsMap.onlineIter.size()>0">
-			and t.ONLINE in <foreach item="item" index="index" collection="propsMap.onlineIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.saltIter != null and propsMap.saltIter.size()>0">
-			and t.SALT in <foreach item="item" index="index" collection="propsMap.saltIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.visitCountIter != null and propsMap.visitCountIter.size()>0">
-			and t.VISIT_COUNT in <foreach item="item" index="index" collection="propsMap.visitCountIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.visitIpIter != null and propsMap.visitIpIter.size()>0">
-			and t.VISIT_IP in <foreach item="item" index="index" collection="propsMap.visitIpIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
 	</sql>
@@ -118,20 +89,20 @@
 	<insert id="insertOneBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into
 		<include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, ACCOUNT_ID, ACCOUNT_PWD, ACCOUNT_STATUS, ACCOUNT_TYPE, NICK_NAME, ONLINE, SALT, VISIT_COUNT, VISIT_FIRST, VISIT_IP, VISIT_LAST, VISIT_PREVIOUS)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, ACCOUNT_ID, ACCOUNT_PWD, ACCOUNT_STATUS, ACCOUNT_TYPE, NICK_NAME, ONLINE, SALT, VISIT_COUNT, VISIT_FIRST, VISIT_IP, VISIT_LAST, VISIT_PREVIOUS)
 		values
-		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{tenantCode}, #{accountId}, #{accountPwd}, #{accountStatus}, #{accountType}, #{nickName}, #{online}, #{salt}, #{visitCount}, #{visitFirst}, #{visitIp}, #{visitLast}, #{visitPrevious})
+		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{accountId}, #{accountPwd}, #{accountStatus}, #{accountType}, #{nickName}, #{online}, #{salt}, #{visitCount}, #{visitFirst}, #{visitIp}, #{visitLast}, #{visitPrevious})
 	</insert>
 	<!-- 批量插入 -->
 	<insert id="insertListBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into <include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, ACCOUNT_ID, ACCOUNT_PWD, ACCOUNT_STATUS, ACCOUNT_TYPE, NICK_NAME, ONLINE, SALT, VISIT_COUNT, VISIT_FIRST, VISIT_IP, VISIT_LAST, VISIT_PREVIOUS)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, ACCOUNT_ID, ACCOUNT_PWD, ACCOUNT_STATUS, ACCOUNT_TYPE, NICK_NAME, ONLINE, SALT, VISIT_COUNT, VISIT_FIRST, VISIT_IP, VISIT_LAST, VISIT_PREVIOUS)
 		values
 		<foreach collection="list" item="item" index="index" separator=",">
 		(#{item.version},#{item.delFlag},#{item.createBy},#{item.createTime},#{item.updateBy},
-		#{item.updateTime},#{item.tenantCode},#{item.accountId},#{item.accountPwd},#{item.accountStatus},
-		#{item.accountType},#{item.nickName},#{item.online},#{item.salt},#{item.visitCount},
-		#{item.visitFirst},#{item.visitIp},#{item.visitLast},#{item.visitPrevious})
+		#{item.updateTime},#{item.accountId},#{item.accountPwd},#{item.accountStatus},#{item.accountType},
+		#{item.nickName},#{item.online},#{item.salt},#{item.visitCount},#{item.visitFirst},
+		#{item.visitIp},#{item.visitLast},#{item.visitPrevious})
 		</foreach>
 	</insert>
 	<!-- 更新 -->
@@ -143,7 +114,6 @@
 			<if test="entity.delFlag != null and entity.delFlag != ''"> DEL_FLAG = #{entity.delFlag},  </if>
 			<if test="entity.updateBy != null and entity.updateBy != ''"> UPDATE_BY = #{entity.updateBy},  </if>
 			<if test="entity.updateTime != null"> UPDATE_TIME = #{entity.updateTime},  </if>
-			<if test="entity.tenantCode != null and entity.tenantCode != ''"> TENANT_CODE = #{entity.tenantCode},  </if>
 			<if test="entity.accountId != null and entity.accountId != ''"> ACCOUNT_ID = #{entity.accountId},  </if>
 			<if test="entity.accountPwd != null and entity.accountPwd != ''"> ACCOUNT_PWD = #{entity.accountPwd},  </if>
 			<if test="entity.accountStatus != null and entity.accountStatus != ''"> ACCOUNT_STATUS = #{entity.accountStatus},  </if>
@@ -169,7 +139,6 @@
 			<if test="entityOld.createTime != null "><![CDATA[ and CREATE_TIME = #{entityOld.createTime}]]> </if>
 			<if test="entityOld.updateBy != null and entityOld.updateBy != ''"> and UPDATE_BY = #{entityOld.updateBy} </if>
 			<if test="entityOld.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entityOld.updateTime}]]> </if>
-			<if test="entityOld.tenantCode != null and entityOld.tenantCode != ''"> and TENANT_CODE = #{entityOld.tenantCode} </if>
 			<if test="entityOld.id != null and entityOld.id != ''"> and ID = #{entityOld.id} </if>
 			<if test="entityOld.accountId != null and entityOld.accountId != ''"> and ACCOUNT_ID = #{entityOld.accountId} </if>
 			<if test="entityOld.accountPwd != null and entityOld.accountPwd != ''"> and ACCOUNT_PWD = #{entityOld.accountPwd} </if>
@@ -186,38 +155,11 @@
 		</if>
 		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
-			and TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
 			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
 			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 			<if test="propsMap.accountIdIter != null and propsMap.accountIdIter.size()>0">
 			and ACCOUNT_ID in <foreach item="item" index="index" collection="propsMap.accountIdIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.accountPwdIter != null and propsMap.accountPwdIter.size()>0">
-			and ACCOUNT_PWD in <foreach item="item" index="index" collection="propsMap.accountPwdIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.accountStatusIter != null and propsMap.accountStatusIter.size()>0">
-			and ACCOUNT_STATUS in <foreach item="item" index="index" collection="propsMap.accountStatusIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.accountTypeIter != null and propsMap.accountTypeIter.size()>0">
-			and ACCOUNT_TYPE in <foreach item="item" index="index" collection="propsMap.accountTypeIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.nickNameIter != null and propsMap.nickNameIter.size()>0">
-			and NICK_NAME in <foreach item="item" index="index" collection="propsMap.nickNameIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.onlineIter != null and propsMap.onlineIter.size()>0">
-			and ONLINE in <foreach item="item" index="index" collection="propsMap.onlineIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.saltIter != null and propsMap.saltIter.size()>0">
-			and SALT in <foreach item="item" index="index" collection="propsMap.saltIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.visitCountIter != null and propsMap.visitCountIter.size()>0">
-			and VISIT_COUNT in <foreach item="item" index="index" collection="propsMap.visitCountIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.visitIpIter != null and propsMap.visitIpIter.size()>0">
-			and VISIT_IP in <foreach item="item" index="index" collection="propsMap.visitIpIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
 		</when>
@@ -242,7 +184,6 @@
 			<if test="entity.createTime != null "><![CDATA[ and CREATE_TIME = #{entity.createTime}]]> </if>
 			<if test="entity.updateBy != null and entity.updateBy != ''"> and UPDATE_BY = #{entity.updateBy} </if>
 			<if test="entity.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entity.updateTime}]]> </if>
-			<if test="entity.tenantCode != null and entity.tenantCode != ''"> and TENANT_CODE = #{entity.tenantCode} </if>
 			<if test="entity.id != null and entity.id != ''"> and ID = #{entity.id} </if>
 			<if test="entity.accountId != null and entity.accountId != ''"> and ACCOUNT_ID = #{entity.accountId} </if>
 			<if test="entity.accountPwd != null and entity.accountPwd != ''"> and ACCOUNT_PWD = #{entity.accountPwd} </if>
@@ -259,38 +200,11 @@
 		</if>
 		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
-			and TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
 			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
 			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 			<if test="propsMap.accountIdIter != null and propsMap.accountIdIter.size()>0">
 			and ACCOUNT_ID in <foreach item="item" index="index" collection="propsMap.accountIdIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.accountPwdIter != null and propsMap.accountPwdIter.size()>0">
-			and ACCOUNT_PWD in <foreach item="item" index="index" collection="propsMap.accountPwdIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.accountStatusIter != null and propsMap.accountStatusIter.size()>0">
-			and ACCOUNT_STATUS in <foreach item="item" index="index" collection="propsMap.accountStatusIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.accountTypeIter != null and propsMap.accountTypeIter.size()>0">
-			and ACCOUNT_TYPE in <foreach item="item" index="index" collection="propsMap.accountTypeIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.nickNameIter != null and propsMap.nickNameIter.size()>0">
-			and NICK_NAME in <foreach item="item" index="index" collection="propsMap.nickNameIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.onlineIter != null and propsMap.onlineIter.size()>0">
-			and ONLINE in <foreach item="item" index="index" collection="propsMap.onlineIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.saltIter != null and propsMap.saltIter.size()>0">
-			and SALT in <foreach item="item" index="index" collection="propsMap.saltIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.visitCountIter != null and propsMap.visitCountIter.size()>0">
-			and VISIT_COUNT in <foreach item="item" index="index" collection="propsMap.visitCountIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.visitIpIter != null and propsMap.visitIpIter.size()>0">
-			and VISIT_IP in <foreach item="item" index="index" collection="propsMap.visitIpIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
 		</when>

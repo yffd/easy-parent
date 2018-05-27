@@ -24,16 +24,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	$(function() {
 		$dg_left = $('#dg_id_left');
 		// 初始化控件数据
-		$.post('/uupm/combo/findDictTree', 
-				{'combo':'status,tenant-status,tenant-type,serve-type,rs-type'}, 
+		$.post('/uupm/ui/listComboTree', 
+				{'treeIds':'status,tenant-status,tenant-type,serve-type,rs-type'}, 
 				function(result) {
 					if("OK"==result.status) {
 						var jsonData = result.data;
-						$json_status = $json_status.concat(jsonData['combo']['status'][0]['children']);
-						$json_tenantStatus = $json_tenantStatus.concat(jsonData['combo']['tenant-status'][0]['children']);
-						$json_tenantType = $json_tenantType.concat(jsonData['combo']['tenant-type'][0]['children']);
-						$json_serveType = $json_serveType.concat(jsonData['combo']['serve-type'][0]['children']);
-						$json_rsType = $json_rsType.concat(jsonData['combo']['rs-type'][0]['children']);
+						$json_status = $json_status.concat(jsonData['status']);
+						$json_tenantStatus = $json_tenantStatus.concat(jsonData['tenant-status']);
+						$json_tenantType = $json_tenantType.concat(jsonData['tenant-type']);
+						$json_serveType = $json_serveType.concat(jsonData['serve-type']);
+						$json_rsType = $json_rsType.concat(jsonData['rs-type']);
 						// 初始化datagrid组件
 						makegrid_left();	
 						makegrid_right();
@@ -55,7 +55,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	// 初始化datagrid组件
 	function makegrid_left() {
 		$dg_left.datagrid({
-			url:'uupm/tenant/findPage',
+			url:'uupm/tenant/listPage',
 		    width: 'auto',
 		    height: $(this).height()-commonui.remainHeight-20-$('#tb_id_left').height(),
 			pagination: true,
@@ -102,7 +102,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	function makegrid_right() {
 		$dg_right = $('#dg_id_right');
 		$dg_right.treegrid({
-			url:'uupm/resource/findTreeAll',
+			url:'uupm/resource/listAllTree',
 		    width: 'auto',
 		    height: $(this).height()-commonui.remainHeight-20,
 			rownumbers: true,
@@ -137,7 +137,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			},
 	        columns: [[
 						{field: 'ck', checkbox: true},
-						{field: 'rsName', title: '名称', width:200,align: 'left'},
+						{field: 'rsName', title: '名称', width:300,align: 'left'},
 						{field: 'rsCode', title: '编号', width: 100, align: 'left'},
 						{field: 'treeId', title: '树ID', width: 100, align: 'left'},
 						{field: 'parentCode', title: '父编号', width: 100, align: 'left'},

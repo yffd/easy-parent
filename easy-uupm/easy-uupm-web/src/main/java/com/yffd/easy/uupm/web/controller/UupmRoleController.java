@@ -33,8 +33,8 @@ public class UupmRoleController extends UupmBaseController {
 	@Autowired
 	private UupmRoleService uupmRoleService;
 	
-	@RequestMapping(value="/findPage", method=RequestMethod.POST)
-	public RespData findPage(@RequestParam Map<String, Object> paramMap) {
+	@RequestMapping(value="/listPage", method=RequestMethod.POST)
+	public RespData listPage(@RequestParam Map<String, Object> paramMap) {
 		PageParam paramPage = this.getPageParam(paramMap);
 		UupmRoleEntity paramModel = this.getModelParam(paramMap, UupmRoleEntity.class);
 		PageResult<UupmRoleEntity> pageResult = this.uupmRoleService.findPage(paramModel, paramPage, getLoginInfo());
@@ -56,10 +56,10 @@ public class UupmRoleController extends UupmBaseController {
 	
 	@RequestMapping(value="/update", method=RequestMethod.POST)
 	public RespData update(UupmRoleEntity paramModel) {
-		if(EasyStringCheckUtils.isEmpty(paramModel.getId())) return this.errorAjax("参数无效");
-		UupmRoleEntity modelOld = new UupmRoleEntity();
-		modelOld.setId(paramModel.getId());
-		int result = this.uupmRoleService.update(paramModel, modelOld, getLoginInfo());
+		if(EasyStringCheckUtils.isEmpty(paramModel.getRoleCode())) return this.errorAjax("参数无效");
+		UupmRoleEntity oldModel = new UupmRoleEntity();
+		oldModel.setRoleCode(paramModel.getRoleCode());
+		int result = this.uupmRoleService.update(paramModel, oldModel, getLoginInfo());
 		if(result==0) return this.errorAjax("更新失败");
 		return this.successAjax();
 	}

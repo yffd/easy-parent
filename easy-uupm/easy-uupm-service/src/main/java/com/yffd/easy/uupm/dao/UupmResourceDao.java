@@ -18,8 +18,12 @@ import com.yffd.easy.uupm.entity.UupmResourceEntity;
 @Repository
 public class UupmResourceDao extends MybatisCommonDao<UupmResourceEntity> {
 
-	public Integer deleteByIds(Set<String> ids) {
+	public Integer delByIds(Set<String> ids) {
 		return this.deleteByProps("idIter", ids);
+	}
+	
+	public Integer delByRsCodes(Set<String> rsCodes) {
+		return this.deleteByProps("rsCodeIter", rsCodes);
 	}
 	
 }

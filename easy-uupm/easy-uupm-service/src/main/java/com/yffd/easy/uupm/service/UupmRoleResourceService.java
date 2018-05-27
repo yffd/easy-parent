@@ -35,7 +35,7 @@ public class UupmRoleResourceService extends UupmBaseService<UupmRoleResourceEnt
 	}
 
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-	public void saveRoleResource(String roleCode, List<String> rsCodesList, LoginInfo loginInfo) {
+	public int saveRoleResource(String roleCode, List<String> rsCodesList, LoginInfo loginInfo) {
 		this.delByRoleCode(roleCode, loginInfo);
 		List<UupmRoleResourceEntity> modelList = new ArrayList<UupmRoleResourceEntity>();
 		for(String rsCode : rsCodesList) {
@@ -44,7 +44,7 @@ public class UupmRoleResourceService extends UupmBaseService<UupmRoleResourceEnt
 			model.setRsCode(rsCode);
 			modelList.add(model);
 		}
-		this.save(modelList, loginInfo);
+		return this.save(modelList, loginInfo);
 	}
 	
 	public void delByRoleCode(String roleCode, LoginInfo loginInfo) {

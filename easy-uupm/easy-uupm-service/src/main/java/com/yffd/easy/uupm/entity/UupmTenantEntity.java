@@ -23,6 +23,7 @@ public class UupmTenantEntity extends CommonEntity {
 	
 	private static final long serialVersionUID = 1L;
 	
+	private String tenantCode;		//租户编号
 	private String tenantName;		//租户名称
 	private String tenantType;		//租户类型：1=运营中心、2=企业、3=个人、4=其它
 	private String tenantStatus;	//租户状态：1=初始化、2=试用中、3=生产中、4=已过期
@@ -30,6 +31,12 @@ public class UupmTenantEntity extends CommonEntity {
 	private Date startTime;			//租赁服务开始时间
 	private Date endTime;			//租赁服务结束时间
 	
+	public String getTenantCode() {
+		return tenantCode;
+	}
+	public void setTenantCode(String tenantCode) {
+		this.tenantCode = tenantCode;
+	}
 	public String getTenantName() {
 		return tenantName;
 	}

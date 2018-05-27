@@ -22,7 +22,7 @@
 						<th>账号状态：</th>
 						<td><input id="accountStatus_id" name="accountStatus" type="text"/></td>
 						<th></th>
-						<td><input name="accountType" type="hidden" value="admin"/></td>
+						<td></td>
 					</tr>
 				</table>
 			</fieldset>

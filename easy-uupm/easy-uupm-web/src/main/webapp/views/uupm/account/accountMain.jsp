@@ -22,15 +22,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	var $dg_account;
 	$(function() {
 		// 初始化控件数据
-		$.post('/uupm/combo/findDictTree', 
-				{'combo':'status,tenant-status,tenant-type,serve-type'}, 
+		$.post('/uupm/ui/listComboTree', 
+				{'treeIds':'status,tenant-status,tenant-type,serve-type'}, 
 				function(result) {
 					if("OK"==result.status) {
 						var jsonData = result.data;
-						$json_status = $json_status.concat(jsonData['combo']['status'][0]['children']);
-						$json_tenantStatus = $json_tenantStatus.concat(jsonData['combo']['tenant-status'][0]['children']);
-						$json_tenantType = $json_tenantType.concat(jsonData['combo']['tenant-type'][0]['children']);
-						$json_serveType = $json_serveType.concat(jsonData['combo']['serve-type'][0]['children']);
+						$json_status = $json_status.concat(jsonData['status']);
+						$json_tenantStatus = $json_tenantStatus.concat(jsonData['tenant-status']);
+						$json_tenantType = $json_tenantType.concat(jsonData['tenant-type']);
+						$json_serveType = $json_serveType.concat(jsonData['serve-type'][0]);
 						// 初始化datagrid组件
 						makeGrid_left();	
 						makeGrid_right();
@@ -42,7 +42,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	function makeGrid_left() {
 		$dg_tenant = $('#dg_id_left');
 		$dg_tenant.datagrid({
-		    url:'uupm/tenant/findPage',
+		    url:'uupm/tenant/listPage',
 		    width: 'auto',
 		    height: $(this).height()-commonui.remainHeight-$('#tb_id_left').height(),
 			pagination: true,
@@ -70,7 +70,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    	},
 	    	onClickRow: function(rowIndex, rowData) {
 	    		$('#searchbox_id_account').searchbox('setValue', '');
-	    		$dg_account.datagrid('options').url='uupm/account/findPage';
+	    		$dg_account.datagrid('options').url='uupm/account/listPage';
 	    		$dg_account.datagrid('reload', {tenantCode:rowData.tenantCode});
             },
 	        columns: [[

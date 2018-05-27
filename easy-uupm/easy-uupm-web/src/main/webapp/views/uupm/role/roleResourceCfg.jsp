@@ -21,13 +21,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	$(function() {
 		$dg_left = $('#dg_id_left');
 		// 初始化控件数据
-		$.post('/uupm/combo/findDictTree', 
-				{'combo':'status,rs-type'}, 
+		$.post('/uupm/ui/listComboTree', 
+				{'treeIds':'status,rs-type'}, 
 				function(result) {
 					if("OK"==result.status) {
 						var jsonData = result.data;
-						$json_status = $json_status.concat(jsonData['combo']['status'][0]['children']);
-						$json_rsType = $json_rsType.concat(jsonData['combo']['rs-type'][0]['children']);
+						$json_status = $json_status.concat(jsonData['status']);
+						$json_rsType = $json_rsType.concat(jsonData['rs-type']);
 						
 						makeGrid_left();	// 初始化datagrid组件
 						makeGrid_right();
@@ -49,7 +49,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	// 初始化组件
 	function makeGrid_left() {
 		$dg_left.datagrid({
-		    url:'uupm/role/findPage',
+		    url:'uupm/role/listPage',
 		    width: 'auto',
 		    height: $(this).height()-commonui.remainHeight-20-$('#tb_id_left').height(),
 			pagination: true,
@@ -196,7 +196,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	}
 	//双击事件
 	function findRoleResourceCodes(rowIndex, rowData) {
-		$.post("uupm/role/resource/findRoleResourceCodes", {'roleCode': rowData.roleCode}, function(result) {
+		$.post("uupm/role/resource/findRsCodesByRoleCode", {'roleCode': rowData.roleCode}, function(result) {
 			if(result.status=='OK') {
 				$dg_right.treegrid('unselectAll');
 				var data = result.data;

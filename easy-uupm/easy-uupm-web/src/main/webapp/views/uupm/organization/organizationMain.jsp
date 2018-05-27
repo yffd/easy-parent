@@ -63,8 +63,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						{field: 'parentCode', title: '父编号', width: 100, align: 'left'},
 						{field: 'parentName', title: '父名称', width: 100, align: 'left'},
 						{field: 'treeId', title: '树ID', width: 100, align: 'left'},
-						{field: 'seqNo', title: '类型', width: 100, align: 'left'},
-						{field: 'remark', title: '备注', width: 100, align: 'left'},
+						{field: 'seqNo', title: '类型', width: 100, align: 'left'}
 	                   ]]
 		});
 	}
@@ -76,18 +75,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
 	// 打开添加对话框
 	function openAddDlg() {
-		var gridData = $dg.treegrid('getData');
 		var row = $dg.treegrid('getSelected');
-		if(gridData && gridData.length>0) {
-			if(!row) {
-				$.messager.show({
-					title :commonui.msg_title,
-					msg : "请选择一行记录!",
-					timeout : commonui.msg_timeout
-				});
-				return;
-			}
-		}
 		parent.$.modalDialog({
 			title: "添加",
 			width: 800,
@@ -95,30 +83,34 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			href: 'views/uupm/organization/organizationEdit.jsp',
 			onLoad:function() {
 				var editForm = parent.$.modalDialog.handler.find("#form_id");
-				var parentName=editForm.find('input[name="parentName"]');
-				var parentCode=editForm.find('input[name="parentCode"]');
 				if(row) {
-					parentName.val(row.orgName);
-					parentName.attr('readonly',true);
-					parentCode.val(row.orgCode);
-					parentCode.attr('readonly',true);
+					editForm.find('input[name="treeId"]').val(row.treeId);
+					editForm.find('input[name="parentCode"]').val(row.orgCode);
+					editForm.find('input[name="parentName"]').val(row.orgName);
 				} else {
-					parentName.val("根节点");
-					parentName.attr('readonly',true);
-					parentCode.val("root");
-					parentCode.attr('readonly',true);
+					editForm.find('input[name="parentCode"]').val("root");
+					editForm.find('input[name="parentName"]').val("默认");
 				}
-				
 			},
 			buttons: [{
 				text: '确定',
 				iconCls: 'icon-ok',
 				handler: function() {
-					parent.$.modalDialog.openWindow = $openWindow;//定义打开对话框的窗口
-					parent.$.modalDialog.openner = $dg;//定义对话框关闭要刷新的组件
 					var editForm = parent.$.modalDialog.handler.find("#form_id");
-					editForm.attr("action", "uupm/organization/add");
-					editForm.submit();
+					var obj = utils.serializeObject(editForm);
+					var actionUrl = 'uupm/organization/addRoot';
+					if(row) actionUrl = 'uupm/organization/add';
+					$.post(actionUrl, obj, function(result) {
+						if("OK"==result.status) {
+							parent.$.modalDialog.handler.dialog('close');
+							$dg.treegrid('reload');
+				    	}
+						$.messager.show({
+							title :commonui.msg_title,
+							timeout : commonui.msg_timeout,
+							msg : result.msg
+						});
+					}, 'json');
 				}
 			},{
 				text: '取消',
@@ -144,18 +136,25 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					var editForm = parent.$.modalDialog.handler.find("#form_id");
 					editForm.form("load", row);
 					editForm.find('input[name="orgCode"]').attr('readonly',true);
-					editForm.find('input[name="parentName"]').attr('readonly',true);
-					editForm.find('input[name="parentCode"]').attr('readonly',true);
+					if(!row.parentName) editForm.find('input[name="parentName"]').val("默认");
 				},
 				buttons: [{
 					text: '确定',
 					iconCls: 'icon-ok',
 					handler: function() {
-						parent.$.modalDialog.openWindow = $openWindow;//定义打开对话框的窗口
-						parent.$.modalDialog.openner = $dg;//定义对话框关闭要刷新的组件
 						var editForm = parent.$.modalDialog.handler.find("#form_id");
-						editForm.attr("action", "uupm/organization/edit");
-						editForm.submit();
+						var obj = utils.serializeObject(editForm);
+						$.post('uupm/organization/update', obj, function(result) {
+							if("OK"==result.status) {
+								parent.$.modalDialog.handler.dialog('close');
+								$dg.treegrid('reload');
+					    	}
+							$.messager.show({
+								title :commonui.msg_title,
+								timeout : commonui.msg_timeout,
+								msg : result.msg
+							});
+						}, 'json');
 					}
 				},{
 					text: '取消',
@@ -181,9 +180,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		if(row) {
 			parent.$.messager.confirm("提示","确定要删除记录吗?",function(r){  
 			    if(r) {
-			    	var arr_id = iterNode(row);
-			    	var ids = arr_id.join(",");
-			    	$.post("uupm/organization/delBatch", {'ids':ids}, function(result) {
+			    	var actionUrl = 'uupm/organization/delTree';
+			    	var params = {};
+			    	if(row.parentCode=='root') {
+			    		params['treeId'] = row.treeId;
+			    	} else {
+			    		actionUrl = 'uupm/organization/delByIds';
+			    		var arr_id = iterNode(row);
+				    	var ids = arr_id.join(",");
+				    	params['ids'] = ids;
+			    	}
+			    	$.post(actionUrl, params, function(result) {
 						if(result.status=='OK') {
 							$dg.treegrid('remove', row.id);
 						}
