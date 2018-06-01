@@ -14,7 +14,7 @@ public class UupmBasePojo extends CommonEntity {
 	
 	private static final long serialVersionUID = 1L;
 	private String id;
-	private String tenantCode;	//租户编号
+	private String ttCode;	//租户编号
 	
 	public String getId() {
 		return id;
@@ -22,11 +22,11 @@ public class UupmBasePojo extends CommonEntity {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getTenantCode() {
-		return tenantCode;
+	public String getTtCode() {
+		return ttCode;
 	}
-	public void setTenantCode(String tenantCode) {
-		this.tenantCode = tenantCode;
+	public void setTtCode(String ttCode) {
+		this.ttCode = ttCode;
 	}
 	
 }

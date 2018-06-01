@@ -1,5 +1,7 @@
 package com.yffd.easy.uupm.pojo.vo;
 
+import java.util.Set;
+
 import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
 
 /**
@@ -13,14 +15,15 @@ import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
 public class UupmUserInfoVo extends UupmBasePojo {
 	
 	private static final long serialVersionUID = 1L;
-	private String userCode;		//用户编号
-	private String userName;		//用户名称
-	private String orgCode;			//机构编号
-	
+	private String userCode;
+	private String userName;
+	private String orgCode;
 	private String orgName;
+	
 	private String accountId;
-	private String accountStatus;
-	private String accountType;
+	
+	private Set<String> roleCodes;
+	private Set<String> rsCodes;
 	
 	public String getUserCode() {
 		return userCode;
@@ -52,18 +55,18 @@ public class UupmUserInfoVo extends UupmBasePojo {
 	public void setAccountId(String accountId) {
 		this.accountId = accountId;
 	}
-	public String getAccountStatus() {
-		return accountStatus;
+	public Set<String> getRoleCodes() {
+		return roleCodes;
 	}
-	public void setAccountStatus(String accountStatus) {
-		this.accountStatus = accountStatus;
+	public void setRoleCodes(Set<String> roleCodes) {
+		this.roleCodes = roleCodes;
 	}
-	public String getAccountType() {
-		return accountType;
+	public Set<String> getRsCodes() {
+		return rsCodes;
 	}
-	public void setAccountType(String accountType) {
-		this.accountType = accountType;
+	public void setRsCodes(Set<String> rsCodes) {
+		this.rsCodes = rsCodes;
 	}
-
+	
 }
 

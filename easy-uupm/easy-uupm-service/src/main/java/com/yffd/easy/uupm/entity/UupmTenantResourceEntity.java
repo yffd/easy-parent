@@ -20,14 +20,14 @@ import com.yffd.easy.framework.common.persist.entity.CommonEntity;
 public class UupmTenantResourceEntity extends CommonEntity {
 	
 	private static final long serialVersionUID = 1L;
-	private String tenantCode;	//租户编号
+	private String ttCode;		//租户编号
 	private String rsCode;		//系统资源编号
 	
-	public String getTenantCode() {
-		return tenantCode;
+	public String getTtCode() {
+		return ttCode;
 	}
-	public void setTenantCode(String tenantCode) {
-		this.tenantCode = tenantCode;
+	public void setTtCode(String ttCode) {
+		this.ttCode = ttCode;
 	}
 	public String getRsCode() {
 		return rsCode;

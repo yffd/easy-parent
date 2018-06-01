@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+    http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-4.2.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+    ">
+    
+	<!-- 配置JDBC事务管理器 -->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager" 
+        p:dataSource-ref="dataSource" />
+    
+    <!-- 启动spring事务注解，开启事务行为, true代表基于类的代理将起作用，否则是基于接口的代理起作用 -->
+	<tx:annotation-driven transaction-manager="txManager" proxy-target-class="true" />
+	
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+        	<tx:method name="save*" propagation="REQUIRED" read-only="false"/>
+        	<tx:method name="edit*" propagation="REQUIRED" read-only="false"/>
+        	<tx:method name="del*" propagation="REQUIRED" read-only="false"/>
+        	<tx:method name="remove*" propagation="REQUIRED" read-only="false"/>
+        	<tx:method name="insert*" propagation="REQUIRED" read-only="false"/>
+			<tx:method name="update*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>  
+			<tx:method name="delete*" propagation="REQUIRED" read-only="false"/>
+			<tx:method name="find*"  propagation="SUPPORTS" read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+ 	<!-- AOP配置--> 
+	<aop:config>
+		<aop:pointcut id="servicePointcut" expression="execution(public * com.yffd.easy.service..*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="servicePointcut" />
+	</aop:config>
+	
+	<!-- 配置Jdbc模板 -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"
+		p:dataSource-ref="dataSource" />
+		
+</beans>

@@ -21,9 +21,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yffd.easy.common.core.util.ValidUtils;
-import com.yffd.easy.framework.pojo.login.LoginInfo;
-import com.yffd.easy.framework.web.login.service.ILoginService;
 import com.yffd.easy.framework.web.mvc.WebController;
+import com.yffd.easy.framework.web.shiro.login.account.ShiroAccountInfo;
+import com.yffd.easy.framework.web.shiro.login.account.ShiroUserInfo;
+import com.yffd.easy.framework.web.shiro.login.service.ILoginService;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -41,18 +42,18 @@ public class PermissionRealm extends AuthorizingRealm {
 	
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-		LOG.info("=========shiro PermissionRealm [设置登录信息--角色、权限]");
+		LOG.info("=========shiro PermissionRealm [设置登录信息--角色、资源]");
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         Subject subject = SecurityUtils.getSubject();
 		Session session = subject.getSession();
-		LoginInfo loginInfo = (LoginInfo) session.getAttribute(WebController.KEY_SESSION_LOGIN_INFO);
-		if(null==loginInfo) return null;
+		ShiroUserInfo userInfo = (ShiroUserInfo) session.getAttribute(WebController.KEY_SESSION_LOGIN_INFO);
+		if(null==userInfo) return null;
 		// 设置角色
-		Set<String> roles = loginInfo.getRoles();
-		authorizationInfo.setRoles(roles);
-		// 设置权限
-		Set<String> resourceCodes = loginInfo.getResources();
-		authorizationInfo.setStringPermissions(resourceCodes);
+		Set<String> roleCodes = userInfo.getRoleCods();
+		authorizationInfo.setRoles(roleCodes);
+		// 设置资源
+		Set<String> rsCodes = userInfo.getRsCodes();
+		authorizationInfo.setStringPermissions(rsCodes);
         return authorizationInfo;
 	}
 
@@ -62,15 +63,14 @@ public class PermissionRealm extends AuthorizingRealm {
 		String accountId = (String)token.getPrincipal();
 		if(ValidUtils.isBlank(accountId)) throw new UnknownAccountException();// 没找到帐号
 		
-		LoginInfo loginInfo = this.loginService.getLoginInfo(accountId);
-		if(null==loginInfo) throw new UnknownAccountException();//没找到帐号
-		if("A".equals(loginInfo.getAccountStatus())) 
+		ShiroAccountInfo account = this.loginService.getAccountInfo(accountId);
+		if(null==account) throw new UnknownAccountException();//没找到帐号
+		if("active".equals(account.getAccountStatus())) 
 			throw new LockedAccountException(); //帐号锁定
-		String credentialsSalt = loginInfo.getAccountId() + loginInfo.getAccountSalt();
 		SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
-				loginInfo.getAccountId(), //账号
-				loginInfo.getAccountPwd(), //密码
-                ByteSource.Util.bytes(credentialsSalt),//salt=accountId+salt
+				account.getAccountId(), //账号
+				account.getAccountPwd(), //密码
+                ByteSource.Util.bytes(account.getCredentialsSalt()),
                 getName()  //realm name
         );
         return authenticationInfo;

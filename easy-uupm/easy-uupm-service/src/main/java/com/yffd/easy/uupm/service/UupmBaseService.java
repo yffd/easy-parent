@@ -18,9 +18,9 @@ public abstract class UupmBaseService<POJO> extends CommonServiceImpl<POJO> {
 		if(null==pojo) return;
 		if(pojo instanceof UupmBasePojo) {
 			UupmBasePojo model = (UupmBasePojo) pojo;
-			if(null!=loginInfo && EasyStringCheckUtils.isEmpty(model.getTenantCode()))
-				model.setTenantCode(loginInfo.getTenantCode());
-			if(EasyStringCheckUtils.isEmpty(model.getTenantCode())) 
+			if(null!=loginInfo && EasyStringCheckUtils.isEmpty(model.getTtCode()))
+				model.setTtCode(loginInfo.getTtCode());
+			if(EasyStringCheckUtils.isEmpty(model.getTtCode())) 
 				LOG.warn("租户信息未指定");
 		}
 	}
@@ -34,9 +34,9 @@ public abstract class UupmBaseService<POJO> extends CommonServiceImpl<POJO> {
 			model.setDelFlag("0");
 			model.setCreateTime(new Date());
 			if(null!=loginInfo) model.setCreateBy(loginInfo.getUserCode());
-			if(null!=loginInfo && EasyStringCheckUtils.isEmpty(model.getTenantCode()))
-				model.setTenantCode(loginInfo.getTenantCode());
-			if(EasyStringCheckUtils.isEmpty(model.getTenantCode())) 
+			if(null!=loginInfo && EasyStringCheckUtils.isEmpty(model.getTtCode()))
+				model.setTtCode(loginInfo.getTtCode());
+			if(EasyStringCheckUtils.isEmpty(model.getTtCode())) 
 				LOG.warn("租户信息未指定");
 		} else if(pojo instanceof CommonEntity) {
 			CommonEntity model = (CommonEntity) pojo;
@@ -54,9 +54,9 @@ public abstract class UupmBaseService<POJO> extends CommonServiceImpl<POJO> {
 			UupmBasePojo model = (UupmBasePojo) pojo;
 			model.setUpdateTime(new Date());
 			if(null!=loginInfo) model.setCreateBy(loginInfo.getUserCode());
-			if(null!=loginInfo && EasyStringCheckUtils.isEmpty(model.getTenantCode()))
-				model.setTenantCode(loginInfo.getTenantCode());
-			if(EasyStringCheckUtils.isEmpty(model.getTenantCode())) 
+			if(null!=loginInfo && EasyStringCheckUtils.isEmpty(model.getTtCode()))
+				model.setTtCode(loginInfo.getTtCode());
+			if(EasyStringCheckUtils.isEmpty(model.getTtCode())) 
 				LOG.warn("租户信息未指定");
 		} else if(pojo instanceof CommonEntity) {
 			CommonEntity model = (CommonEntity) pojo;
@@ -70,17 +70,17 @@ public abstract class UupmBaseService<POJO> extends CommonServiceImpl<POJO> {
 		if(null==pojo) return;
 		if(pojo instanceof UupmBasePojo) {
 			UupmBasePojo model = (UupmBasePojo) pojo;
-			if(null!=loginInfo && EasyStringCheckUtils.isEmpty(model.getTenantCode()))
-				model.setTenantCode(loginInfo.getTenantCode());
-			if(EasyStringCheckUtils.isEmpty(model.getTenantCode())) 
+			if(null!=loginInfo && EasyStringCheckUtils.isEmpty(model.getTtCode()))
+				model.setTtCode(loginInfo.getTtCode());
+			if(EasyStringCheckUtils.isEmpty(model.getTtCode())) 
 				LOG.warn("租户信息未指定");
 		}
 	}
 	
 	public void beforeSetPropertiesForQuery(UupmBasePojo pojo, LoginInfo loginInfo) {
-		if(null!=loginInfo && EasyStringCheckUtils.isEmpty(pojo.getTenantCode()))
-			pojo.setTenantCode(loginInfo.getTenantCode());
-		if(EasyStringCheckUtils.isEmpty(pojo.getTenantCode())) 
+		if(null!=loginInfo && EasyStringCheckUtils.isEmpty(pojo.getTtCode()))
+			pojo.setTtCode(loginInfo.getTtCode());
+		if(EasyStringCheckUtils.isEmpty(pojo.getTtCode())) 
 			LOG.warn("租户信息未指定");
 	}
 

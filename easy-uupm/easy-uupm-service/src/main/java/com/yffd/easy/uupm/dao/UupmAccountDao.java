@@ -4,7 +4,6 @@ import org.springframework.stereotype.Repository;
 
 import com.yffd.easy.framework.common.persist.mybatis.dao.MybatisCommonDao;
 import com.yffd.easy.uupm.entity.UupmAccountEntity;
-import com.yffd.easy.uupm.pojo.vo.UupmLoginInfoVo;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -17,8 +16,4 @@ import com.yffd.easy.uupm.pojo.vo.UupmLoginInfoVo;
 @Repository
 public class UupmAccountDao extends MybatisCommonDao<UupmAccountEntity> {
 
-	public UupmLoginInfoVo findLoginInfo(UupmLoginInfoVo loginInfoVo) {
-		return this.selectOneByCustom("findLoginInfo", loginInfoVo, true);
-	}
-	
 }

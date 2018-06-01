@@ -39,29 +39,29 @@ public class UupmTenantResourceController extends UupmBaseController {
 	// 租户资源授权
 	@RequestMapping(value="/saveTenantResource", method=RequestMethod.POST)
 	public RespData saveTenantResource(HttpServletRequest req) {
-		String tenantCode = req.getParameter("tenantCode");
+		String ttCode = req.getParameter("ttCode");
 		String rsCodes = req.getParameter("rsCodes");
-		if(EasyStringCheckUtils.isEmpty(tenantCode) || EasyStringCheckUtils.isEmpty(rsCodes)) return this.errorAjax("参数错误");
+		if(EasyStringCheckUtils.isEmpty(ttCode) || EasyStringCheckUtils.isEmpty(rsCodes)) return this.errorAjax("参数错误");
 		List<String> rsCodesList = JSON.parseArray(rsCodes, String.class);
 		if(null==rsCodesList || rsCodesList.size()==0) return this.errorAjax("参数错误");
-		int result = this.uupmTenantResourceService.saveTenantResource(tenantCode, rsCodesList, getLoginInfo());
+		int result = this.uupmTenantResourceService.saveTenantResource(ttCode, rsCodesList, getLoginInfo());
 		if(result==0) return this.errorAjax("授权失败");
 		return this.successAjax();
 	}
 		
 	// 查找某租户已拥有的资源编号
 	@RequestMapping(value="/findTenantResourceCodes", method=RequestMethod.POST)
-	public RespData findTenantResourceCodes(String tenantCode) {
-		if(EasyStringCheckUtils.isEmpty(tenantCode)) return this.errorAjax("参数错误");
-		Set<String> result = this.uupmTenantResourceService.findRsCodesByTenantCode(tenantCode);
+	public RespData findTenantResourceCodes(String ttCode) {
+		if(EasyStringCheckUtils.isEmpty(ttCode)) return this.errorAjax("参数错误");
+		Set<String> result = this.uupmTenantResourceService.findRsCodesByTtCode(ttCode);
 		return this.successAjax(result);
 	}
 	
 	// 当前登录租户所拥有的所有资源
 	@RequestMapping(value="/findTenantResource", method=RequestMethod.POST)
 	public RespData findTenantResource() {
-		String tenantCode = this.getLoginInfo().getTenantCode();
-		List<UupmResourceEntity> result = this.uupmTenantResourceService.findTenantResource(tenantCode);
+		String ttCode = this.getLoginInfo().getTtCode();
+		List<UupmResourceEntity> result = this.uupmTenantResourceService.findTenantResource(ttCode);
 		if(null!=result && !result.isEmpty()) {
 			List<UupmUIResTreeVo> treeList = this.uupmResourceModelFactory.buildMultiTree(result);
 			return this.successAjax(treeList);

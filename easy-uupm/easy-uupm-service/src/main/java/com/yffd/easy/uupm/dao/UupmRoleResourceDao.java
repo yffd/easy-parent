@@ -23,4 +23,8 @@ public class UupmRoleResourceDao extends MybatisCommonDao<UupmRoleResourceEntity
 		return this.selectListByProps("roleCodeIter", roleCodes, null);
 	}
 
+	public Integer delByRsCodes(Set<String> rsCodes) {
+		return this.deleteByProps("rsCodeIter", rsCodes);
+	}
+	
 }

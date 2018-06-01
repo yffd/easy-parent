@@ -12,7 +12,7 @@
 	<!-- 列名 -->
 	<sql id="table_columns">
 		t.VERSION as version, t.DEL_FLAG as delFlag, t.CREATE_BY as createBy, t.CREATE_TIME as createTime, t.UPDATE_BY as updateBy, 
-		t.UPDATE_TIME as updateTime, t.TENANT_CODE as tenantCode, t.ID as id, t.ROLE_CODE as roleCode, t.RS_CODE as rsCode
+		t.UPDATE_TIME as updateTime, t.ID as id, t.TT_CODE as ttCode, t.ROLE_CODE as roleCode, t.RS_CODE as rsCode
 	</sql>
 	<!-- 分页条件 -->
 	<sql id="conditions_limit"><if test="page != null"> limit #{page.startIndex}, #{page.pageLimit} </if></sql>
@@ -33,7 +33,7 @@
 			<if test="entity.createTime != null "><![CDATA[ and t.CREATE_TIME = #{entity.createTime}]]> </if>
 			<if test="entity.updateBy != null and entity.updateBy != ''"> and t.UPDATE_BY = #{entity.updateBy} </if>
 			<if test="entity.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{entity.updateTime}]]> </if>
-			<if test="entity.tenantCode != null and entity.tenantCode != ''"> and t.TENANT_CODE = #{entity.tenantCode} </if>
+			<if test="entity.ttCode != null and entity.ttCode != ''"> and t.TT_CODE = #{entity.ttCode} </if>
 			<if test="entity.id != null and entity.id != ''"> and t.ID = #{entity.id} </if>
 			<if test="entity.roleCode != null and entity.roleCode != ''"> and t.ROLE_CODE = #{entity.roleCode} </if>
 			<if test="entity.rsCode != null and entity.rsCode != ''"> and t.RS_CODE = #{entity.rsCode} </if>
@@ -41,7 +41,7 @@
 		<if test="propsMap != null">
 			<!-- In query -->
 			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
-			and t.TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
+			and t.TT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
 			and t.ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
@@ -84,18 +84,18 @@
 	<insert id="insertOneBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into
 		<include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, ROLE_CODE, RS_CODE)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TT_CODE, ROLE_CODE, RS_CODE)
 		values
-		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{tenantCode}, #{roleCode}, #{rsCode})
+		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{ttCode}, #{roleCode}, #{rsCode})
 	</insert>
 	<!-- 批量插入 -->
 	<insert id="insertListBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into <include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, ROLE_CODE, RS_CODE)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TT_CODE, ROLE_CODE, RS_CODE)
 		values
 		<foreach collection="list" item="item" index="index" separator=",">
 		(#{item.version},#{item.delFlag},#{item.createBy},#{item.createTime},#{item.updateBy},
-		#{item.updateTime},#{item.tenantCode},#{item.roleCode},#{item.rsCode})
+		#{item.updateTime},#{item.ttCode},#{item.roleCode},#{item.rsCode})
 		</foreach>
 	</insert>
 	<!-- 更新 -->
@@ -107,7 +107,7 @@
 			<if test="entity.delFlag != null and entity.delFlag != ''"> DEL_FLAG = #{entity.delFlag},  </if>
 			<if test="entity.updateBy != null and entity.updateBy != ''"> UPDATE_BY = #{entity.updateBy},  </if>
 			<if test="entity.updateTime != null"> UPDATE_TIME = #{entity.updateTime},  </if>
-			<if test="entity.tenantCode != null and entity.tenantCode != ''"> TENANT_CODE = #{entity.tenantCode},  </if>
+			<if test="entity.ttCode != null and entity.ttCode != ''"> TT_CODE = #{entity.ttCode},  </if>
 			<if test="entity.roleCode != null and entity.roleCode != ''"> ROLE_CODE = #{entity.roleCode},  </if>
 			<if test="entity.rsCode != null and entity.rsCode != ''"> RS_CODE = #{entity.rsCode},  </if>
 		</if>
@@ -123,7 +123,7 @@
 			<if test="entityOld.createTime != null "><![CDATA[ and CREATE_TIME = #{entityOld.createTime}]]> </if>
 			<if test="entityOld.updateBy != null and entityOld.updateBy != ''"> and UPDATE_BY = #{entityOld.updateBy} </if>
 			<if test="entityOld.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entityOld.updateTime}]]> </if>
-			<if test="entityOld.tenantCode != null and entityOld.tenantCode != ''"> and TENANT_CODE = #{entityOld.tenantCode} </if>
+			<if test="entityOld.ttCode != null and entityOld.ttCode != ''"> and TT_CODE = #{entityOld.ttCode} </if>
 			<if test="entityOld.id != null and entityOld.id != ''"> and ID = #{entityOld.id} </if>
 			<if test="entityOld.roleCode != null and entityOld.roleCode != ''"> and ROLE_CODE = #{entityOld.roleCode} </if>
 			<if test="entityOld.rsCode != null and entityOld.rsCode != ''"> and RS_CODE = #{entityOld.rsCode} </if>
@@ -131,7 +131,7 @@
 		<if test="propsMap != null">
 			<!-- In query -->
 			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
-			and TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
+			and TT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
 			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
@@ -165,7 +165,7 @@
 			<if test="entity.createTime != null "><![CDATA[ and CREATE_TIME = #{entity.createTime}]]> </if>
 			<if test="entity.updateBy != null and entity.updateBy != ''"> and UPDATE_BY = #{entity.updateBy} </if>
 			<if test="entity.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entity.updateTime}]]> </if>
-			<if test="entity.tenantCode != null and entity.tenantCode != ''"> and TENANT_CODE = #{entity.tenantCode} </if>
+			<if test="entity.ttCode != null and entity.ttCode != ''"> and TT_CODE = #{entity.ttCode} </if>
 			<if test="entity.id != null and entity.id != ''"> and ID = #{entity.id} </if>
 			<if test="entity.roleCode != null and entity.roleCode != ''"> and ROLE_CODE = #{entity.roleCode} </if>
 			<if test="entity.rsCode != null and entity.rsCode != ''"> and RS_CODE = #{entity.rsCode} </if>
@@ -173,7 +173,7 @@
 		<if test="propsMap != null">
 			<!-- In query -->
 			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
-			and TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
+			and TT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
 			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>

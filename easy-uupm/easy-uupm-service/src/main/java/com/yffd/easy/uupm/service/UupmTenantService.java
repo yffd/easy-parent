@@ -51,14 +51,14 @@ public class UupmTenantService extends UupmBaseService<UupmTenantEntity> {
 	}
 
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-	public Integer delByTenantCode(String tenantCode, LoginInfo loginInfo) {
-		if(EasyStringCheckUtils.isEmpty(tenantCode)) 
+	public Integer delByTtCode(String ttCode, LoginInfo loginInfo) {
+		if(EasyStringCheckUtils.isEmpty(ttCode)) 
 			throw CommonBizException.BIZ_PARAMS_IS_EMPTY();
 		UupmTenantEntity model = new UupmTenantEntity();
-		model.setTenantCode(tenantCode);
+		model.setTtCode(ttCode);
 		int num = this.delete(model, loginInfo);
 		
-		this.uupmTenantResourceService.delByTenantCode(tenantCode);
+		this.uupmTenantResourceService.delByTtCode(ttCode);
 		return num;
 	}
 	

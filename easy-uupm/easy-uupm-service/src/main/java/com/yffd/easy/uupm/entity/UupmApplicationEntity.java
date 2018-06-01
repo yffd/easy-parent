@@ -6,7 +6,7 @@
 
 package com.yffd.easy.uupm.entity;
 
-import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
+import com.yffd.easy.framework.common.persist.entity.CommonEntity;
 
 /**
  * 
@@ -17,7 +17,7 @@ import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
  * @since		 JDK 1.7+
  * @see
  */
-public class UupmApplicationEntity extends UupmBasePojo {
+public class UupmApplicationEntity extends CommonEntity {
 	
 	private static final long serialVersionUID = 1L;
 	private String appCode;			//应用系统编号

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.yffd.easy.common.core.util.EasyStringCheckUtils;
+import com.yffd.easy.framework.common.exception.CommonBizException;
 import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
 import com.yffd.easy.framework.pojo.login.LoginInfo;
 import com.yffd.easy.uupm.dao.UupmUserRoleDao;
@@ -51,21 +53,11 @@ public class UupmUserRoleService extends UupmBaseService<UupmUserRoleEntity> {
 		this.delete(entity, loginInfo);
 	}
 	
-//	public List<UupmUserRoleEntity> findRoles(UupmUserRoleEntity paramModel) {
-//		if(null==paramModel || EasyStringCheckUtils.isEmpty(paramModel.getUserCode()))
-//			throw CommonBizException.BIZ_PARAMS_IS_EMPTY();
-//		List<UupmUserRoleEntity> resultList = this.findList(paramModel);
-//		return resultList;
-//	}
-//	public Set<String> findRoleCodes(UupmUserRoleModel paramModel) {
-//		if(null==paramModel || EasyStringCheckUtils.isEmpty(paramModel.getUserCode())) {}
-//		List<UupmUserRoleModel> resultList = this.findList(paramModel, null);
-//		if(null==resultList || resultList.size()==0) return null;
-//		Set<String> roleCodes = new HashSet<String>();
-//		for(UupmUserRoleModel model : resultList) {
-//			roleCodes.add(model.getRoleCode());
-//		}
-//		return roleCodes;
-//	}
+	public int delByRoleCode(String roleCode, LoginInfo loginInfo) {
+		if(EasyStringCheckUtils.isEmpty(roleCode)) throw CommonBizException.BIZ_PARAMS_IS_EMPTY();
+		UupmUserRoleEntity model = new UupmUserRoleEntity();
+		model.setRoleCode(roleCode);
+		return this.delete(model, loginInfo);
+	}
 	
 }

@@ -31,7 +31,7 @@ public class UupmBaseController extends WebDataController {
 	protected LoginInfo getLoginInfo() {
 		LoginInfo info = new LoginInfo();
 		info.setUserCode("sys");
-		info.setTenantCode("dft");
+		info.setTtCode("dft");
 		return info;
 	}
 

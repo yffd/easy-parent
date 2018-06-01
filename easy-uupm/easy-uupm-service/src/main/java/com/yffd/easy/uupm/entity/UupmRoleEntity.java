@@ -22,7 +22,7 @@ public class UupmRoleEntity extends UupmBasePojo {
 	private static final long serialVersionUID = 1L;
 	private String roleCode;	//角色编号
 	private String roleName;	//角色名称
-	private String roleStatus;	//角色状态：1=激活、0=冻结
+	private String roleStatus;	//角色状态
 	private String remark;		//备注
 	
 	public String getRoleCode() {

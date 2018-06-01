@@ -14,9 +14,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <script type="text/javascript">
 	var $json_status = [ {id:"", text:"全部", "selected": true} ];
-	var $json_tenantStatus = [ {id:"", text:"全部", "selected": true} ];
-	var $json_tenantType = [ {id:"", text:"全部", "selected": true} ];
-	var $json_serveType = [ {id:"", text:"全部", "selected": true} ];
 	var $json_rsType = [ {id:"", text:"全部", "selected": true} ];
 	var $openWindow = this;// 当前窗口
 	var $dg_left;
@@ -25,14 +22,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		$dg_left = $('#dg_id_left');
 		// 初始化控件数据
 		$.post('/uupm/ui/listComboTree', 
-				{'treeIds':'status,tenant-status,tenant-type,serve-type,rs-type'}, 
+				{'treeIds':'status,rs-type'}, 
 				function(result) {
 					if("OK"==result.status) {
 						var jsonData = result.data;
 						$json_status = $json_status.concat(jsonData['status']);
-						$json_tenantStatus = $json_tenantStatus.concat(jsonData['tenant-status']);
-						$json_tenantType = $json_tenantType.concat(jsonData['tenant-type']);
-						$json_serveType = $json_serveType.concat(jsonData['serve-type']);
 						$json_rsType = $json_rsType.concat(jsonData['rs-type']);
 						// 初始化datagrid组件
 						makegrid_left();	
@@ -84,18 +78,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		findTenantResourceCodes(rowIndex, rowData);
             },
 	        columns: [[
-						{field: 'tenantName', title: '名称', width: 200, align: 'left'},
-						{field: 'tenantCode', title: '编号', width: 100, align: 'left'},
-						{field: 'tenantType', title: '类型', width: 100, align: 'left',
-							formatter: function(value, row) {
-								return utils.fmtDict($json_tenantType, value);
-							}	
-						},
-						{field: 'tenantStatus', title: '状态', width: 100, align: 'left',
-							formatter: function(value, row) {
-								return utils.fmtDict($json_tenantStatus, value);
-							}
-						}
+						{field: 'ttName', title: '租户名称', width: 200, align: 'left'},
+						{field: 'ttCode', title: '租户编号', width: 100, align: 'left'}
 	                   ]]
 		});
 	}
@@ -178,8 +162,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							rsCodeArr.push(obj['rsCode']);
 						});
 					}
-					var tenant_code = row_tenant.tenantCode;
-					var data={"tenantCode":tenant_code, "rsCodes": JSON.stringify(rsCodeArr)};
+					var tenant_code = row_tenant.ttCode;
+					var data={"ttCode":tenant_code, "rsCodes": JSON.stringify(rsCodeArr)};
 					$.post("uupm/tenant/resource/saveTenantResource", data, function(result) {
 						$.messager.show({
 							title :commonui.msg_title,
@@ -205,7 +189,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	}
 	//双击事件
 	function findTenantResourceCodes(rowIndex, rowData) {
-		$.post("uupm/tenant/resource/findTenantResourceCodes", {tenantCode:rowData.tenantCode}, function(result) {
+		$.post("uupm/tenant/resource/findTenantResourceCodes", {ttCode:rowData.ttCode}, function(result) {
 			if(result.status=='OK') {
 				$dg_right.treegrid('unselectAll');
 				var data = result.data;
@@ -304,8 +288,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<table id="dg_id_left"></table>
 		
 		<div id="mm_id_left">
-			<div name="tenantName">&nbsp;&nbsp;名称&nbsp;&nbsp;&nbsp;&nbsp;</div>
-			<div name="tenantCode">&nbsp;&nbsp;编号&nbsp;&nbsp;&nbsp;&nbsp;</div>
+			<div name="ttName">&nbsp;&nbsp;名称&nbsp;&nbsp;&nbsp;&nbsp;</div>
+			<div name="ttCode">&nbsp;&nbsp;编号&nbsp;&nbsp;&nbsp;&nbsp;</div>
 		</div>
     </div>
 

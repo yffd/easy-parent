@@ -20,9 +20,9 @@ import com.yffd.easy.uupm.entity.UupmTenantResourceEntity;
 @Repository
 public class UupmTenantResourceDao extends MybatisCommonDao<UupmTenantResourceEntity> {
 
-	public List<UupmResourceEntity> selectTenantResource(String tenantCode) {
+	public List<UupmResourceEntity> selectTenantResource(String ttCode) {
 		UupmTenantResourceEntity entity = new UupmTenantResourceEntity();
-		entity.setTenantCode(tenantCode);
+		entity.setTtCode(ttCode);
 		return this.selectListByCustom("selectTenantResource", entity, true);
 	}
 	

@@ -29,21 +29,21 @@ public class UupmMenuService extends UupmBaseService<UupmMenuEntity> {
 		return uupmMenuDao;
 	}
 	
-	public List<UupmMenuInfoVo> findMenuList(String tenantCode, String parentCode) {
+	public List<UupmMenuInfoVo> findMenuList(String ttCode, String parentCode) {
 		UupmMenuInfoVo menuInfoVo = new UupmMenuInfoVo();
-		menuInfoVo.setTenantCode(tenantCode);
+		menuInfoVo.setTtCode(ttCode);
 		menuInfoVo.setParentCode(parentCode);
 		return this.uupmMenuDao.findMenuInfoList(menuInfoVo);
 	}
 	
-//	public int addMenuForAdmin(String tenantCode) {
-//		List<UupmMenuInfoVo> list = this.findMenuInfoForAdmin(tenantCode);
+//	public int addMenuForAdmin(String ttCode) {
+//		List<UupmMenuInfoVo> list = this.findMenuInfoForAdmin(ttCode);
 //		if(null==list || list.size()==0) return 0;
 //		List<UupmMenuEntity> modelList = new ArrayList<UupmMenuEntity>();
 //		for(UupmMenuInfoVo vo : list) {
 //			try {
 //				UupmMenuEntity model = EasyJavaBeanUtils.copyProperties(vo, UupmMenuEntity.class);
-//				model.setTenantCode(tenantCode);
+//				model.setTenantCode(ttCode);
 ////			String nodeLabel = (String) map.get("nodeLabel");
 ////			String parentCode = (String) map.get("parentCode");
 ////			if(nodeLabel.equals(parentCode)) {
@@ -60,14 +60,14 @@ public class UupmMenuService extends UupmBaseService<UupmMenuEntity> {
 //		return this.save(modelList);
 //	}
 	
-//	public int addMenuForOther(String tenantCode) {
-//		List<UupmMenuInfoVo> list = this.findMenuInfoForDefault(tenantCode);
+//	public int addMenuForOther(String ttCode) {
+//		List<UupmMenuInfoVo> list = this.findMenuInfoForDefault(ttCode);
 //		if(null==list || list.size()==0) return 0;
 //		List<UupmMenuEntity> modelList = new ArrayList<UupmMenuEntity>();
 //		for(UupmMenuInfoVo vo : list) {
 //			try {
 //				UupmMenuEntity model = EasyJavaBeanUtils.copyProperties(vo, UupmMenuEntity.class);
-//				model.setTenantCode(tenantCode);
+//				model.setTenantCode(ttCode);
 ////			String nodeLabel = (String) map.get("nodeLabel");
 ////			String parentCode = (String) map.get("parentCode");
 ////			if(nodeLabel.equals(parentCode)) {
@@ -84,15 +84,15 @@ public class UupmMenuService extends UupmBaseService<UupmMenuEntity> {
 //		return this.save(modelList);
 //	}
 	
-	public List<UupmMenuInfoVo> findMenuInfoForAdmin(String tenantCode) {
+	public List<UupmMenuInfoVo> findMenuInfoForAdmin(String ttCode) {
 		UupmMenuInfoVo menuInfoVo = new UupmMenuInfoVo();
-		menuInfoVo.setTenantCode(tenantCode);
+		menuInfoVo.setTtCode(ttCode);
 		return this.uupmMenuDao.findMenuInfoForAdminList(menuInfoVo);
 	}
 	
-	public List<UupmMenuInfoVo> findMenuInfoForDefault(String tenantCode) {
+	public List<UupmMenuInfoVo> findMenuInfoForDefault(String ttCode) {
 		UupmMenuInfoVo menuInfoVo = new UupmMenuInfoVo();
-		menuInfoVo.setTenantCode(tenantCode);
+		menuInfoVo.setTtCode(ttCode);
 		return this.uupmMenuDao.findMenuInfoForDefaultList(menuInfoVo);
 	}
 	

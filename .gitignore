@@ -30,3 +30,4 @@ easy-framework-web/.settings/
 .settings/
 *.classpath
 *.gitignore
+easy-uupm/easy-uupm-interface/target/

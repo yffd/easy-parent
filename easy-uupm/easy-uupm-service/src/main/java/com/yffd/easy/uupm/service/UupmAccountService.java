@@ -1,9 +1,5 @@
 package com.yffd.easy.uupm.service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +9,6 @@ import com.yffd.easy.framework.pojo.page.PageParam;
 import com.yffd.easy.framework.pojo.page.PageResult;
 import com.yffd.easy.uupm.dao.UupmAccountDao;
 import com.yffd.easy.uupm.entity.UupmAccountEntity;
-import com.yffd.easy.uupm.entity.UupmOrganizationEntity;
-import com.yffd.easy.uupm.entity.UupmUserRoleEntity;
-import com.yffd.easy.uupm.pojo.vo.UupmLoginInfoVo;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -50,11 +43,13 @@ public class UupmAccountService extends UupmBaseService<UupmAccountEntity> {
 	
 	public int addTenantAccount(UupmAccountEntity entity, LoginInfo loginInfo) {
 		entity.setAccountType("tenant");
+		entity.setAccountStatus("active");
 		return this.save(entity, loginInfo);
 	}
 	
-	public int addDefaultAccount(UupmAccountEntity entity, LoginInfo loginInfo) {
-		entity.setAccountType("default");
+	public int addUserAccount(UupmAccountEntity entity, LoginInfo loginInfo) {
+		entity.setAccountType("user");
+		entity.setAccountStatus("active");
 		return this.save(entity, loginInfo);
 	}
 	

@@ -18,6 +18,7 @@
   	<easy.framework.pojo.version>0.0.1-SNAPSHOT</easy.framework.pojo.version>
   	<!-- spring -->
 	<spring.version>4.2.6.RELEASE</spring.version>
+	<!-- aop -->
 	<aspectjweaver.version>1.8.0</aspectjweaver.version>
     <!-- mybatis -->
 	<mybatis.version>3.4.0</mybatis.version>
@@ -74,13 +75,13 @@
 		<version>${spring.version}</version>
 	</dependency>
 	<!-- Spring end -->
-	
+	<!-- aop begin -->
 	<dependency>
 		<groupId>org.aspectj</groupId>
 		<artifactId>aspectjweaver</artifactId>
 		<version>${aspectjweaver.version}</version>
 	</dependency>
-		
+	<!-- aop end -->	
   	<!-- mybatis begin -->
 	<dependency>
 		<groupId>org.mybatis</groupId>

@@ -35,6 +35,7 @@ public class UupmUITreeService extends UupmBaseService<UupmUITreeEntity> {
 	public Integer deleteByIds(String idStr) {
 		if(EasyStringCheckUtils.isEmpty(idStr)) return 0;
 		String[] idsArr = idStr.split(",");
+		if(idsArr.length==0) return 0;
 		List<String> idsList = Arrays.asList(idsArr);
 		Set<String> ids = new HashSet<String>(idsList);
 		return this.uupmUITreeDao.deleteByIds(ids);

@@ -12,8 +12,8 @@
 	<!-- 列名 -->
 	<sql id="table_columns">
 		t.VERSION as version, t.DEL_FLAG as delFlag, t.CREATE_BY as createBy, t.CREATE_TIME as createTime, t.UPDATE_BY as updateBy, 
-		t.UPDATE_TIME as updateTime, t.TENANT_CODE as tenantCode, t.ID as id, t.END_TIME as endTime, t.SERVE_TYPE as serveType, 
-		t.START_TIME as startTime, t.TENANT_NAME as tenantName, t.TENANT_STATUS as tenantStatus, t.TENANT_TYPE as tenantType
+		t.UPDATE_TIME as updateTime, t.ID as id, t.PINYIN as pinyin, t.SERVE_STATUS as serveStatus, t.SERVE_TYPE as serveType, 
+		t.SHORT_PINYIN as shortPinyin, t.TT_CODE as ttCode, t.TT_NAME as ttName, t.TT_STATUS as ttStatus, t.TT_TYPE as ttType
 	</sql>
 	<!-- 分页条件 -->
 	<sql id="conditions_limit"><if test="page != null"> limit #{page.startIndex}, #{page.pageLimit} </if></sql>
@@ -34,23 +34,24 @@
 			<if test="entity.createTime != null "><![CDATA[ and t.CREATE_TIME = #{entity.createTime}]]> </if>
 			<if test="entity.updateBy != null and entity.updateBy != ''"> and t.UPDATE_BY = #{entity.updateBy} </if>
 			<if test="entity.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{entity.updateTime}]]> </if>
-			<if test="entity.tenantCode != null and entity.tenantCode != ''"> and t.TENANT_CODE = #{entity.tenantCode} </if>
 			<if test="entity.id != null and entity.id != ''"> and t.ID = #{entity.id} </if>
-			<if test="entity.endTime != null "><![CDATA[ and t.END_TIME = #{entity.endTime}]]> </if>
+			<if test="entity.pinyin != null and entity.pinyin != ''"> and t.PINYIN = #{entity.pinyin} </if>
+			<if test="entity.serveStatus != null and entity.serveStatus != ''"> and t.SERVE_STATUS = #{entity.serveStatus} </if>
 			<if test="entity.serveType != null and entity.serveType != ''"> and t.SERVE_TYPE = #{entity.serveType} </if>
-			<if test="entity.startTime != null "><![CDATA[ and t.START_TIME = #{entity.startTime}]]> </if>
-			<if test="entity.tenantStatus != null and entity.tenantStatus != ''"> and t.TENANT_STATUS = #{entity.tenantStatus} </if>
-			<if test="entity.tenantType != null and entity.tenantType != ''"> and t.TENANT_TYPE = #{entity.tenantType} </if>
+			<if test="entity.shortPinyin != null and entity.shortPinyin != ''"> and t.SHORT_PINYIN = #{entity.shortPinyin} </if>
+			<if test="entity.ttCode != null and entity.ttCode != ''"> and t.TT_CODE = #{entity.ttCode} </if>
+			<if test="entity.ttStatus != null and entity.ttStatus != ''"> and t.TT_STATUS = #{entity.ttStatus} </if>
+			<if test="entity.ttType != null and entity.ttType != ''"> and t.TT_TYPE = #{entity.ttType} </if>
 			<!-- Like query -->
-			<if test="entity.tenantName != null and entity.tenantName != ''"> and t.TENANT_NAME like CONCAT(CONCAT('%', #{entity.tenantName}), '%') </if>
+			<if test="entity.ttName != null and entity.ttName != ''"> and t.TT_NAME like CONCAT(CONCAT('%', #{entity.ttName}), '%') </if>
 		</if>
 		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
-			and t.TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
 			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
 			and t.ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.ttCodeIter != null and propsMap.ttCodeIter.size()>0">
+			and t.TT_CODE in <foreach item="item" index="index" collection="propsMap.ttCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
 	</sql>
@@ -84,19 +85,19 @@
 	<insert id="insertOneBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into
 		<include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, END_TIME, SERVE_TYPE, START_TIME, TENANT_NAME, TENANT_STATUS, TENANT_TYPE)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, PINYIN, SERVE_STATUS, SERVE_TYPE, SHORT_PINYIN, TT_CODE, TT_NAME, TT_STATUS, TT_TYPE)
 		values
-		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{tenantCode}, #{endTime}, #{serveType}, #{startTime}, #{tenantName}, #{tenantStatus}, #{tenantType})
+		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{pinyin}, #{serveStatus}, #{serveType}, #{shortPinyin}, #{ttCode}, #{ttName}, #{ttStatus}, #{ttType})
 	</insert>
 	<!-- 批量插入 -->
 	<insert id="insertListBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into <include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, END_TIME, SERVE_TYPE, START_TIME, TENANT_NAME, TENANT_STATUS, TENANT_TYPE)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, PINYIN, SERVE_STATUS, SERVE_TYPE, SHORT_PINYIN, TT_CODE, TT_NAME, TT_STATUS, TT_TYPE)
 		values
 		<foreach collection="list" item="item" index="index" separator=",">
 		(#{item.version},#{item.delFlag},#{item.createBy},#{item.createTime},#{item.updateBy},
-		#{item.updateTime},#{item.tenantCode},#{item.endTime},#{item.serveType},#{item.startTime},
-		#{item.tenantName},#{item.tenantStatus},#{item.tenantType})
+		#{item.updateTime},#{item.pinyin},#{item.serveStatus},#{item.serveType},#{item.shortPinyin},
+		#{item.ttCode},#{item.ttName},#{item.ttStatus},#{item.ttType})
 		</foreach>
 	</insert>
 	<!-- 更新 -->
@@ -108,13 +109,14 @@
 			<if test="entity.delFlag != null and entity.delFlag != ''"> DEL_FLAG = #{entity.delFlag},  </if>
 			<if test="entity.updateBy != null and entity.updateBy != ''"> UPDATE_BY = #{entity.updateBy},  </if>
 			<if test="entity.updateTime != null"> UPDATE_TIME = #{entity.updateTime},  </if>
-			<if test="entity.tenantCode != null and entity.tenantCode != ''"> TENANT_CODE = #{entity.tenantCode},  </if>
-			<if test="entity.endTime != null"> END_TIME = #{entity.endTime},  </if>
+			<if test="entity.pinyin != null and entity.pinyin != ''"> PINYIN = #{entity.pinyin},  </if>
+			<if test="entity.serveStatus != null and entity.serveStatus != ''"> SERVE_STATUS = #{entity.serveStatus},  </if>
 			<if test="entity.serveType != null and entity.serveType != ''"> SERVE_TYPE = #{entity.serveType},  </if>
-			<if test="entity.startTime != null"> START_TIME = #{entity.startTime},  </if>
-			<if test="entity.tenantName != null and entity.tenantName != ''"> TENANT_NAME = #{entity.tenantName},  </if>
-			<if test="entity.tenantStatus != null and entity.tenantStatus != ''"> TENANT_STATUS = #{entity.tenantStatus},  </if>
-			<if test="entity.tenantType != null and entity.tenantType != ''"> TENANT_TYPE = #{entity.tenantType},  </if>
+			<if test="entity.shortPinyin != null and entity.shortPinyin != ''"> SHORT_PINYIN = #{entity.shortPinyin},  </if>
+			<if test="entity.ttCode != null and entity.ttCode != ''"> TT_CODE = #{entity.ttCode},  </if>
+			<if test="entity.ttName != null and entity.ttName != ''"> TT_NAME = #{entity.ttName},  </if>
+			<if test="entity.ttStatus != null and entity.ttStatus != ''"> TT_STATUS = #{entity.ttStatus},  </if>
+			<if test="entity.ttType != null and entity.ttType != ''"> TT_TYPE = #{entity.ttType},  </if>
 		</if>
 		</set>
 		<where>
@@ -128,22 +130,23 @@
 			<if test="entityOld.createTime != null "><![CDATA[ and CREATE_TIME = #{entityOld.createTime}]]> </if>
 			<if test="entityOld.updateBy != null and entityOld.updateBy != ''"> and UPDATE_BY = #{entityOld.updateBy} </if>
 			<if test="entityOld.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entityOld.updateTime}]]> </if>
-			<if test="entityOld.tenantCode != null and entityOld.tenantCode != ''"> and TENANT_CODE = #{entityOld.tenantCode} </if>
 			<if test="entityOld.id != null and entityOld.id != ''"> and ID = #{entityOld.id} </if>
-			<if test="entityOld.endTime != null "><![CDATA[ and END_TIME = #{entityOld.endTime}]]> </if>
+			<if test="entityOld.pinyin != null and entityOld.pinyin != ''"> and PINYIN = #{entityOld.pinyin} </if>
+			<if test="entityOld.serveStatus != null and entityOld.serveStatus != ''"> and SERVE_STATUS = #{entityOld.serveStatus} </if>
 			<if test="entityOld.serveType != null and entityOld.serveType != ''"> and SERVE_TYPE = #{entityOld.serveType} </if>
-			<if test="entityOld.startTime != null "><![CDATA[ and START_TIME = #{entityOld.startTime}]]> </if>
-			<if test="entityOld.tenantName != null and entityOld.tenantName != ''"> and TENANT_NAME = #{entityOld.tenantName} </if>
-			<if test="entityOld.tenantStatus != null and entityOld.tenantStatus != ''"> and TENANT_STATUS = #{entityOld.tenantStatus} </if>
-			<if test="entityOld.tenantType != null and entityOld.tenantType != ''"> and TENANT_TYPE = #{entityOld.tenantType} </if>
+			<if test="entityOld.shortPinyin != null and entityOld.shortPinyin != ''"> and SHORT_PINYIN = #{entityOld.shortPinyin} </if>
+			<if test="entityOld.ttCode != null and entityOld.ttCode != ''"> and TT_CODE = #{entityOld.ttCode} </if>
+			<if test="entityOld.ttName != null and entityOld.ttName != ''"> and TT_NAME = #{entityOld.ttName} </if>
+			<if test="entityOld.ttStatus != null and entityOld.ttStatus != ''"> and TT_STATUS = #{entityOld.ttStatus} </if>
+			<if test="entityOld.ttType != null and entityOld.ttType != ''"> and TT_TYPE = #{entityOld.ttType} </if>
 		</if>
 		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
-			and TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
 			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
 			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.ttCodeIter != null and propsMap.ttCodeIter.size()>0">
+			and TT_CODE in <foreach item="item" index="index" collection="propsMap.ttCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
 		</when>
@@ -168,22 +171,23 @@
 			<if test="entity.createTime != null "><![CDATA[ and CREATE_TIME = #{entity.createTime}]]> </if>
 			<if test="entity.updateBy != null and entity.updateBy != ''"> and UPDATE_BY = #{entity.updateBy} </if>
 			<if test="entity.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entity.updateTime}]]> </if>
-			<if test="entity.tenantCode != null and entity.tenantCode != ''"> and TENANT_CODE = #{entity.tenantCode} </if>
 			<if test="entity.id != null and entity.id != ''"> and ID = #{entity.id} </if>
-			<if test="entity.endTime != null "><![CDATA[ and END_TIME = #{entity.endTime}]]> </if>
+			<if test="entity.pinyin != null and entity.pinyin != ''"> and PINYIN = #{entity.pinyin} </if>
+			<if test="entity.serveStatus != null and entity.serveStatus != ''"> and SERVE_STATUS = #{entity.serveStatus} </if>
 			<if test="entity.serveType != null and entity.serveType != ''"> and SERVE_TYPE = #{entity.serveType} </if>
-			<if test="entity.startTime != null "><![CDATA[ and START_TIME = #{entity.startTime}]]> </if>
-			<if test="entity.tenantName != null and entity.tenantName != ''"> and TENANT_NAME = #{entity.tenantName} </if>
-			<if test="entity.tenantStatus != null and entity.tenantStatus != ''"> and TENANT_STATUS = #{entity.tenantStatus} </if>
-			<if test="entity.tenantType != null and entity.tenantType != ''"> and TENANT_TYPE = #{entity.tenantType} </if>
+			<if test="entity.shortPinyin != null and entity.shortPinyin != ''"> and SHORT_PINYIN = #{entity.shortPinyin} </if>
+			<if test="entity.ttCode != null and entity.ttCode != ''"> and TT_CODE = #{entity.ttCode} </if>
+			<if test="entity.ttName != null and entity.ttName != ''"> and TT_NAME = #{entity.ttName} </if>
+			<if test="entity.ttStatus != null and entity.ttStatus != ''"> and TT_STATUS = #{entity.ttStatus} </if>
+			<if test="entity.ttType != null and entity.ttType != ''"> and TT_TYPE = #{entity.ttType} </if>
 		</if>
 		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
-			and TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
 			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
 			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.ttCodeIter != null and propsMap.ttCodeIter.size()>0">
+			and TT_CODE in <foreach item="item" index="index" collection="propsMap.ttCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
 		</when>

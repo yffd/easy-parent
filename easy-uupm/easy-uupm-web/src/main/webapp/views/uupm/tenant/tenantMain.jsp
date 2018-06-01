@@ -13,9 +13,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <jsp:include page="/common/layout/script.jsp"></jsp:include>
 
 <script type="text/javascript">
-	var $json_tenantStatus = [ {id:"", text:"全部", "selected": true} ];
-	var $json_tenantType = [ {id:"", text:"全部", "selected": true} ];
+	var $json_status = [ {id:"", text:"全部", "selected": true} ];
+	var $json_ttType = [ {id:"", text:"全部", "selected": true} ];
 	var $json_serveType = [ {id:"", text:"全部", "selected": true} ];
+	var $json_serveStatus = [ {id:"", text:"全部", "selected": true} ];
 
 	var $openWindow = this;// 当前窗口
 	var $dg;
@@ -23,36 +24,44 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		$dg = $('#dg_id');
 		// 初始化控件数据
 		$.post('/uupm/ui/listComboTree', 
-				{'treeIds':'tenant-status,tenant-type,serve-type'}, 
+				{'treeIds':'status,tt-type,serve-type,serve-status'}, 
 				function(result) {
 					if("OK"==result.status) {
 						var jsonData = result.data;
-						$json_tenantStatus = $json_tenantStatus.concat(jsonData['tenant-status']);
-						$json_tenantType = $json_tenantType.concat(jsonData['tenant-type']);
+						$json_status = $json_status.concat(jsonData['status']);
+						$json_ttType = $json_ttType.concat(jsonData['tt-type']);
 						$json_serveType = $json_serveType.concat(jsonData['serve-type']);
+						$json_serveStatus = $json_serveStatus.concat(jsonData['serve-status']);
 						// 初始化datagrid组件
 						makeGrid();	
 						
-						$('#tenantType_id').combobox({
+						$('input[name="ttType"]').combobox({
 							editable:false,
 							panelHeight: 120,
 						    valueField:'id',
 						    textField:'text',
-						    data: $json_tenantType
+						    data: $json_ttType
 						});
-						$('#tenantStatus_id').combobox({
+						$('input[name="ttStatus"]').combobox({
 							editable:false,
 							panelHeight: 120,
 							valueField:'id',
 						    textField:'text',
-						    data: $json_tenantStatus
+						    data: $json_status
 						});
-						$('#serveType_id').combobox({
+						$('input[name="serveType"]').combobox({
 							editable:false,
 							panelHeight: 80,
 							valueField:'id',
 						    textField:'text',
 						    data: $json_serveType
+						});
+						$('input[name="serveStaus"]').combobox({
+							editable:false,
+							panelHeight: 80,
+							valueField:'id',
+						    textField:'text',
+						    data: $json_serveStatus
 						});
 						
 					}
@@ -88,18 +97,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		}
 	    	},
 	    	frozenColumns: [[
-	    	                 {field: 'tenantName', title: '租户名称', width: 200, align: 'left'}
+	    	                 {field: 'ttName', title: '租户名称', width: 200, align: 'left'}
 	    	                 ]],
 	        columns: [[
-						{field: 'tenantCode', title: '租户编号', width: 100, align: 'left'},
-						{field: 'tenantType', title: '类型', width: 100, align: 'left',
+						{field: 'ttCode', title: '租户编号', width: 100, align: 'left'},
+						{field: 'ttType', title: '租户类型', width: 100, align: 'left',
 							formatter: function(value, row) {
-								return utils.fmtDict($json_tenantType, value);
+								return utils.fmtDict($json_ttType, value);
 							}	
 						},
-						{field: 'tenantStatus', title: '状态', width: 100, align: 'left',
+						{field: 'ttStatus', title: '租户状态', width: 100, align: 'left',
 							formatter: function(value, row) {
-								return utils.fmtDict($json_tenantStatus, value);
+								return utils.fmtDict($json_status, value);
 							}	
 						},
 						{field: 'serveType', title: '服务方式', width: 100, align: 'left',
@@ -107,15 +116,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								return utils.fmtDict($json_serveType, value);
 							}
 						},
-						{field: 'startTime', title: '服务开始时间', width: 100, align: 'center',
+						{field: 'serveStatus', title: '服务状态', width: 100, align: 'left',
 							formatter: function(value, row) {
-								return value?new Date(value).format("yyyy-MM-dd HH:mm:ss"):"";
-							}	
-						},
-						{field: 'endTime', title: '服务结束时间', width: 100, align: 'center',
-							formatter: function(value, row) {
-								return value?new Date(value).format("yyyy-MM-dd HH:mm:ss"):"";
-							}	
+								return utils.fmtDict($json_serveStatus, value);
+							}
 						}
 	                   ]]
 		});
@@ -135,9 +139,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	// 清除搜索条件
 	function cleanSearch() {
 		$('#searchForm_id input').val('');
-		$('#tenantType_id').combobox('select','');
-		$('#tenantStatus_id').combobox('select','');
-		$('#serveType_id').combobox('select','');
+		$('input[name="ttType"]').combobox('select','');
+		$('input[name="ttStatus"]').combobox('select','');
 	}
 	
 	// 打开添加对话框
@@ -149,7 +152,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			href: 'views/uupm/tenant/tenantEdit.jsp',
 			onLoad:function(){
 				var editForm = parent.$.modalDialog.handler.find("#form_id");
-				editForm.find("#startTime").val(new Date().format("yyyy-MM-dd HH:mm:ss"));
 				setComboForSelected(editForm);
 			},
 			buttons: [{
@@ -187,16 +189,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		if(row) {
 			parent.$.modalDialog({
 				title: "编辑",
-				width: 600,
+				width: 800,
 				height: 400,
 				href: 'views/uupm/tenant/tenantEdit.jsp',
 				onLoad:function(){
 					var editForm = parent.$.modalDialog.handler.find("#form_id");
 					setComboForSelected(editForm);
 					editForm.form("load", row);
-					editForm.find("#tenantCode_id").attr('readonly',true);
-					if(row.startTime) editForm.find("#startTime").val(new Date(row.startTime).format("yyyy-MM-dd HH:mm:ss"));
-					if(row.endTime) editForm.find("#endTime").val(new Date(row.endTime).format("yyyy-MM-dd HH:mm:ss"));
+					editForm.find('input["pinyin"]').attr('readonly',true);
+					editForm.find('input["shortPinyin"]').attr('readonly',true);
 				},
 				buttons: [{
 					text: '确定',
@@ -240,7 +241,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		if(row) {
 			parent.$.messager.confirm("提示","确定要删除记录吗?",function(r){  
 			    if(r) {
-			    	$.post("uupm/tenant/delByTenantCode", {tenantCode:row.tenantCode}, function(result) {
+			    	$.post("uupm/tenant/delByTtCode", {ttCode:row.ttCode}, function(result) {
 						if(result.status=='OK') {
 							var rowIndex = $dg.datagrid('getRowIndex', row);
 							$dg.datagrid('deleteRow', rowIndex);
@@ -269,32 +270,41 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	}
 	// 设置控件选中
 	function setComboForSelected(selectForm) {
-		selectForm.find('#tenantType_id').combobox({
+		selectForm.find('input[name="ttType"]').combobox({
 			editable:false,
 			panelHeight: 120,
 			valueField:'id',
 		    textField:'text',
-		    data: $.grep($json_tenantType, function(n,i){
+		    data: $.grep($json_ttType, function(n,i){
 		    	if(i==1) n['selected']=true;
 		    	return i > 0;
 		    })
 		});
-		selectForm.find('#tenantStatus_id').combobox({
+		selectForm.find('input[name="ttStatus"]').combobox({
 			editable:false,
 			panelHeight: 120,
 			valueField:'id',
 		    textField:'text',
-		    data: $.grep($json_tenantStatus, function(n,i){
+		    data: $.grep($json_status, function(n,i){
 		    	if(i==1) n['selected']=true;
 		    	return i > 0;
 		    })
 		});
-		selectForm.find('#serveType_id').combobox({
+		selectForm.find('input[name="serveType"]').combobox({
 			editable:false,
 			panelHeight: 80,
 			valueField:'id',
 		    textField:'text',
 		    data: $.grep($json_serveType, function(n,i){
+		    	if(i==1) n['selected']=true;
+		    	return i > 0;
+		    })
+		});
+		selectForm.find('input[name="serveStatus"]').combobox({
+			editable:false,
+			valueField:'id',
+		    textField:'text',
+		    data: $.grep($json_serveStatus, function(n,i){
 		    	if(i==1) n['selected']=true;
 		    	return i > 0;
 		    })
@@ -315,36 +325,38 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<tr>
 					<th>租户名称：</th>
 					<td>
-						<input name="tenantName" type="text" />
+						<input name="ttName" type="text" />
 					</td>
-					<th>租户编号：</th>
+					<th>租户简拼：</th>
 					<td>
-						<input name="tenantCode" type="text" />
+						<input name="shortPinyin" type="text" />
+					</td>
+					<th>租户全拼：</th>
+					<td>
+						<input name="pinyin" type="text" />
 					</td>
 				</tr>
 				<tr>
-					<th>类型：</th>
+					<th>租户类型：</th>
 					<td>
-						<input id="tenantType_id" name="tenantType" type="text" />
+						<input name="ttType" type="text" />
 					</td>
-					<th>状态：</th>
+					<th>租户状态：</th>
 					<td>
-						<input id="tenantStatus_id" name="tenantStatus" type="text" />
+						<input name="ttStatus" type="text" />
 					</td>
+					<th></th>
+					<td></td>
 				</tr>
+<!-- 				<tr> -->
+<!-- 					<th>服务开始时间：</th><td> -->
+<!-- 						<input type="text" name="sStartTime" id="sStartTime" class="Wdate" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'eStartTime\',{d:0});}'})"/> -->
+<!-- 						~ -->
+<!-- 						<input type="text" name="eStartTime" id="eStartTime" class="Wdate" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'sStartTime\',{d:0});}'})"/> -->
+<!-- 					</td> -->
+<!-- 				</tr> -->
 				<tr>
-					<th>服务方式：</th>
-					<td>
-						<input id="serveType_id" name="serveType" type="text" />
-					</td>
-					<th>服务开始时间：</th><td>
-						<input type="text" name="sStartTime" id="sStartTime" class="Wdate" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'eStartTime\',{d:0});}'})"/>
-						~
-						<input type="text" name="eStartTime" id="eStartTime" class="Wdate" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'sStartTime\',{d:0});}'})"/>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="3"></td>
+					<td colspan="5"></td>
 					<td style="text-align:right;padding-right:20px;">
 						<a href="javascript:void(0);" class="easyui-linkbutton" onclick="_search();">查询</a> 
 						<a href="javascript:void(0);" class="easyui-linkbutton" onclick="cleanSearch();">重置</a>

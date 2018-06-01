@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.yffd.easy.common.core.util.EasyStringCheckUtils;
 import com.yffd.easy.framework.common.exception.CommonBizException;
 import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
 import com.yffd.easy.framework.pojo.login.LoginInfo;
@@ -28,6 +29,8 @@ public class UupmUserService extends UupmBaseService<UupmUserEntity> {
 
 	@Autowired
 	private UupmAccountService uupmAccountService;
+	@Autowired
+	private UupmUserRoleService uupmUserRoleService;
 	
 	@Autowired
 	private UupmUserDao uupmUserDao;
@@ -45,8 +48,17 @@ public class UupmUserService extends UupmBaseService<UupmUserEntity> {
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public int addUserWithAccount(UupmUserEntity user, UupmAccountEntity account, LoginInfo loginInfo) {
 		int result = this.save(user, loginInfo);
-		// 生成普通账号
-		this.uupmAccountService.addDefaultAccount(account, loginInfo);
+		this.uupmAccountService.addUserAccount(account, loginInfo);	// 生成用户账号
 		return result;
+	}
+	
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public int delByUserCode(String userCode, LoginInfo loginInfo) {
+		if(EasyStringCheckUtils.isEmpty(userCode)) throw CommonBizException.BIZ_PARAMS_IS_EMPTY();
+		UupmUserEntity model = new UupmUserEntity();
+		model.setUserCode(userCode);
+		int num = this.delete(model, loginInfo);	// 删除用户
+		this.uupmUserRoleService.delByUserCode(userCode, loginInfo);	// 删除 用户-角色关联
+		return num;
 	}
 }

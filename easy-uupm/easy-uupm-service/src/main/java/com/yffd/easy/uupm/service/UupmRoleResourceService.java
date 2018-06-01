@@ -74,25 +74,7 @@ public class UupmRoleResourceService extends UupmBaseService<UupmRoleResourceEnt
 		return rsCodes;
 	}
 	
-//	public Set<String> findRsCode(String roleCode) {
-//		UupmRoleResourceEntity paramModel = new UupmRoleResourceEntity();
-//		paramModel.setRoleCode(roleCode);
-//		List<UupmRoleResourceEntity> resultList = this.findList(paramModel);
-//		if(null==resultList ||resultList.size()==0) return null;
-//		Set<String> rsCodes = new HashSet<String>();
-//		for(UupmRoleResourceEntity model : resultList) {
-//			rsCodes.add(model.getRsCode());
-//		}
-//		return rsCodes;
-//	}
-	
-	
-//	public List<UupmRoleResourceEntity> findResources(List<UupmUserRoleEntity> userRoleList) {
-//		if(null==userRoleList || userRoleList.size()==0) return null;
-//		Set<String> roleCodeSet = new HashSet<String>();
-//		for(UupmUserRoleEntity model : userRoleList) {
-//			roleCodeSet.add(model.getRoleCode());
-//		}
-//		return this.uupmRoleResourceDao.findByResourceCodes(roleCodeSet);
-//	}
+	public int delByRsCodes(Set<String> rsCodes) {
+		return this.uupmRoleResourceDao.delByRsCodes(rsCodes);
+	}
 }

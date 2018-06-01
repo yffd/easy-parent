@@ -34,9 +34,9 @@ public class UupmMenuController extends UupmBaseController {
 	@RequestMapping(value="/findMenuTree", method=RequestMethod.POST)
 	public RespData findMenuTree() {
 		// TODO 租户编号
-		String tenantCode = "admin";
+		String ttCode = "admin";
 		String parentCode = null;//"root";
-		List<UupmMenuInfoVo> result = this.uupmMenuService.findMenuList(tenantCode, parentCode);
+		List<UupmMenuInfoVo> result = this.uupmMenuService.findMenuList(ttCode, parentCode);
 		if(null!=result && !result.isEmpty()) {
 			List<UupmTreeMenuVo> treeList = this.uupmMenuInfoModelFactory.buildMultiTree(result);
 			return this.successAjax(treeList);
@@ -46,15 +46,15 @@ public class UupmMenuController extends UupmBaseController {
 	
 	@RequestMapping(value="/saveMenuForAdmin", method=RequestMethod.POST)
 	public RespData saveMenuForAdmin() {
-//		String tenantCode = "admin";
-//		this.uupmMenuService.addMenuForAdmin(tenantCode);
+//		String ttCode = "admin";
+//		this.uupmMenuService.addMenuForAdmin(ttCode);
 		return this.successAjax();
 	}
 	
 	@RequestMapping(value="/saveMenuForOther", method=RequestMethod.POST)
 	public RespData saveMenuForOther() {
-//		String tenantCode = "nuoyuan";
-//		this.uupmMenuService.addMenuForOther(tenantCode);
+//		String ttCode = "nuoyuan";
+//		this.uupmMenuService.addMenuForOther(ttCode);
 		return this.successAjax();
 	}
 	

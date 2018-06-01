@@ -39,23 +39,23 @@ public class UupmTenantResourceService extends UupmBaseService<UupmTenantResourc
 	 * 某租户所拥有的所有资源
 	 * @Date	2018年5月23日 上午11:30:33 <br/>
 	 * @author  zhangST
-	 * @param tenantCode
+	 * @param ttCode
 	 * @return
 	 */
-	public List<UupmResourceEntity> findTenantResource(String tenantCode) {
-		return this.uupmTenantResourceDao.selectTenantResource(tenantCode);
+	public List<UupmResourceEntity> findTenantResource(String ttCode) {
+		return this.uupmTenantResourceDao.selectTenantResource(ttCode);
 	}
 	
 	/**
 	 * 查找某租户已拥有的资源编号
 	 * @Date	2018年5月23日 上午11:30:08 <br/>
 	 * @author  zhangST
-	 * @param tenantCode
+	 * @param ttCode
 	 * @return
 	 */
-	public Set<String> findRsCodesByTenantCode(String tenantCode) {
+	public Set<String> findRsCodesByTtCode(String ttCode) {
 		UupmTenantResourceEntity entity = new UupmTenantResourceEntity();
-		entity.setTenantCode(tenantCode);
+		entity.setTtCode(ttCode);
 		List<UupmTenantResourceEntity> list = this.findList(entity, null);
 		if(null==list || list.size()==0) return null;
 		Set<String> codes = new HashSet<String>();
@@ -66,12 +66,12 @@ public class UupmTenantResourceService extends UupmBaseService<UupmTenantResourc
 	}
 	
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-	public int saveTenantResource(String tenantCode, List<String> rsCodesList, LoginInfo loginInfo) {
-		this.delByTenantCode(tenantCode);
+	public int saveTenantResource(String ttCode, List<String> rsCodesList, LoginInfo loginInfo) {
+		this.delByTtCode(ttCode);
 		List<UupmTenantResourceEntity> modelList = new ArrayList<UupmTenantResourceEntity>();
 		for(String rsCode : rsCodesList) {
 			UupmTenantResourceEntity model = new UupmTenantResourceEntity();
-			model.setTenantCode(tenantCode);
+			model.setTtCode(ttCode);
 			model.setRsCode(rsCode);
 			modelList.add(model);
 		}
@@ -79,9 +79,9 @@ public class UupmTenantResourceService extends UupmBaseService<UupmTenantResourc
 		return this.save(modelList, loginInfo);
 	}
 	
-	public int delByTenantCode(String tenantCode) {
+	public int delByTtCode(String ttCode) {
 		UupmTenantResourceEntity entity = new UupmTenantResourceEntity();
-		entity.setTenantCode(tenantCode);
+		entity.setTtCode(ttCode);
 		return this.delete(entity, null);
 	}
 	

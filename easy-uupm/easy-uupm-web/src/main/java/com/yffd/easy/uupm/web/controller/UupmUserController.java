@@ -13,7 +13,7 @@ import com.yffd.easy.framework.pojo.page.PageParam;
 import com.yffd.easy.framework.pojo.page.PageResult;
 import com.yffd.easy.framework.pojo.vo.DataGridVo;
 import com.yffd.easy.framework.pojo.vo.RespData;
-import com.yffd.easy.framework.web.shiro.password.PasswordEncrypt;
+import com.yffd.easy.framework.web.shiro.login.account.ShiroAccount;
 import com.yffd.easy.uupm.entity.UupmAccountEntity;
 import com.yffd.easy.uupm.entity.UupmUserEntity;
 import com.yffd.easy.uupm.pojo.vo.UupmUserInfoVo;
@@ -47,19 +47,22 @@ public class UupmUserController extends UupmBaseController {
 	@RequestMapping(value="/add", method=RequestMethod.POST)
 	public RespData add(UupmUserEntity paramModel) {
 		if(EasyStringCheckUtils.isEmpty(paramModel.getUserCode())) return this.errorAjax("参数无效");
+		String realUserCode = this.getLoginInfo().getTtCode() + paramModel.getUserCode();	// 重置userCode
 		UupmUserEntity model = new UupmUserEntity();	// 存在校验
-		model.setUserCode(paramModel.getUserCode());
+		model.setUserCode(realUserCode);
 		boolean exsist = this.uupmUserService.exsist(model, getLoginInfo());
 		if(exsist) return this.errorAjax("编号已存在");
-		// 生成盐串和密码串
-		String salt = PasswordEncrypt.getRandomSalt();
-		String accountId = this.getLoginInfo().getTenantCode() + "-" + model.getUserCode();
-		String password = model.getUserCode();
-//		String encryptPwd = PasswordEncrypt.getEncryptPassword(accountId, password, salt);
+		// 生成用户账号+密码
+		String accountId = realUserCode;
+		String password = paramModel.getUserCode();
+		ShiroAccount shiroAccount = new ShiroAccount(accountId, password);	// 账号加密
 		UupmAccountEntity account = new UupmAccountEntity();
 		account.setAccountId(accountId);
-//		account.setAccountPwd(encryptPwd);
-		account.setSalt(salt);
+		account.setAccountPwd(shiroAccount.getEncryptPwd());
+		account.setSalt(shiroAccount.getCredentialsSalt());
+		
+		paramModel.setUserCode(realUserCode);	// 重置userCode
+		paramModel.setAccountId(accountId);		// 关联账号ID
 		int result = this.uupmUserService.addUserWithAccount(paramModel, account, getLoginInfo());
 		if(result==0) return this.errorAjax("添加失败");
 		return this.successAjax();
@@ -75,12 +78,10 @@ public class UupmUserController extends UupmBaseController {
 		return this.successAjax();
 	}
 	
-	@RequestMapping(value="/delById", method=RequestMethod.POST)
-	public RespData delById(String id) {
-		if(EasyStringCheckUtils.isEmpty(id)) return this.errorAjax("参数无效");
-		UupmUserEntity model = new UupmUserEntity();
-		model.setId(id);
-		int result = this.uupmUserService.delete(model, getLoginInfo());
+	@RequestMapping(value="/delByUserCode", method=RequestMethod.POST)
+	public RespData delByUserCode(String userCode) {
+		if(EasyStringCheckUtils.isEmpty(userCode)) return this.errorAjax("参数无效");
+		int result = this.uupmUserService.delByUserCode(userCode, getLoginInfo());
 		if(result==0) return this.errorAjax("删除失败");
 		return this.successAjax();
 	}

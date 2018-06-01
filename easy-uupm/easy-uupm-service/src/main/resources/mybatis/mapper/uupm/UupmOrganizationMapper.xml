@@ -12,7 +12,7 @@
 	<!-- 列名 -->
 	<sql id="table_columns">
 		t.VERSION as version, t.DEL_FLAG as delFlag, t.CREATE_BY as createBy, t.CREATE_TIME as createTime, t.UPDATE_BY as updateBy, 
-		t.UPDATE_TIME as updateTime, t.TENANT_CODE as tenantCode, t.ID as id, t.ORG_CODE as orgCode, t.ORG_NAME as orgName, 
+		t.UPDATE_TIME as updateTime, t.ID as id, t.TT_CODE as ttCode, t.ORG_CODE as orgCode, t.ORG_NAME as orgName, 
 		t.PARENT_CODE as parentCode, t.SEQ_NO as seqNo, t.TREE_ID as treeId
 	</sql>
 	<!-- 分页条件 -->
@@ -21,7 +21,7 @@
 	<sql id="conditions_orderby">
 		<choose>
 			<when test="orderBy != null and orderBy !=''"> ORDER BY #{orderBy} </when>
-			<otherwise> ORDER BY seqNo ASC </otherwise>
+			<otherwise> ORDER BY id desc </otherwise>
 		</choose>
 	</sql>
 	<!-- 动态组装复合查询条件 -->
@@ -34,8 +34,8 @@
 			<if test="entity.createTime != null "><![CDATA[ and t.CREATE_TIME = #{entity.createTime}]]> </if>
 			<if test="entity.updateBy != null and entity.updateBy != ''"> and t.UPDATE_BY = #{entity.updateBy} </if>
 			<if test="entity.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{entity.updateTime}]]> </if>
-			<if test="entity.tenantCode != null and entity.tenantCode != ''"> and t.TENANT_CODE = #{entity.tenantCode} </if>
 			<if test="entity.id != null and entity.id != ''"> and t.ID = #{entity.id} </if>
+			<if test="entity.ttCode != null and entity.ttCode != ''"> and t.TT_CODE = #{entity.ttCode} </if>
 			<if test="entity.orgCode != null and entity.orgCode != ''"> and t.ORG_CODE = #{entity.orgCode} </if>
 			<if test="entity.parentCode != null and entity.parentCode != ''"> and t.PARENT_CODE = #{entity.parentCode} </if>
 			<if test="entity.seqNo != null "> and t.SEQ_NO = #{entity.seqNo} </if>
@@ -45,11 +45,11 @@
 		</if>
 		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
-			and t.TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
 			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
 			and t.ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.ttCodeIter != null and propsMap.ttCodeIter.size()>0">
+			and t.TT_CODE in <foreach item="item" index="index" collection="propsMap.ttCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 			<if test="propsMap.orgCodeIter != null and propsMap.orgCodeIter.size()>0">
 			and t.ORG_CODE in <foreach item="item" index="index" collection="propsMap.orgCodeIter" open="(" separator="," close=") ">#{item}</foreach>
@@ -92,18 +92,18 @@
 	<insert id="insertOneBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into
 		<include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, ORG_CODE, ORG_NAME, PARENT_CODE, SEQ_NO, TREE_ID)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TT_CODE, ORG_CODE, ORG_NAME, PARENT_CODE, SEQ_NO, TREE_ID)
 		values
-		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{tenantCode}, #{orgCode}, #{orgName}, #{parentCode}, #{seqNo}, #{treeId})
+		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{ttCode}, #{orgCode}, #{orgName}, #{parentCode}, #{seqNo}, #{treeId})
 	</insert>
 	<!-- 批量插入 -->
 	<insert id="insertListBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into <include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, ORG_CODE, ORG_NAME, PARENT_CODE, SEQ_NO, TREE_ID)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TT_CODE, ORG_CODE, ORG_NAME, PARENT_CODE, SEQ_NO, TREE_ID)
 		values
 		<foreach collection="list" item="item" index="index" separator=",">
 		(#{item.version},#{item.delFlag},#{item.createBy},#{item.createTime},#{item.updateBy},
-		#{item.updateTime},#{item.tenantCode},#{item.orgCode},#{item.orgName},#{item.parentCode},
+		#{item.updateTime},#{item.ttCode},#{item.orgCode},#{item.orgName},#{item.parentCode},
 		#{item.seqNo},#{item.treeId})
 		</foreach>
 	</insert>
@@ -116,7 +116,7 @@
 			<if test="entity.delFlag != null and entity.delFlag != ''"> DEL_FLAG = #{entity.delFlag},  </if>
 			<if test="entity.updateBy != null and entity.updateBy != ''"> UPDATE_BY = #{entity.updateBy},  </if>
 			<if test="entity.updateTime != null"> UPDATE_TIME = #{entity.updateTime},  </if>
-			<if test="entity.tenantCode != null and entity.tenantCode != ''"> TENANT_CODE = #{entity.tenantCode},  </if>
+			<if test="entity.ttCode != null and entity.ttCode != ''"> TT_CODE = #{entity.ttCode},  </if>
 			<if test="entity.orgCode != null and entity.orgCode != ''"> ORG_CODE = #{entity.orgCode},  </if>
 			<if test="entity.orgName != null and entity.orgName != ''"> ORG_NAME = #{entity.orgName},  </if>
 			<if test="entity.parentCode != null and entity.parentCode != ''"> PARENT_CODE = #{entity.parentCode},  </if>
@@ -135,8 +135,8 @@
 			<if test="entityOld.createTime != null "><![CDATA[ and CREATE_TIME = #{entityOld.createTime}]]> </if>
 			<if test="entityOld.updateBy != null and entityOld.updateBy != ''"> and UPDATE_BY = #{entityOld.updateBy} </if>
 			<if test="entityOld.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entityOld.updateTime}]]> </if>
-			<if test="entityOld.tenantCode != null and entityOld.tenantCode != ''"> and TENANT_CODE = #{entityOld.tenantCode} </if>
 			<if test="entityOld.id != null and entityOld.id != ''"> and ID = #{entityOld.id} </if>
+			<if test="entityOld.ttCode != null and entityOld.ttCode != ''"> and TT_CODE = #{entityOld.ttCode} </if>
 			<if test="entityOld.orgCode != null and entityOld.orgCode != ''"> and ORG_CODE = #{entityOld.orgCode} </if>
 			<if test="entityOld.orgName != null and entityOld.orgName != ''"> and ORG_NAME = #{entityOld.orgName} </if>
 			<if test="entityOld.parentCode != null and entityOld.parentCode != ''"> and PARENT_CODE = #{entityOld.parentCode} </if>
@@ -145,11 +145,11 @@
 		</if>
 		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
-			and TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
 			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
 			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.ttCodeIter != null and propsMap.ttCodeIter.size()>0">
+			and TT_CODE in <foreach item="item" index="index" collection="propsMap.ttCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 			<if test="propsMap.orgCodeIter != null and propsMap.orgCodeIter.size()>0">
 			and ORG_CODE in <foreach item="item" index="index" collection="propsMap.orgCodeIter" open="(" separator="," close=") ">#{item}</foreach>
@@ -183,8 +183,8 @@
 			<if test="entity.createTime != null "><![CDATA[ and CREATE_TIME = #{entity.createTime}]]> </if>
 			<if test="entity.updateBy != null and entity.updateBy != ''"> and UPDATE_BY = #{entity.updateBy} </if>
 			<if test="entity.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entity.updateTime}]]> </if>
-			<if test="entity.tenantCode != null and entity.tenantCode != ''"> and TENANT_CODE = #{entity.tenantCode} </if>
 			<if test="entity.id != null and entity.id != ''"> and ID = #{entity.id} </if>
+			<if test="entity.ttCode != null and entity.ttCode != ''"> and TT_CODE = #{entity.ttCode} </if>
 			<if test="entity.orgCode != null and entity.orgCode != ''"> and ORG_CODE = #{entity.orgCode} </if>
 			<if test="entity.orgName != null and entity.orgName != ''"> and ORG_NAME = #{entity.orgName} </if>
 			<if test="entity.parentCode != null and entity.parentCode != ''"> and PARENT_CODE = #{entity.parentCode} </if>
@@ -193,11 +193,11 @@
 		</if>
 		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
-			and TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
 			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
 			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.ttCodeIter != null and propsMap.ttCodeIter.size()>0">
+			and TT_CODE in <foreach item="item" index="index" collection="propsMap.ttCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 			<if test="propsMap.orgCodeIter != null and propsMap.orgCodeIter.size()>0">
 			and ORG_CODE in <foreach item="item" index="index" collection="propsMap.orgCodeIter" open="(" separator="," close=") ">#{item}</foreach>

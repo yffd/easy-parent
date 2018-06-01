@@ -14,7 +14,6 @@ public class UupmMenuInfoVo extends UupmBasePojo {
 	private static final long serialVersionUID = -129579540759851462L;
 
 	private String id;
-	private String tenantCode;
 	private String accessType;
 	private String menuName;
 	private String menuCode;
@@ -31,12 +30,6 @@ public class UupmMenuInfoVo extends UupmBasePojo {
 	}
 	public void setId(String id) {
 		this.id = id;
-	}
-	public String getTenantCode() {
-		return tenantCode;
-	}
-	public void setTenantCode(String tenantCode) {
-		this.tenantCode = tenantCode;
 	}
 	public String getAccessType() {
 		return accessType;

@@ -64,22 +64,13 @@ public class UupmRoleController extends UupmBaseController {
 		return this.successAjax();
 	}
 	
-	@RequestMapping(value="/delById", method=RequestMethod.POST)
-	public RespData delById(UupmRoleEntity paramModel) {
-		if(EasyStringCheckUtils.isEmpty(paramModel.getId())) return this.errorAjax("参数无效");
-		UupmRoleEntity model = new UupmRoleEntity();
-		model.setId(paramModel.getId());
-		int result = this.uupmRoleService.delete(model, getLoginInfo());
+	@RequestMapping(value="/delByRoleCode", method=RequestMethod.POST)
+	public RespData delByRoleCode(String roleCode) {
+		if(EasyStringCheckUtils.isEmpty(roleCode)) return this.errorAjax("参数无效");
+		int result = this.uupmRoleService.delByRoleCode(roleCode, getLoginInfo());
 		if(result==0) return this.errorAjax("删除失败");
 		return this.successAjax();
 	}
 	
-	@RequestMapping(value="/delByIds", method=RequestMethod.POST)
-	public RespData delByIds(String ids) {
-		if(EasyStringCheckUtils.isEmpty(ids)) return this.errorAjax("参数无效");
-		int result = this.uupmRoleService.deleteByIds(ids);
-		if(result==0) return this.error("删除失败");
-		return this.successAjax();
-	}
 	
 }

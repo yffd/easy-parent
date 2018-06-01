@@ -1,13 +1,11 @@
 package com.yffd.easy.uupm.web.login.service;
 
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.yffd.easy.framework.pojo.login.LoginInfo;
-import com.yffd.easy.framework.web.login.service.ILoginService;
-import com.yffd.easy.uupm.pojo.vo.UupmLoginInfoVo;
+import com.yffd.easy.framework.web.shiro.login.account.ShiroAccountInfo;
+import com.yffd.easy.framework.web.shiro.login.account.ShiroUserInfo;
+import com.yffd.easy.framework.web.shiro.login.service.ILoginService;
 import com.yffd.easy.uupm.service.UupmAccountService;
 
 /**
@@ -23,9 +21,22 @@ public class ShiroLoginService implements ILoginService {
 
 	@Autowired
 	private UupmAccountService uupmAccountService;
-	
+
 	@Override
-	public LoginInfo getLoginInfo(String accountId) {
+	public ShiroAccountInfo getAccountInfo(String accountId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ShiroUserInfo getUserinfo(String accountId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
+//	@Override
+//	public LoginInfo getLoginInfo(String accountId) {
 //		UupmLoginInfoVo loginInfoVo = this.uupmAccountService.findLoginInfo(accountId);
 //		LoginInfo loginInfo = new LoginInfo();
 //		loginInfo.setTenantCode((String) loginInfoVo.getTenantCode());
@@ -39,8 +50,8 @@ public class ShiroLoginService implements ILoginService {
 //		loginInfo.setAccountSalt((String) loginInfoVo.getSalt());
 //		loginInfo.setAccountStatus((String) loginInfoVo.getAccountStatus());
 //		return loginInfo;
-		return null;
-	}
+//		return null;
+//	}
 
 }
 

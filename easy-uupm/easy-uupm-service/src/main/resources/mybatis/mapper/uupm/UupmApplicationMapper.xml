@@ -12,8 +12,8 @@
 	<!-- 列名 -->
 	<sql id="table_columns">
 		t.VERSION as version, t.DEL_FLAG as delFlag, t.CREATE_BY as createBy, t.CREATE_TIME as createTime, t.UPDATE_BY as updateBy, 
-		t.UPDATE_TIME as updateTime, t.TENANT_CODE as tenantCode, t.ID as id, t.APP_CODE as appCode, t.APP_CONTEXT_PATH as appContextPath, 
-		t.APP_DOMAIN as appDomain, t.APP_PORT as appPort
+		t.UPDATE_TIME as updateTime, t.ID as id, t.APP_CODE as appCode, t.APP_CONTEXT_PATH as appContextPath, t.APP_DOMAIN as appDomain, 
+		t.APP_PORT as appPort
 	</sql>
 	<!-- 分页条件 -->
 	<sql id="conditions_limit"><if test="page != null"> limit #{page.startIndex}, #{page.pageLimit} </if></sql>
@@ -34,7 +34,6 @@
 			<if test="entity.createTime != null "><![CDATA[ and t.CREATE_TIME = #{entity.createTime}]]> </if>
 			<if test="entity.updateBy != null and entity.updateBy != ''"> and t.UPDATE_BY = #{entity.updateBy} </if>
 			<if test="entity.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{entity.updateTime}]]> </if>
-			<if test="entity.tenantCode != null and entity.tenantCode != ''"> and t.TENANT_CODE = #{entity.tenantCode} </if>
 			<if test="entity.id != null and entity.id != ''"> and t.ID = #{entity.id} </if>
 			<if test="entity.appCode != null and entity.appCode != ''"> and t.APP_CODE = #{entity.appCode} </if>
 			<if test="entity.appContextPath != null and entity.appContextPath != ''"> and t.APP_CONTEXT_PATH = #{entity.appContextPath} </if>
@@ -43,23 +42,11 @@
 		</if>
 		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
-			and t.TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
 			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
 			and t.ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 			<if test="propsMap.appCodeIter != null and propsMap.appCodeIter.size()>0">
 			and t.APP_CODE in <foreach item="item" index="index" collection="propsMap.appCodeIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.appContextPathIter != null and propsMap.appContextPathIter.size()>0">
-			and t.APP_CONTEXT_PATH in <foreach item="item" index="index" collection="propsMap.appContextPathIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.appDomainIter != null and propsMap.appDomainIter.size()>0">
-			and t.APP_DOMAIN in <foreach item="item" index="index" collection="propsMap.appDomainIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.appPortIter != null and propsMap.appPortIter.size()>0">
-			and t.APP_PORT in <foreach item="item" index="index" collection="propsMap.appPortIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
 	</sql>
@@ -93,19 +80,18 @@
 	<insert id="insertOneBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into
 		<include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, APP_CODE, APP_CONTEXT_PATH, APP_DOMAIN, APP_PORT)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, APP_CODE, APP_CONTEXT_PATH, APP_DOMAIN, APP_PORT)
 		values
-		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{tenantCode}, #{appCode}, #{appContextPath}, #{appDomain}, #{appPort})
+		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{appCode}, #{appContextPath}, #{appDomain}, #{appPort})
 	</insert>
 	<!-- 批量插入 -->
 	<insert id="insertListBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into <include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, APP_CODE, APP_CONTEXT_PATH, APP_DOMAIN, APP_PORT)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, APP_CODE, APP_CONTEXT_PATH, APP_DOMAIN, APP_PORT)
 		values
 		<foreach collection="list" item="item" index="index" separator=",">
 		(#{item.version},#{item.delFlag},#{item.createBy},#{item.createTime},#{item.updateBy},
-		#{item.updateTime},#{item.tenantCode},#{item.appCode},#{item.appContextPath},#{item.appDomain},
-		#{item.appPort})
+		#{item.updateTime},#{item.appCode},#{item.appContextPath},#{item.appDomain},#{item.appPort})
 		</foreach>
 	</insert>
 	<!-- 更新 -->
@@ -117,7 +103,6 @@
 			<if test="entity.delFlag != null and entity.delFlag != ''"> DEL_FLAG = #{entity.delFlag},  </if>
 			<if test="entity.updateBy != null and entity.updateBy != ''"> UPDATE_BY = #{entity.updateBy},  </if>
 			<if test="entity.updateTime != null"> UPDATE_TIME = #{entity.updateTime},  </if>
-			<if test="entity.tenantCode != null and entity.tenantCode != ''"> TENANT_CODE = #{entity.tenantCode},  </if>
 			<if test="entity.appCode != null and entity.appCode != ''"> APP_CODE = #{entity.appCode},  </if>
 			<if test="entity.appContextPath != null and entity.appContextPath != ''"> APP_CONTEXT_PATH = #{entity.appContextPath},  </if>
 			<if test="entity.appDomain != null and entity.appDomain != ''"> APP_DOMAIN = #{entity.appDomain},  </if>
@@ -135,7 +120,6 @@
 			<if test="entityOld.createTime != null "><![CDATA[ and CREATE_TIME = #{entityOld.createTime}]]> </if>
 			<if test="entityOld.updateBy != null and entityOld.updateBy != ''"> and UPDATE_BY = #{entityOld.updateBy} </if>
 			<if test="entityOld.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entityOld.updateTime}]]> </if>
-			<if test="entityOld.tenantCode != null and entityOld.tenantCode != ''"> and TENANT_CODE = #{entityOld.tenantCode} </if>
 			<if test="entityOld.id != null and entityOld.id != ''"> and ID = #{entityOld.id} </if>
 			<if test="entityOld.appCode != null and entityOld.appCode != ''"> and APP_CODE = #{entityOld.appCode} </if>
 			<if test="entityOld.appContextPath != null and entityOld.appContextPath != ''"> and APP_CONTEXT_PATH = #{entityOld.appContextPath} </if>
@@ -144,23 +128,11 @@
 		</if>
 		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
-			and TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
 			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
 			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 			<if test="propsMap.appCodeIter != null and propsMap.appCodeIter.size()>0">
 			and APP_CODE in <foreach item="item" index="index" collection="propsMap.appCodeIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.appContextPathIter != null and propsMap.appContextPathIter.size()>0">
-			and APP_CONTEXT_PATH in <foreach item="item" index="index" collection="propsMap.appContextPathIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.appDomainIter != null and propsMap.appDomainIter.size()>0">
-			and APP_DOMAIN in <foreach item="item" index="index" collection="propsMap.appDomainIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.appPortIter != null and propsMap.appPortIter.size()>0">
-			and APP_PORT in <foreach item="item" index="index" collection="propsMap.appPortIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
 		</when>
@@ -185,7 +157,6 @@
 			<if test="entity.createTime != null "><![CDATA[ and CREATE_TIME = #{entity.createTime}]]> </if>
 			<if test="entity.updateBy != null and entity.updateBy != ''"> and UPDATE_BY = #{entity.updateBy} </if>
 			<if test="entity.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entity.updateTime}]]> </if>
-			<if test="entity.tenantCode != null and entity.tenantCode != ''"> and TENANT_CODE = #{entity.tenantCode} </if>
 			<if test="entity.id != null and entity.id != ''"> and ID = #{entity.id} </if>
 			<if test="entity.appCode != null and entity.appCode != ''"> and APP_CODE = #{entity.appCode} </if>
 			<if test="entity.appContextPath != null and entity.appContextPath != ''"> and APP_CONTEXT_PATH = #{entity.appContextPath} </if>
@@ -194,23 +165,11 @@
 		</if>
 		<if test="propsMap != null">
 			<!-- In query -->
-			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
-			and TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
 			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
 			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 			<if test="propsMap.appCodeIter != null and propsMap.appCodeIter.size()>0">
 			and APP_CODE in <foreach item="item" index="index" collection="propsMap.appCodeIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.appContextPathIter != null and propsMap.appContextPathIter.size()>0">
-			and APP_CONTEXT_PATH in <foreach item="item" index="index" collection="propsMap.appContextPathIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.appDomainIter != null and propsMap.appDomainIter.size()>0">
-			and APP_DOMAIN in <foreach item="item" index="index" collection="propsMap.appDomainIter" open="(" separator="," close=") ">#{item}</foreach>
-			</if>
-			<if test="propsMap.appPortIter != null and propsMap.appPortIter.size()>0">
-			and APP_PORT in <foreach item="item" index="index" collection="propsMap.appPortIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
 		</when>

@@ -12,6 +12,7 @@
     <module>easy-framework-common</module>
     <module>easy-framework-web</module>
     <module>easy-uupm</module>
+    <module>easy-demo</module>
   </modules>
 
 	<!-- 定义公共变量 -->

@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yffd.easy.uupm.dao.UupmAccountDao">
 
+
 	<!-- ######################################################################### -->
 	<!-- #########################   common sql begin    ######################### -->
 	<!-- ######################################################################### -->
@@ -12,8 +13,7 @@
 	<sql id="table_columns">
 		t.VERSION as version, t.DEL_FLAG as delFlag, t.CREATE_BY as createBy, t.CREATE_TIME as createTime, t.UPDATE_BY as updateBy, 
 		t.UPDATE_TIME as updateTime, t.ID as id, t.ACCOUNT_ID as accountId, t.ACCOUNT_PWD as accountPwd, t.ACCOUNT_STATUS as accountStatus, 
-		t.ACCOUNT_TYPE as accountType, t.NICK_NAME as nickName, t.ONLINE as online, t.SALT as salt, t.VISIT_COUNT as visitCount, 
-		t.VISIT_FIRST as visitFirst, t.VISIT_IP as visitIp, t.VISIT_LAST as visitLast, t.VISIT_PREVIOUS as visitPrevious
+		t.ACCOUNT_TYPE as accountType, t.NICK_NAME as nickName, t.SALT as salt
 	</sql>
 	<!-- 分页条件 -->
 	<sql id="conditions_limit"><if test="page != null"> limit #{page.startIndex}, #{page.pageLimit} </if></sql>
@@ -39,13 +39,7 @@
 			<if test="entity.accountPwd != null and entity.accountPwd != ''"> and t.ACCOUNT_PWD = #{entity.accountPwd} </if>
 			<if test="entity.accountStatus != null and entity.accountStatus != ''"> and t.ACCOUNT_STATUS = #{entity.accountStatus} </if>
 			<if test="entity.accountType != null and entity.accountType != ''"> and t.ACCOUNT_TYPE = #{entity.accountType} </if>
-			<if test="entity.online != null and entity.online != ''"> and t.ONLINE = #{entity.online} </if>
 			<if test="entity.salt != null and entity.salt != ''"> and t.SALT = #{entity.salt} </if>
-			<if test="entity.visitCount != null "> and t.VISIT_COUNT = #{entity.visitCount} </if>
-			<if test="entity.visitFirst != null "><![CDATA[ and t.VISIT_FIRST = #{entity.visitFirst}]]> </if>
-			<if test="entity.visitIp != null and entity.visitIp != ''"> and t.VISIT_IP = #{entity.visitIp} </if>
-			<if test="entity.visitLast != null "><![CDATA[ and t.VISIT_LAST = #{entity.visitLast}]]> </if>
-			<if test="entity.visitPrevious != null "><![CDATA[ and t.VISIT_PREVIOUS = #{entity.visitPrevious}]]> </if>
 			<!-- Like query -->
 			<if test="entity.nickName != null and entity.nickName != ''"> and t.NICK_NAME like CONCAT(CONCAT('%', #{entity.nickName}), '%') </if>
 		</if>
@@ -89,20 +83,19 @@
 	<insert id="insertOneBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into
 		<include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, ACCOUNT_ID, ACCOUNT_PWD, ACCOUNT_STATUS, ACCOUNT_TYPE, NICK_NAME, ONLINE, SALT, VISIT_COUNT, VISIT_FIRST, VISIT_IP, VISIT_LAST, VISIT_PREVIOUS)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, ACCOUNT_ID, ACCOUNT_PWD, ACCOUNT_STATUS, ACCOUNT_TYPE, NICK_NAME, SALT)
 		values
-		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{accountId}, #{accountPwd}, #{accountStatus}, #{accountType}, #{nickName}, #{online}, #{salt}, #{visitCount}, #{visitFirst}, #{visitIp}, #{visitLast}, #{visitPrevious})
+		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{accountId}, #{accountPwd}, #{accountStatus}, #{accountType}, #{nickName}, #{salt})
 	</insert>
 	<!-- 批量插入 -->
 	<insert id="insertListBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into <include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, ACCOUNT_ID, ACCOUNT_PWD, ACCOUNT_STATUS, ACCOUNT_TYPE, NICK_NAME, ONLINE, SALT, VISIT_COUNT, VISIT_FIRST, VISIT_IP, VISIT_LAST, VISIT_PREVIOUS)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, ACCOUNT_ID, ACCOUNT_PWD, ACCOUNT_STATUS, ACCOUNT_TYPE, NICK_NAME, SALT)
 		values
 		<foreach collection="list" item="item" index="index" separator=",">
 		(#{item.version},#{item.delFlag},#{item.createBy},#{item.createTime},#{item.updateBy},
 		#{item.updateTime},#{item.accountId},#{item.accountPwd},#{item.accountStatus},#{item.accountType},
-		#{item.nickName},#{item.online},#{item.salt},#{item.visitCount},#{item.visitFirst},
-		#{item.visitIp},#{item.visitLast},#{item.visitPrevious})
+		#{item.nickName},#{item.salt})
 		</foreach>
 	</insert>
 	<!-- 更新 -->
@@ -119,13 +112,7 @@
 			<if test="entity.accountStatus != null and entity.accountStatus != ''"> ACCOUNT_STATUS = #{entity.accountStatus},  </if>
 			<if test="entity.accountType != null and entity.accountType != ''"> ACCOUNT_TYPE = #{entity.accountType},  </if>
 			<if test="entity.nickName != null and entity.nickName != ''"> NICK_NAME = #{entity.nickName},  </if>
-			<if test="entity.online != null and entity.online != ''"> ONLINE = #{entity.online},  </if>
 			<if test="entity.salt != null and entity.salt != ''"> SALT = #{entity.salt},  </if>
-			<if test="entity.visitCount != null"> VISIT_COUNT = #{entity.visitCount},  </if>
-			<if test="entity.visitFirst != null"> VISIT_FIRST = #{entity.visitFirst},  </if>
-			<if test="entity.visitIp != null and entity.visitIp != ''"> VISIT_IP = #{entity.visitIp},  </if>
-			<if test="entity.visitLast != null"> VISIT_LAST = #{entity.visitLast},  </if>
-			<if test="entity.visitPrevious != null"> VISIT_PREVIOUS = #{entity.visitPrevious},  </if>
 		</if>
 		</set>
 		<where>
@@ -145,13 +132,7 @@
 			<if test="entityOld.accountStatus != null and entityOld.accountStatus != ''"> and ACCOUNT_STATUS = #{entityOld.accountStatus} </if>
 			<if test="entityOld.accountType != null and entityOld.accountType != ''"> and ACCOUNT_TYPE = #{entityOld.accountType} </if>
 			<if test="entityOld.nickName != null and entityOld.nickName != ''"> and NICK_NAME = #{entityOld.nickName} </if>
-			<if test="entityOld.online != null and entityOld.online != ''"> and ONLINE = #{entityOld.online} </if>
 			<if test="entityOld.salt != null and entityOld.salt != ''"> and SALT = #{entityOld.salt} </if>
-			<if test="entityOld.visitCount != null "> and VISIT_COUNT = #{entityOld.visitCount} </if>
-			<if test="entityOld.visitFirst != null "><![CDATA[ and VISIT_FIRST = #{entityOld.visitFirst}]]> </if>
-			<if test="entityOld.visitIp != null and entityOld.visitIp != ''"> and VISIT_IP = #{entityOld.visitIp} </if>
-			<if test="entityOld.visitLast != null "><![CDATA[ and VISIT_LAST = #{entityOld.visitLast}]]> </if>
-			<if test="entityOld.visitPrevious != null "><![CDATA[ and VISIT_PREVIOUS = #{entityOld.visitPrevious}]]> </if>
 		</if>
 		<if test="propsMap != null">
 			<!-- In query -->
@@ -190,13 +171,7 @@
 			<if test="entity.accountStatus != null and entity.accountStatus != ''"> and ACCOUNT_STATUS = #{entity.accountStatus} </if>
 			<if test="entity.accountType != null and entity.accountType != ''"> and ACCOUNT_TYPE = #{entity.accountType} </if>
 			<if test="entity.nickName != null and entity.nickName != ''"> and NICK_NAME = #{entity.nickName} </if>
-			<if test="entity.online != null and entity.online != ''"> and ONLINE = #{entity.online} </if>
 			<if test="entity.salt != null and entity.salt != ''"> and SALT = #{entity.salt} </if>
-			<if test="entity.visitCount != null "> and VISIT_COUNT = #{entity.visitCount} </if>
-			<if test="entity.visitFirst != null "><![CDATA[ and VISIT_FIRST = #{entity.visitFirst}]]> </if>
-			<if test="entity.visitIp != null and entity.visitIp != ''"> and VISIT_IP = #{entity.visitIp} </if>
-			<if test="entity.visitLast != null "><![CDATA[ and VISIT_LAST = #{entity.visitLast}]]> </if>
-			<if test="entity.visitPrevious != null "><![CDATA[ and VISIT_PREVIOUS = #{entity.visitPrevious}]]> </if>
 		</if>
 		<if test="propsMap != null">
 			<!-- In query -->
@@ -219,14 +194,4 @@
 	<!-- ##########################   common sql end    ########################## -->
 	<!-- ######################################################################### -->
 
-	<select id="findLoginInfo" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.pojo.vo.UupmLoginInfoVo">
-		select t.ACCOUNT_ID as accountId, t.ACCOUNT_PWD as accountPwd, t.ACCOUNT_STATUS as accountStatus, t.SALT as salt 
-		, u.USER_CODE as userCode, u.USER_NAME as userName
-		, org.ORG_CODE as orgCode, org.ORG_NAME as orgName, org.DATA_PATH as dataPath
-		from uupm_account t
-		LEFT JOIN uupm_user u ON t.ACCOUNT_ID = u.USER_CODE
-		LEFT JOIN uupm_organization org ON u.TENANT_CODE = org.TENANT_CODE and u.ORG_CODE = org.ORG_CODE
-		where t.ACCOUNT_ID = #{accountId}
-	</select>
-	
 </mapper>

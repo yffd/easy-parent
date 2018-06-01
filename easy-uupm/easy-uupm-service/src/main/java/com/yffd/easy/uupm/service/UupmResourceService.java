@@ -1,6 +1,5 @@
 package com.yffd.easy.uupm.service;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +28,8 @@ public class UupmResourceService extends UupmBaseService<UupmResourceEntity> {
 
 	@Autowired
 	private UupmTenantResourceService uupmTenantResourceService;
+	@Autowired
+	private UupmRoleResourceService uupmRoleResourceService;
 	
 	@Autowired
 	private UupmResourceDao uupmResourceDao;
@@ -51,31 +52,26 @@ public class UupmResourceService extends UupmBaseService<UupmResourceEntity> {
 		return rsCodes;
 	}
 	
-	public Integer delByIds(String idStr) {
-		if(EasyStringCheckUtils.isEmpty(idStr)) return 0;
-		String[] idsArr = idStr.split(",");
-		List<String> idsList = Arrays.asList(idsArr);
-		Set<String> ids = new HashSet<String>(idsList);
-		return this.uupmResourceDao.delByIds(ids);
-	}
-	
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public int delByTreeId(String treeId) {
 		if(EasyStringCheckUtils.isEmpty(treeId)) throw CommonBizException.BIZ_PARAMS_IS_EMPTY();
 		Set<String> rsCodes = this.findRsCodesByTreeId(treeId);
-		if(null!=rsCodes && rsCodes.size()>0) this.uupmTenantResourceService.delByRsCodes(rsCodes);
+		if(null!=rsCodes && rsCodes.size()>0) {
+			this.uupmTenantResourceService.delByRsCodes(rsCodes);	// 删除 资源-租户关联
+			this.uupmRoleResourceService.delByRsCodes(rsCodes);		// 删除 资源-角色关联
+		}
 		
 		UupmResourceEntity model = new UupmResourceEntity();
 		model.setTreeId(treeId);
-		int num = this.delete(model , null);
-		
+		int num = this.delete(model , null);	// 删除资源
 		return num;
 	}
 
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public int delByRsCodes(Set<String> rsCodes) {
-		int num = this.uupmResourceDao.delByRsCodes(rsCodes);
-		this.uupmTenantResourceService.delByRsCodes(rsCodes);
+		int num = this.uupmResourceDao.delByRsCodes(rsCodes);	// 删除资源
+		this.uupmTenantResourceService.delByRsCodes(rsCodes);	// 删除 资源-租户关联
+		this.uupmRoleResourceService.delByRsCodes(rsCodes);		// 删除 资源-角色关联
 		return num;
 	}
 	

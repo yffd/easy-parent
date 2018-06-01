@@ -1,6 +1,5 @@
 package com.yffd.easy.uupm.dao;
 
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.stereotype.Repository;
@@ -23,8 +22,4 @@ public class UupmOrganizationDao extends MybatisCommonDao<UupmOrganizationEntity
 		return this.deleteByProps("idIter", ids);
 	}
 	
-	public List<UupmOrganizationEntity> findByOrgCodes(Set<String> orgCodes) {
-		if(null==orgCodes || orgCodes.size()==0) return null;
-		return this.selectListByProps("orgCodeIter", orgCodes, null);
-	}
 }

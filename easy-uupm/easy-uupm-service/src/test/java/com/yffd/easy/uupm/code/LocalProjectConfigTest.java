@@ -3,7 +3,7 @@ package com.yffd.easy.uupm.code;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.yffd.easy.framework.common.code.geneator.CodeGenerator;
+import com.yffd.easy.framework.common.code.generator.CodeGenerator;
 import com.yffd.easy.framework.common.persist.mybatis.dao.MybatisCommonDao;
 import com.yffd.easy.framework.common.service.impl.CommonServiceImpl;
 
@@ -27,7 +27,7 @@ public class LocalProjectConfigTest extends CodeGenerator {
 	public static Class<?> serviceSuperClazz = CommonServiceImpl.class;
 	
 	
-	public static String baseDirPath = "D:\\git_workspace\\easy-parent\\";
+	public static String baseDirPath = "D:\\java\\git-easy\\easy-parent\\";
 	public static String javaRootDirPath = baseDirPath + "easy-uupm\\easy-uupm-service\\src\\main\\java";
 	public static String resourceRootDirPath = baseDirPath + "easy-uupm\\easy-uupm-service\\src";
 	

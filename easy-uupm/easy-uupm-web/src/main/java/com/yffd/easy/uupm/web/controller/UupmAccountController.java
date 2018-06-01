@@ -13,7 +13,7 @@ import com.yffd.easy.framework.pojo.page.PageParam;
 import com.yffd.easy.framework.pojo.page.PageResult;
 import com.yffd.easy.framework.pojo.vo.DataGridVo;
 import com.yffd.easy.framework.pojo.vo.RespData;
-import com.yffd.easy.framework.web.shiro.password.PasswordEncrypt;
+import com.yffd.easy.framework.web.shiro.login.account.ShiroAccount;
 import com.yffd.easy.uupm.entity.UupmAccountEntity;
 import com.yffd.easy.uupm.service.UupmAccountService;
 import com.yffd.easy.uupm.web.base.UupmBaseController;
@@ -50,11 +50,12 @@ public class UupmAccountController extends UupmBaseController {
 		model.setAccountId(paramModel.getAccountId());
 		boolean exsist = this.uupmAccountService.exsist(model, getLoginInfo());
 		if(exsist) return this.error("账号已存在");
-		// 生成盐串和密码串
-//		String salt = PasswordEncrypt.getRandomSalt();
-//		String encryptPwd = PasswordEncrypt.getEncryptPassword(paramModel.getAccountId(), paramModel.getAccountPwd(), salt);
-//		paramModel.setSalt(salt);
-//		paramModel.setAccountPwd(encryptPwd);
+		String accountId = paramModel.getAccountId();
+		String password = paramModel.getAccountPwd();
+		ShiroAccount shiroAccount = new ShiroAccount(accountId, password);
+		
+		paramModel.setAccountPwd(shiroAccount.getEncryptPwd());
+		paramModel.setSalt(shiroAccount.getCredentialsSalt());
 		int result = this.uupmAccountService.addTenantAccount(paramModel, getLoginInfo());
 		if(result==0) return this.error("添加失败");
 		return this.successAjax();

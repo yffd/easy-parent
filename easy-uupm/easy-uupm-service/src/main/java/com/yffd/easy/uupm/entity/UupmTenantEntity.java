@@ -6,8 +6,6 @@
 
 package com.yffd.easy.uupm.entity;
 
-import java.util.Date;
-
 import com.yffd.easy.framework.common.persist.entity.CommonEntity;
 
 /**
@@ -23,37 +21,56 @@ public class UupmTenantEntity extends CommonEntity {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private String tenantCode;		//租户编号
-	private String tenantName;		//租户名称
-	private String tenantType;		//租户类型：1=运营中心、2=企业、3=个人、4=其它
-	private String tenantStatus;	//租户状态：1=初始化、2=试用中、3=生产中、4=已过期
+	private String ttName;			//租户名称
+	private String ttCode;			//租户编号
+	private String pinyin;			//租户全拼
+	private String shortPinyin;		//租户简拼
+	private String ttType;			//租户类型：1=运营中心、2=企业、3=个人、4=其它
+	private String ttStatus;		//租户状态
 	private String serveType;		//服务方式：1=收费、0=免费
-	private Date startTime;			//租赁服务开始时间
-	private Date endTime;			//租赁服务结束时间
+	private String serveStatus;		//服务状态
 	
-	public String getTenantCode() {
-		return tenantCode;
+	public String getTtName() {
+		return ttName;
 	}
-	public void setTenantCode(String tenantCode) {
-		this.tenantCode = tenantCode;
+	public void setTtName(String ttName) {
+		this.ttName = ttName;
 	}
-	public String getTenantName() {
-		return tenantName;
+	public String getTtCode() {
+		return ttCode;
 	}
-	public void setTenantName(String tenantName) {
-		this.tenantName = tenantName;
+	public void setTtCode(String ttCode) {
+		this.ttCode = ttCode;
 	}
-	public String getTenantType() {
-		return tenantType;
+	public String getPinyin() {
+		return pinyin;
 	}
-	public void setTenantType(String tenantType) {
-		this.tenantType = tenantType;
+	public void setPinyin(String pinyin) {
+		this.pinyin = pinyin;
 	}
-	public String getTenantStatus() {
-		return tenantStatus;
+	public String getShortPinyin() {
+		return shortPinyin;
 	}
-	public void setTenantStatus(String tenantStatus) {
-		this.tenantStatus = tenantStatus;
+	public void setShortPinyin(String shortPinyin) {
+		this.shortPinyin = shortPinyin;
+	}
+	public String getTtStatus() {
+		return ttStatus;
+	}
+	public void setTtStatus(String ttStatus) {
+		this.ttStatus = ttStatus;
+	}
+	public String getTtType() {
+		return ttType;
+	}
+	public void setTtType(String ttType) {
+		this.ttType = ttType;
+	}
+	public String getServeStatus() {
+		return serveStatus;
+	}
+	public void setServeStatus(String serveStatus) {
+		this.serveStatus = serveStatus;
 	}
 	public String getServeType() {
 		return serveType;
@@ -61,17 +78,5 @@ public class UupmTenantEntity extends CommonEntity {
 	public void setServeType(String serveType) {
 		this.serveType = serveType;
 	}
-	public Date getStartTime() {
-		return startTime;
-	}
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
-	}
-	public Date getEndTime() {
-		return endTime;
-	}
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
-	}
-   
+	
 }

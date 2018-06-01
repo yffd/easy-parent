@@ -24,7 +24,7 @@ public class UupmUserEntity extends UupmBasePojo {
 	private String userCode;		//用户编号
 	private String userName;		//用户名称
 	private String orgCode;			//机构编号
-	
+	private String accountId;		//账号ID
 	public String getUserCode() {
 		return userCode;
 	}
@@ -42,6 +42,12 @@ public class UupmUserEntity extends UupmBasePojo {
 	}
 	public void setOrgCode(String orgCode) {
 		this.orgCode = orgCode;
+	}
+	public String getAccountId() {
+		return accountId;
+	}
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
 	}
 	
 }

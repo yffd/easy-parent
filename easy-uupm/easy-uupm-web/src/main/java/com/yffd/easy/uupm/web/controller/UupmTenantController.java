@@ -43,9 +43,12 @@ public class UupmTenantController extends UupmBaseController {
 	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
 	public RespData add(UupmTenantEntity paramModel) {
-		if(EasyStringCheckUtils.isEmpty(paramModel.getTenantCode())) return this.errorAjax("参数无效");
+		if(EasyStringCheckUtils.isEmpty(paramModel.getTtName())
+				|| EasyStringCheckUtils.isEmpty(paramModel.getPinyin())
+				|| EasyStringCheckUtils.isEmpty(paramModel.getShortPinyin())) return this.errorAjax("参数无效");
+		paramModel.setTtCode(paramModel.getShortPinyin());	// 设置 ttCode = shortPinyin
 		UupmTenantEntity model = new UupmTenantEntity();
-		model.setTenantCode(paramModel.getTenantCode());
+		model.setTtCode(paramModel.getTtCode());
 		boolean exsist = this.uupmTenantService.exsist(model, getLoginInfo());
 		if(exsist) return this.errorAjax("编号已存在");
 		int result = this.uupmTenantService.addTenantWithAccount(paramModel, getLoginInfo());
@@ -63,10 +66,10 @@ public class UupmTenantController extends UupmBaseController {
 		return this.successAjax();
 	}
 	
-	@RequestMapping(value="/delByTenantCode", method=RequestMethod.POST)
-	public RespData delByTenantCode(String tenantCode) {
-		if(EasyStringCheckUtils.isEmpty(tenantCode)) return this.errorAjax("参数无效");
-		int result = this.uupmTenantService.delByTenantCode(tenantCode, getLoginInfo());
+	@RequestMapping(value="/delByTtCode", method=RequestMethod.POST)
+	public RespData delByTtCode(String ttCode) {
+		if(EasyStringCheckUtils.isEmpty(ttCode)) return this.errorAjax("参数无效");
+		int result = this.uupmTenantService.delByTtCode(ttCode, getLoginInfo());
 		if(result==0) return this.error("删除失败");
 		return this.successAjax();
 	}

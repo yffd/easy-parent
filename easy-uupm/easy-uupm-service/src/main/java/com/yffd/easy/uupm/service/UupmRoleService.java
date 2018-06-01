@@ -1,17 +1,17 @@
 package com.yffd.easy.uupm.service;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
+import com.yffd.easy.framework.common.exception.CommonBizException;
 import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
+import com.yffd.easy.framework.pojo.login.LoginInfo;
 import com.yffd.easy.uupm.dao.UupmRoleDao;
 import com.yffd.easy.uupm.entity.UupmRoleEntity;
+import com.yffd.easy.uupm.entity.UupmRoleResourceEntity;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -25,6 +25,10 @@ import com.yffd.easy.uupm.entity.UupmRoleEntity;
 public class UupmRoleService extends UupmBaseService<UupmRoleEntity> {
 
 	@Autowired
+	private UupmRoleResourceService uupmRoleResourceService;
+	@Autowired
+	private UupmUserRoleService uupmUserRoleService;
+	@Autowired
 	private UupmRoleDao uupmRoleDao;
 
 	@Override
@@ -32,11 +36,17 @@ public class UupmRoleService extends UupmBaseService<UupmRoleEntity> {
 		return uupmRoleDao;
 	}
 	
-	public Integer deleteByIds(String idStr) {
-		if(EasyStringCheckUtils.isEmpty(idStr)) return 0;
-		String[] idsArr = idStr.split(",");
-		List<String> idsList = Arrays.asList(idsArr);
-		Set<String> ids = new HashSet<String>(idsList);
-		return this.uupmRoleDao.deleteByIds(ids);
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+	public int delByRoleCode(String roleCode, LoginInfo loginInfo) {
+		if(EasyStringCheckUtils.isEmpty(roleCode)) throw CommonBizException.BIZ_PARAMS_IS_EMPTY();
+		UupmRoleEntity model = new UupmRoleEntity();
+		model.setRoleCode(roleCode);
+		int num = this.delete(model, loginInfo);	// 删除角色
+		
+		UupmRoleResourceEntity rrModel = new UupmRoleResourceEntity();
+		rrModel.setRoleCode(roleCode);
+		this.uupmRoleResourceService.delete(rrModel , loginInfo);		// 删除 角色-资源关联
+		this.uupmUserRoleService.delByRoleCode(roleCode, loginInfo);	// 删除 角色-用户关联
+		return num;
 	}
 }

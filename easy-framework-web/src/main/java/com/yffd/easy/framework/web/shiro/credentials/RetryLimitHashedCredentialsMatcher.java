@@ -8,9 +8,9 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yffd.easy.framework.pojo.login.LoginInfo;
-import com.yffd.easy.framework.web.login.service.ILoginService;
 import com.yffd.easy.framework.web.mvc.WebController;
+import com.yffd.easy.framework.web.shiro.login.account.ShiroUserInfo;
+import com.yffd.easy.framework.web.shiro.login.service.ILoginService;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -29,10 +29,10 @@ public class RetryLimitHashedCredentialsMatcher extends HashedCredentialsMatcher
 		boolean matches = super.doCredentialsMatch(token, info);
 		String accountId = (String)token.getPrincipal();
 		if(matches) {
-			LoginInfo loginInfo = this.loginService.getLoginInfo(accountId);
+			ShiroUserInfo userInfo = this.loginService.getUserinfo(accountId);
 			Subject subject = SecurityUtils.getSubject();
 			Session session = subject.getSession();
-			session.setAttribute(WebController.KEY_SESSION_LOGIN_INFO, loginInfo);
+			session.setAttribute(WebController.KEY_SESSION_LOGIN_INFO, userInfo);
 		}
 		return matches;
 	}

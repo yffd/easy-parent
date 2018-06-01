@@ -11,7 +11,7 @@
 	<!-- 列名 -->
 	<sql id="table_columns">
 		t.VERSION as version, t.DEL_FLAG as delFlag, t.CREATE_BY as createBy, t.CREATE_TIME as createTime, t.UPDATE_BY as updateBy, 
-		t.UPDATE_TIME as updateTime, t.TENANT_CODE as tenantCode, t.ID as id, t.ACCESS_TYPE as accessType, t.MENU_CODE as menuCode, 
+		t.UPDATE_TIME as updateTime, t.ID as id, t.TT_CODE as ttCode, t.ACCESS_TYPE as accessType, t.MENU_CODE as menuCode, 
 		t.MENU_ICONS as menuIcons, t.MENU_NAME as menuName, t.MENU_SEQ_NO as menuSeqNo, t.MENU_TYPE as menuType, t.PARENT_CODE as parentCode
 	</sql>
 	<!-- 分页条件 -->
@@ -33,7 +33,7 @@
 			<if test="entity.createTime != null "><![CDATA[ and t.CREATE_TIME = #{entity.createTime}]]> </if>
 			<if test="entity.updateBy != null and entity.updateBy != ''"> and t.UPDATE_BY = #{entity.updateBy} </if>
 			<if test="entity.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{entity.updateTime}]]> </if>
-			<if test="entity.tenantCode != null and entity.tenantCode != ''"> and t.TENANT_CODE = #{entity.tenantCode} </if>
+			<if test="entity.ttCode != null and entity.ttCode != ''"> and t.TT_CODE = #{entity.ttCode} </if>
 			<if test="entity.id != null and entity.id != ''"> and t.ID = #{entity.id} </if>
 			<if test="entity.accessType != null and entity.accessType != ''"> and t.ACCESS_TYPE = #{entity.accessType} </if>
 			<if test="entity.menuCode != null and entity.menuCode != ''"> and t.MENU_CODE = #{entity.menuCode} </if>
@@ -47,7 +47,7 @@
 		<if test="propsMap != null">
 			<!-- In query -->
 			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
-			and t.TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
+			and t.TT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
 			and t.ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
@@ -105,18 +105,18 @@
 	<insert id="insertOneBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into
 		<include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, ACCESS_TYPE, MENU_CODE, MENU_ICONS, MENU_NAME, MENU_SEQ_NO, MENU_TYPE, PARENT_CODE)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TT_CODE, ACCESS_TYPE, MENU_CODE, MENU_ICONS, MENU_NAME, MENU_SEQ_NO, MENU_TYPE, PARENT_CODE)
 		values
-		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{tenantCode}, #{accessType}, #{menuCode}, #{menuIcons}, #{menuName}, #{menuSeqNo}, #{menuType}, #{parentCode})
+		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{ttCode}, #{accessType}, #{menuCode}, #{menuIcons}, #{menuName}, #{menuSeqNo}, #{menuType}, #{parentCode})
 	</insert>
 	<!-- 批量插入 -->
 	<insert id="insertListBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into <include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TENANT_CODE, ACCESS_TYPE, MENU_CODE, MENU_ICONS, MENU_NAME, MENU_SEQ_NO, MENU_TYPE, PARENT_CODE)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TT_CODE, ACCESS_TYPE, MENU_CODE, MENU_ICONS, MENU_NAME, MENU_SEQ_NO, MENU_TYPE, PARENT_CODE)
 		values
 		<foreach collection="list" item="item" index="index" separator=",">
 		(#{item.version},#{item.delFlag},#{item.createBy},#{item.createTime},#{item.updateBy},
-		#{item.updateTime},#{item.tenantCode},#{item.accessType},#{item.menuCode},#{item.menuIcons},
+		#{item.updateTime},#{item.ttCode},#{item.accessType},#{item.menuCode},#{item.menuIcons},
 		#{item.menuName},#{item.menuSeqNo},#{item.menuType},#{item.parentCode})
 		</foreach>
 	</insert>
@@ -129,7 +129,7 @@
 			<if test="entity.delFlag != null and entity.delFlag != ''"> DEL_FLAG = #{entity.delFlag},  </if>
 			<if test="entity.updateBy != null and entity.updateBy != ''"> UPDATE_BY = #{entity.updateBy},  </if>
 			<if test="entity.updateTime != null"> UPDATE_TIME = #{entity.updateTime},  </if>
-			<if test="entity.tenantCode != null and entity.tenantCode != ''"> TENANT_CODE = #{entity.tenantCode},  </if>
+			<if test="entity.ttCode != null and entity.ttCode != ''"> TT_CODE = #{entity.ttCode},  </if>
 			<if test="entity.accessType != null and entity.accessType != ''"> ACCESS_TYPE = #{entity.accessType},  </if>
 			<if test="entity.menuCode != null and entity.menuCode != ''"> MENU_CODE = #{entity.menuCode},  </if>
 			<if test="entity.menuIcons != null and entity.menuIcons != ''"> MENU_ICONS = #{entity.menuIcons},  </if>
@@ -150,7 +150,7 @@
 			<if test="entityOld.createTime != null "><![CDATA[ and CREATE_TIME = #{entityOld.createTime}]]> </if>
 			<if test="entityOld.updateBy != null and entityOld.updateBy != ''"> and UPDATE_BY = #{entityOld.updateBy} </if>
 			<if test="entityOld.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entityOld.updateTime}]]> </if>
-			<if test="entityOld.tenantCode != null and entityOld.tenantCode != ''"> and TENANT_CODE = #{entityOld.tenantCode} </if>
+			<if test="entityOld.ttCode != null and entityOld.ttCode != ''"> and TT_CODE = #{entityOld.ttCode} </if>
 			<if test="entityOld.id != null and entityOld.id != ''"> and ID = #{entityOld.id} </if>
 			<if test="entityOld.accessType != null and entityOld.accessType != ''"> and ACCESS_TYPE = #{entityOld.accessType} </if>
 			<if test="entityOld.menuCode != null and entityOld.menuCode != ''"> and MENU_CODE = #{entityOld.menuCode} </if>
@@ -163,7 +163,7 @@
 		<if test="propsMap != null">
 			<!-- In query -->
 			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
-			and TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
+			and TT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
 			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
@@ -212,7 +212,7 @@
 			<if test="entity.createTime != null "><![CDATA[ and CREATE_TIME = #{entity.createTime}]]> </if>
 			<if test="entity.updateBy != null and entity.updateBy != ''"> and UPDATE_BY = #{entity.updateBy} </if>
 			<if test="entity.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entity.updateTime}]]> </if>
-			<if test="entity.tenantCode != null and entity.tenantCode != ''"> and TENANT_CODE = #{entity.tenantCode} </if>
+			<if test="entity.ttCode != null and entity.ttCode != ''"> and TT_CODE = #{entity.ttCode} </if>
 			<if test="entity.id != null and entity.id != ''"> and ID = #{entity.id} </if>
 			<if test="entity.accessType != null and entity.accessType != ''"> and ACCESS_TYPE = #{entity.accessType} </if>
 			<if test="entity.menuCode != null and entity.menuCode != ''"> and MENU_CODE = #{entity.menuCode} </if>
@@ -225,7 +225,7 @@
 		<if test="propsMap != null">
 			<!-- In query -->
 			<if test="propsMap.tenantCodeIter != null and propsMap.tenantCodeIter.size()>0">
-			and TENANT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
+			and TT_CODE in <foreach item="item" index="index" collection="propsMap.tenantCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
 			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
@@ -266,14 +266,14 @@
 
 	<select id="selectMenuInfo" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.pojo.vo.UupmMenuInfoVo">
 		select 
-		t.ID as id, t.TENANT_CODE as tenantCode, t.ACCESS_TYPE as accessType, t.MENU_CODE as menuCode, 
+		t.ID as id, t.TT_CODE as ttCode, t.ACCESS_TYPE as accessType, t.MENU_CODE as menuCode, 
 		t.MENU_ICONS as menuIcons, t.MENU_NAME as menuName, t.MENU_SEQ_NO as menuSeqNo, t.MENU_TYPE as menuType, t.PARENT_CODE as parentCode
 		, t1.SHORT_URL as menuShortUrl
 		, t2.APP_CONTEXT_PATH as appContextPath, t2.APP_DOMAIN as appDomain, t2.APP_PORT as appPort
 		from 
 		uupm_menu t left join uupm_resource t1 on t.MENU_CODE = t1.RS_CODE
 		left join uupm_application t2 on t.MENU_CODE = t2.APP_CODE
-		where t.TENANT_CODE=#{tenantCode}
+		where t.TT_CODE=#{ttCode}
 		<if test="parentCode != null and parentCode != ''"> and PARENT_CODE = #{parentCode} </if>
 	</select>
 	
@@ -283,7 +283,7 @@
 		, t1.menuCode 
 		from uupm_resource t
 		left join 
-		(select MENU_CODE as menuCode from uupm_menu where TENANT_CODE=#{tenantCode}) t1
+		(select MENU_CODE as menuCode from uupm_menu where TT_CODE=#{ttCode}) t1
 		on t.RS_CODE = t1.menuCode 
 		where t.RS_TYPE='M' and t1.menuCode is null
 	</select>
@@ -294,7 +294,7 @@
 		from uupm_tenant_resource t2 
 		left join uupm_resource t on t2.RS_CODE = t.RS_CODE
 		left join 
-		(select MENU_CODE as menuCode from uupm_menu where TENANT_CODE=#{tenantCode}) t1 on t.RS_CODE = t1.menuCode 
+		(select MENU_CODE as menuCode from uupm_menu where TT_CODE=#{ttCode}) t1 on t.RS_CODE = t1.menuCode 
 		where t.RS_TYPE='M' and t1.menuCode is null
 	</select>
 	

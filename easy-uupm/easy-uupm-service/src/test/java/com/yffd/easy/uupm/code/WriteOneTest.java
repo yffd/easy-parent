@@ -2,13 +2,14 @@ package com.yffd.easy.uupm.code;
 
 import org.junit.Test;
 
-import com.yffd.easy.framework.common.code.geneator.CodeFileDaoGenerator;
-import com.yffd.easy.framework.common.code.geneator.CodeFileMapperXmlGenerator;
-import com.yffd.easy.framework.common.code.geneator.CodeFileServiceGenerator;
-import com.yffd.easy.framework.common.code.geneator.CodeMapperSqlGenerator;
-import com.yffd.easy.framework.common.code.geneator.CodeMapperSqlTreeGenerator;
+import com.yffd.easy.framework.common.code.generator.CodeFileDaoGenerator;
+import com.yffd.easy.framework.common.code.generator.CodeFileMapperXmlGenerator;
+import com.yffd.easy.framework.common.code.generator.CodeFileServiceGenerator;
+import com.yffd.easy.framework.common.code.generator.CodeMapperSqlGenerator;
+import com.yffd.easy.framework.common.code.generator.CodeMapperSqlTreeGenerator;
 import com.yffd.easy.uupm.entity.UupmAccountEntity;
 import com.yffd.easy.uupm.entity.UupmMenuEntity;
+import com.yffd.easy.uupm.entity.UupmOrganizationEntity;
 import com.yffd.easy.uupm.entity.UupmResourceEntity;
 import com.yffd.easy.uupm.entity.UupmUITreeEntity;
 import com.yffd.easy.uupm.pojo.vo.UupmUserInfoVo;
@@ -70,7 +71,7 @@ public class WriteOneTest extends LocalProjectConfigTest {
 	@Test
 	public void writeToMapper() {
 		// TODO
-		Class<?> pojoClazz = UupmAccountEntity.class;
+		Class<?> pojoClazz = UupmOrganizationEntity.class;
 		String sqlNamespace = daoGenerator.fmtDaoFullName(daoPackageName, pojoClazz);
 		mapperXmlGenerator.writeToFile(pojoClazz, sqlNamespace, outRootDirPath_mapper_xml, covered);
 	}

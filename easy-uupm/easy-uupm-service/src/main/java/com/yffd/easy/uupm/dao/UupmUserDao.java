@@ -40,4 +40,8 @@ public class UupmUserDao extends MybatisCommonDao<UupmUserEntity> {
 		return this.selectListByCustom("findUserInfoList", params, true);
 	}
 	
+	public UupmUserInfoVo findUserInfo(UupmUserInfoVo userInfoVo) {
+		return this.selectOneByCustom("findUserInfo", userInfoVo, true);
+	}
+	
 }

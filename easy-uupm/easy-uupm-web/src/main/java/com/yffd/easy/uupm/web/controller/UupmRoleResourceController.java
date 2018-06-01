@@ -65,10 +65,10 @@ public class UupmRoleResourceController extends UupmBaseController {
 		
 //	// 角色授权
 //	@RequestMapping(value="/findRoleResource", method=RequestMethod.POST)
-//	public RespData findRoleResource(String tenantCode, String roleCode) {
+//	public RespData findRoleResource(String ttCode, String roleCode) {
 //		if(EasyStringCheckUtils.isEmpty(roleCode)) return this.errorAjax("参数错误");
 //		UupmRoleResourceEntity model = new UupmRoleResourceEntity();
-//		model.setTenantCode(tenantCode);
+//		model.setTenantCode(ttCode);
 //		model.setRoleCode(roleCode);
 //		List<UupmRoleResourceEntity> listResult = this.uupmRoleResourceService.findList(model);
 //		return this.successAjax(listResult);

@@ -15,8 +15,11 @@ import com.yffd.easy.framework.pojo.IPOJO;
  */
 public class LoginInfo implements IPOJO, Serializable {
 
-	private static final long serialVersionUID = -8544013546779025925L;
-	private String tenantCode;
+	private static final long serialVersionUID = 1L;
+	private Set<String> roleCods;
+	private Set<String> rsCodes;
+	
+	private String ttCode;
 	private String userCode;
 	private String userName;
 	private String orgCode;
@@ -29,11 +32,11 @@ public class LoginInfo implements IPOJO, Serializable {
 	private String accountSalt;
 	private String accountStatus;
 	
-	public String getTenantCode() {
-		return tenantCode;
+	public String getTtCode() {
+		return ttCode;
 	}
-	public void setTenantCode(String tenantCode) {
-		this.tenantCode = tenantCode;
+	public void setTtCode(String ttCode) {
+		this.ttCode = ttCode;
 	}
 	public String getUserCode() {
 		return userCode;

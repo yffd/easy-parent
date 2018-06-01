@@ -21,4 +21,5 @@ public class UupmRoleDao extends MybatisCommonDao<UupmRoleEntity> {
 	public Integer deleteByIds(Set<String> ids) {
 		return this.deleteByProps("idIter", ids);
 	}
+	
 }

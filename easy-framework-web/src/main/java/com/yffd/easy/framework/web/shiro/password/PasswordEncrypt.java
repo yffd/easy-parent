@@ -19,8 +19,7 @@ public class PasswordEncrypt {
 	private static String algorithmName = "md5";
     private static int hashIterations = 2;
     
-	public static String getEncryptPassword(String accountId, String accountPwd, String salt) {
-		String credentialsSalt = accountId + salt;
+	public static String getEncryptPassword(String accountPwd, String credentialsSalt) {
 		String newPassword = new SimpleHash(algorithmName,
 				accountPwd,
 				ByteSource.Util.bytes(credentialsSalt),
@@ -32,5 +31,10 @@ public class PasswordEncrypt {
 		return randomNumberGenerator.nextBytes().toHex();
 	}
 	
+	public static void main(String[] args) {
+		String salt = PasswordEncrypt.getRandomSalt();
+		System.out.println(salt);
+		System.out.println(PasswordEncrypt.getEncryptPassword("admin", salt));
+	}
 }
 

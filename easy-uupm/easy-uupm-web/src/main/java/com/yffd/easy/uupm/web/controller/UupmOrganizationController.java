@@ -63,11 +63,11 @@ public class UupmOrganizationController extends UupmBaseController {
 	public RespData add(UupmOrganizationEntity paramModel) {
 		if(EasyStringCheckUtils.isEmpty(paramModel.getTreeId()) 
 				|| EasyStringCheckUtils.isEmpty(paramModel.getOrgCode())
-				|| EasyStringCheckUtils.isEmpty(paramModel.getParentCode())) return this.error("参数无效");
+				|| EasyStringCheckUtils.isEmpty(paramModel.getParentCode())) return this.errorAjax("参数无效");
 		UupmOrganizationEntity entity = new UupmOrganizationEntity();	// 存在校验
 		entity.setOrgCode(paramModel.getOrgCode());
 		boolean exsist = this.uupmOrganizationService.exsist(entity, getLoginInfo());
-		if(exsist) return this.error("编号已存在");
+		if(exsist) return this.errorAjax("编号已存在");
 		this.uupmOrganizationService.save(paramModel, getLoginInfo());
 		return this.successAjax();
 	}
@@ -75,7 +75,7 @@ public class UupmOrganizationController extends UupmBaseController {
 	@RequestMapping(value="/update", method=RequestMethod.POST)
 	public RespData update(UupmOrganizationEntity paramModel) {
 		if(EasyStringCheckUtils.isEmpty(paramModel.getTreeId()) 
-				|| EasyStringCheckUtils.isEmpty(paramModel.getOrgCode())) return this.error("参数无效");
+				|| EasyStringCheckUtils.isEmpty(paramModel.getOrgCode())) return this.errorAjax("参数无效");
 		UupmOrganizationEntity entityOld = new UupmOrganizationEntity();
 		entityOld.setTreeId(paramModel.getTreeId());
 		entityOld.setOrgCode(paramModel.getOrgCode());
@@ -97,7 +97,7 @@ public class UupmOrganizationController extends UupmBaseController {
 	public RespData delByIds(String ids) {
 		if(EasyStringCheckUtils.isEmpty(ids)) return this.errorAjax("参数无效");
 		int result = this.uupmOrganizationService.deleteByIds(ids);
-		if(result==0) return this.error("删除失败");
+		if(result==0) return this.errorAjax("删除失败");
 		return this.successAjax();
 	}
 	
