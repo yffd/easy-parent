@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
+import org.apache.shiro.session.mgt.SimpleSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,6 +93,7 @@ public class JedisCustomSessionManager extends JedisCustomBaseManager implements
 			Set<Session> sessions = new HashSet<Session>();
 			for(String key : keys) {
 				String value = jedis.get(key);
+				if(null==value) continue;
 				if(value.indexOf("#")>0) {
 					String[] arr = value.split("#", 2);
 					String clazzName = arr[0];
@@ -113,7 +115,23 @@ public class JedisCustomSessionManager extends JedisCustomBaseManager implements
 
 	@Override
 	public Serializable doCreate(Session session) {
-		this.update(session);
+//		String sessionId = this.buildSessionKey(session.getId());
+//		((SimpleSession) session).setId(sessionId);
+		if(null==session || null==session.getId()) throw new NullPointerException("session is empty");
+		String key = this.buildSessionKey(session.getId());
+		String value = JSON.toJSONString(session);
+		String tmpValue = session.getClass().getName() + "#" + value;
+		int ttl = (int) (session.getTimeout() / 1000); //秒
+		Jedis jedis = null;
+		try {
+			jedis = this.getClient();
+			jedis.set(key, tmpValue);
+			if(ttl > 0) jedis.expire(key, ttl);
+		} catch (Exception e) {
+			LOG.error(String.format("======= jedis shiro-session:doCreate【key:%s， value:%s】 =======", key, tmpValue), e);
+		} finally {
+			this.close(jedis);
+		}
 		return session.getId();
 	}
 
@@ -125,6 +143,7 @@ public class JedisCustomSessionManager extends JedisCustomBaseManager implements
 		try {
 			jedis = this.getClient();
 			String value = jedis.get(key);
+			if(null==value) return null;
 			String[] arr = value.split("#", 2);
 			String clazzName = arr[0];
 			Class<?> clazz = Class.forName(clazzName);
@@ -141,7 +160,9 @@ public class JedisCustomSessionManager extends JedisCustomBaseManager implements
 	}
 
 	private String buildSessionKey(Serializable sessionId) {
-		return this.getName() + ":" + sessionId;
+		return sessionId.toString();
+//		return this.getName() + ":" + sessionId;
 	}
+	
 }
 
