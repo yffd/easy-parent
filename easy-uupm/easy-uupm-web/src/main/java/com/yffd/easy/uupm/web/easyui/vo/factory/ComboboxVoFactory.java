@@ -23,13 +23,20 @@ import com.yffd.easy.uupm.web.easyui.vo.ComboboxVo;
  */
 public class ComboboxVoFactory {
 
-	public String switchJson(String flag) {
+	public enum Style { STATUS_STYLE, ACCOUNT_TYPE, APP_SYS_TYPE, TT_TYPE, TT_STATUS, TT_SERVE_TYPE, }
+	
+	public String switchJson(Style flag) {
+		String jsonData = "{}";
 		switch (flag) {
-		case "a" : this.getAccountTypeJson(); break;
-		case "d" : this.getAppSystemTypeJson(); break;
+		case STATUS_STYLE : jsonData = this.getStatusStyleJson(); break;
+		case ACCOUNT_TYPE : jsonData = this.getAccountTypeJson(); break;
+		case APP_SYS_TYPE : jsonData = this.getAppSystemTypeJson(); break;
+		case TT_TYPE : jsonData = this.getTenantTypeJson(); break;
+		case TT_STATUS : jsonData = this.getTenantStatusJson(); break;
+		case TT_SERVE_TYPE : jsonData = this.getTenantServeTypeJson(); break;
 		default : break;
 		}
-		return null;
+		return jsonData;
 	}
 	
 	// 状态
