@@ -4,9 +4,9 @@
  * @version 1.0
 */
 
-package com.yffd.easy.uupm.entity;
+package com.yffd.easy.uupm.entity.a;
 
-import com.yffd.easy.framework.common.persist.entity.CommonEntity;
+import com.yffd.easy.framework.pojo.entity.CommonEntity;
 
 /**
  * 

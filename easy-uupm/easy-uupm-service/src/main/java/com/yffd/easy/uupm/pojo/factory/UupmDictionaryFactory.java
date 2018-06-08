@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.yffd.easy.common.core.tree.custom.EasyCustomTreeBuilder;
-import com.yffd.easy.uupm.entity.UupmDictionaryEntity;
+import com.yffd.easy.uupm.entity.a.UupmDictionaryEntity;
 import com.yffd.easy.uupm.pojo.vo.UupmTreeDictVo;
 
 /**

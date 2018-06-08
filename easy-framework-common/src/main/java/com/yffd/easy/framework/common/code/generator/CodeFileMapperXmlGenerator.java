@@ -2,7 +2,7 @@ package com.yffd.easy.framework.common.code.generator;
 
 import java.io.File;
 
-import com.yffd.easy.framework.common.persist.entity.CommonPartialTreeEntity;
+import com.yffd.easy.framework.pojo.entity.CommonPartialTreeEntity;
 
 /**
  * @Description  简单描述该类的功能（可选）.

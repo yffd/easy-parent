@@ -7,8 +7,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Date;
 
-import com.yffd.easy.framework.common.persist.entity.CommonPartialTreeEntity;
 import com.yffd.easy.framework.common.service.impl.CommonServiceImpl;
+import com.yffd.easy.framework.pojo.entity.CommonPartialTreeEntity;
 
 /**
  * @Description  简单描述该类的功能（可选）.

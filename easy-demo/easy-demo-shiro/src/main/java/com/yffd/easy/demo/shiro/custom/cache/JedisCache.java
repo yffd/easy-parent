@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.yffd.easy.demo.shiro.custom.jedis.IJedisManager;
-import com.yffd.easy.demo.shiro.uitl.SerializeUtils;
+import com.yffd.easy.demo.shiro.custom.util.ShiroSerializeUtils;
 
 /**
  * jedis 的hash类型实现缓存
@@ -42,23 +42,23 @@ public class JedisCache<K, V> implements Cache<K, V> {
 	//根据Key获取缓存中的值
 	@Override
 	public V get(K key) throws CacheException {
-		if(LOG.isInfoEnabled()) LOG.info(String.format("======= [shiro] : JedisCache#get(%s) =======", key));
+		if(LOG.isInfoEnabled()) LOG.info(String.format("======= [shiro cache] : JedisCache#get(%s) =======", key));
 		byte[] byteHkey = this.getJedisManager().getName().getBytes();
-		byte[] byteField = SerializeUtils.serialize(key);
+		byte[] byteField = ShiroSerializeUtils.serialize(key);
 		byte[] byteValue = new byte[0];
 		this.getJedisManager().hget(byteHkey, byteField);
 		if(null==byteValue) return null;
-		return (V) SerializeUtils.deserialize(byteValue);
+		return (V) ShiroSerializeUtils.deserialize(byteValue);
 	}
 
 	//往缓存中放入key-value，返回缓存中之前的值
 	@Override
 	public V put(K key, V value) throws CacheException {
-		if(LOG.isInfoEnabled()) LOG.info(String.format("======= [shiro] : JedisCache#put(%s, %s) =======", key, value));
+		if(LOG.isInfoEnabled()) LOG.info(String.format("======= [shiro cache] : JedisCache#put(%s, %s) =======", key, value));
 		V previos = this.get(key);
 		byte[] byteHkey = this.getJedisManager().getName().getBytes();
-		byte[] byteField = SerializeUtils.serialize(key);
-		byte[] byteValue = SerializeUtils.serialize(value);
+		byte[] byteField = ShiroSerializeUtils.serialize(key);
+		byte[] byteValue = ShiroSerializeUtils.serialize(value);
 		this.getJedisManager().hset(byteHkey, byteField, byteValue);
 		return previos;
 	}
@@ -66,10 +66,10 @@ public class JedisCache<K, V> implements Cache<K, V> {
 	//移除缓存中key对应的值，返回该值
 	@Override
 	public V remove(K key) throws CacheException {
-		if(LOG.isInfoEnabled()) LOG.info(String.format("======= [shiro] : JedisCache#remove(%s) =======", key));
+		if(LOG.isInfoEnabled()) LOG.info(String.format("======= [shiro cache] : JedisCache#remove(%s) =======", key));
 		V previos = this.get(key);
 		byte[] byteHkey = this.getJedisManager().getName().getBytes();
-		byte[] byteField = SerializeUtils.serialize(key);
+		byte[] byteField = ShiroSerializeUtils.serialize(key);
 		this.getJedisManager().hdel(byteHkey, byteField);
 		return previos;
 	}
@@ -77,7 +77,7 @@ public class JedisCache<K, V> implements Cache<K, V> {
 	//清空整个缓存
 	@Override
 	public void clear() throws CacheException {
-		if(LOG.isInfoEnabled()) LOG.info("======= [shiro] : JedisCache#clear() =======");
+		if(LOG.isInfoEnabled()) LOG.info("======= [shiro cache] : JedisCache#clear() =======");
 		byte[] byteHkey = this.getJedisManager().getName().getBytes();
 		this.getJedisManager().del(byteHkey);
 	}
@@ -85,7 +85,7 @@ public class JedisCache<K, V> implements Cache<K, V> {
 	//返回缓存大小
 	@Override
 	public int size() {
-		if(LOG.isInfoEnabled()) LOG.info("======= [shiro] : JedisCache#size() =======");
+		if(LOG.isInfoEnabled()) LOG.info("======= [shiro cache] : JedisCache#size() =======");
 		byte[] byteHkey = this.getJedisManager().getName().getBytes();
 		Long num = this.getJedisManager().hlen(byteHkey);
 		if(null==num) return 0;
@@ -95,7 +95,7 @@ public class JedisCache<K, V> implements Cache<K, V> {
 	//获取缓存中所有的key
 	@Override
 	public Set<K> keys() {
-		if(LOG.isInfoEnabled()) LOG.info("======= [shiro] : JedisCache#keys() =======");
+		if(LOG.isInfoEnabled()) LOG.info("======= [shiro cache] : JedisCache#keys() =======");
 		byte[] byteHkey = this.getJedisManager().getName().getBytes();
 		Set<byte[]> keys = this.getJedisManager().hkeys(byteHkey);
 		if(null==keys || keys.size()==0) {
@@ -104,7 +104,7 @@ public class JedisCache<K, V> implements Cache<K, V> {
 			Set<K> ret = new HashSet<>();
 			for(byte[] keyBytes : keys) {
 				if(null==keyBytes) continue;
-				K key = (K) SerializeUtils.deserialize(keyBytes);
+				K key = (K) ShiroSerializeUtils.deserialize(keyBytes);
 				ret.add(key);
 			}
 			return Collections.unmodifiableSet(ret);
@@ -115,7 +115,7 @@ public class JedisCache<K, V> implements Cache<K, V> {
 	//获取缓存中所有的value
 	@Override
 	public Collection<V> values() {
-		if(LOG.isInfoEnabled()) LOG.info("======= [shiro] : JedisCache#values() =======");
+		if(LOG.isInfoEnabled()) LOG.info("======= [shiro cache] : JedisCache#values() =======");
 		byte[] byteHkey = this.getJedisManager().getName().getBytes();
 		List<byte[]> values = this.getJedisManager().hvals(byteHkey);
 		if(null==values || values.size()==0) {
@@ -124,7 +124,7 @@ public class JedisCache<K, V> implements Cache<K, V> {
 			List<V> ret = new ArrayList<>();
 			for(byte[] valueBytes : values) {
 				if(null==valueBytes) continue;
-				V value = (V) SerializeUtils.deserialize(valueBytes);
+				V value = (V) ShiroSerializeUtils.deserialize(valueBytes);
 				ret.add(value);
 			}
 			return Collections.unmodifiableList(ret);

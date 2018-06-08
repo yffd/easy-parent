@@ -1,6 +1,6 @@
-package com.yffd.easy.uupm.entity;
+package com.yffd.easy.uupm.entity.a;
 
-import com.yffd.easy.framework.common.persist.entity.CommonEntity;
+import com.yffd.easy.framework.pojo.entity.CommonEntity;
 
 /**
  * @Description  简单描述该类的功能（可选）.

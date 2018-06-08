@@ -14,7 +14,13 @@
 	    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
 	    default-lazy-init="true">
 	
+	<!-- ::自定义shiro拦截器 -->
+	<bean id="loginPathMatchingFilter" class="com.yffd.easy.demo.shiro.custom.filter.LoginPathMatchingFilter"/>
+	<bean id="rolePathMatchingFilter" class="com.yffd.easy.demo.shiro.custom.filter.RolePathMatchingFilter"/>
+	<bean id="permissionPathMatchingFilter" class="com.yffd.easy.demo.shiro.custom.filter.PermissionPathMatchingFilter"/>
+	
 	<!-- 对应于web.xml中配置的那个shiroFilter -->
+	<!-- 1、先执行Shiro自己的Filter链；2、再执行Servlet容器的Filter链（即原始的Filter）-->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <!-- Shiro的核心安全接口，这个属性是必须的 -->
         <property name="securityManager" ref="securityManager"/>
@@ -25,21 +31,42 @@
         <!-- 用户访问未对其授权的资源时，所显示的连接 -->
         <property name="unauthorizedUrl" value="/error/unauthorized"/>
         <property name="filterChainDefinitions">
-        <!-- authc:身份验证通过 、user:身份验证通过或RememberMe登录-->
+        <!-- authc:身份验证通过 、user:身份验证通过或RememberMe登录 -->
             <value>
-                /admin/**=authc
+<!--                 /admin/**=authc -->
+<!--                 /admin/**=login -->
+<!--                 /admin/**=role[admin] -->
+                /admin/**=permission[user:create]
                 /html/**=user
             </value>
         </property>
+        <property name="filters">
+           <util:map>
+              <entry key="login" value-ref="loginPathMatchingFilter"/>
+              <entry key="role" value-ref="rolePathMatchingFilter"/>
+              <entry key="permission" value-ref="permissionPathMatchingFilter"/>
+<!--               <entry key="simple" value-ref="simple"></entry> -->
+<!--               <entry key="kickout" value-ref="kickoutSessionFilter"></entry> -->
+           </util:map>
+       </property>
     </bean>
     
     <!-- ::安全管理器 -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="securityRealm"/>
 <!--     	<property name="cacheManager" ref="cacheManager"/> -->
         <property name="sessionManager" ref="sessionManager"/>
         <property name="rememberMeManager" ref="rememberMeManager"/>
-        <property name="realm" ref="jdbcRealm"/>
     </bean>
+    
+    <!-- ::安全数据源 -->
+    <bean id="securityRealm" class="com.yffd.easy.demo.shiro.custom.realm.SecurityRealm">
+    	<property name="securityService" ref="securityService"/>
+    	<!-- 指定密码匹配器 -->
+        <property name="credentialsMatcher" ref="credentialsMatcher"/>
+    </bean>
+    <!-- 凭证匹配器 -->
+    <bean id="credentialsMatcher" class="com.yffd.easy.demo.shiro.custom.credential.RetryLimitHashedCredentialsMatcher"/>
     
     <!-- ::缓存管理器 jedis实现 -->  
 <!-- 	<bean id="cacheManager" class="com.yffd.easy.demo.shiro.custom.cache.JedisCacheManager"> -->
@@ -52,44 +79,23 @@
     	<property name="globalSessionTimeout" value="1800000"/>
     	<!-- 是否删除无效的，默认也是开启 -->
     	<property name="deleteInvalidSessions" value="true"/>
-    	<!-- 是否开启 检测，默认开启 -->
-    	<property name="sessionValidationSchedulerEnabled" value="true"/>
-    	<property name="sessionValidationScheduler" ref="sessionValidationScheduler"/>
+    	<!-- session 监听，可以多个 -->
+	   	<property name="sessionListeners">
+	   		<list>
+	   			<ref bean="sessionListener"/>
+	   		</list>
+	   	</property>
     	<property name="sessionDAO" ref="sessionDAO"/>
     </bean>
-    <!-- 会话验证调度器 -->
-	<bean id="sessionValidationScheduler" class="org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler">
-		 <!-- 间隔多少时间检查，不配置是60分钟 -->
-	     <property name="interval" value="1800000"/>
-	     <property name="sessionManager" ref="sessionManager"/>
+	<!-- session监听 -->
+	<bean id="sessionListener" class="com.yffd.easy.demo.shiro.custom.session.listener.JedisSessionListener">
+		<property name="jedisManager" ref="jedisManager"/>
 	</bean>
 	<!-- 会话DAO -->
-	<bean id="sessionDAO" class="com.yffd.easy.demo.shiro.custom.session.JedisChacheSessionDao">
+	<bean id="sessionDAO" class="com.yffd.easy.demo.shiro.custom.session.dao.JedisChacheSessionDao">
 		<property name="jedisManager" ref="jedisManager"/>
 	</bean>
 	
-	
-	
-    <!-- ::使用Shiro自带的JdbcRealm类，指定存储用户、角色、权限许可的数据源及相关查询语句 -->
-    <bean id="jdbcRealm" class="org.apache.shiro.realm.jdbc.JdbcRealm">
-        <property name="dataSource" ref="dataSource"/>
-    	<!-- 指定密码匹配所需要用到的加密对象 -->
-        <property name="credentialsMatcher" ref="credentialsMatcher"/>
-        <!-- 默认不支持权限查找(permissionsQuery)，true:使之生效 -->
-        <property name="permissionsLookupEnabled" value="true"/>
-        <property name="authenticationQuery"
-                  value="SELECT password FROM sec_user WHERE user_name = ?"/>
-        <property name="userRolesQuery"
-                  value="SELECT role_name from sec_user_role left join sec_role using(role_id) left join sec_user using(user_id) WHERE user_name = ?"/>
-        <property name="permissionsQuery"
-                  value="SELECT permission_name FROM sec_role_permission left join sec_role using(role_id) left join sec_permission using(permission_id) WHERE role_name = ?"/>
-    </bean>
-    
-    <!-- ::凭证匹配器：数据库保存的密码是使用MD5算法加密的，所以这里需要配置一个密码匹配对象 -->
-    <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.Md5CredentialsMatcher"/>
-    
-    
-    
     <!-- ::rememberMe管理器 -->
     <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
         <!-- rememberMe cookie加密的密钥 建议每个项目都不一样 默认AES算法 密钥长度（128 256 512 位）-->
@@ -103,23 +109,9 @@
 		<property name="maxAge" value="2592000"/><!-- 30天 -->
 	</bean>
     
-    
-
     <!-- ::生命周期处理器-->
 	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
 	
-	<!-- ::jedis管理器 -->
-<!-- 	<bean id="jedisCustomManager" class="com.yffd.easy.demo.shiro.shiro.jedis.JedisCustomJsonManager"> -->
-<!-- 		<property name="jedisPool" ref="jedisPool"/> -->
-<!-- 		<property name="name" value="shiro"/> -->
-<!-- 		<property name="dbIndex" value="5"/> -->
-<!-- 	</bean> -->
-<!-- 	<bean id="jedisCustomSessionManager" class="com.yffd.easy.demo.shiro.shiro.jedis.JedisCustomSessionManager"> -->
-<!-- 		<property name="jedisPool" ref="jedisPool"/> -->
-<!-- 		<property name="name" value="shiro:sid"/> -->
-<!-- 		<property name="dbIndex" value="5"/> -->
-<!-- 	</bean> -->
-
 	<!-- ::jedis管理器 -->
 	<bean id="jedisManager" class="com.yffd.easy.demo.shiro.custom.jedis.JedisSingleManager">
 		<property name="jedisPool" ref="jedisPool"/>

@@ -1,13 +1,10 @@
-package com.yffd.easy.uupm.service;
+package com.yffd.easy.uupm.service.a;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
-import com.yffd.easy.uupm.dao.UupmMenuDao;
-import com.yffd.easy.uupm.entity.UupmMenuEntity;
+import com.yffd.easy.uupm.entity.a.UupmMenuEntity;
 import com.yffd.easy.uupm.pojo.vo.UupmMenuInfoVo;
 
 /**
@@ -21,19 +18,11 @@ import com.yffd.easy.uupm.pojo.vo.UupmMenuInfoVo;
 @Service
 public class UupmMenuService extends UupmBaseService<UupmMenuEntity> {
 
-	@Autowired
-	private UupmMenuDao uupmMenuDao;
-
-	@Override
-	protected IMybatisCommonDao<UupmMenuEntity> getBindDao() {
-		return uupmMenuDao;
-	}
-	
 	public List<UupmMenuInfoVo> findMenuList(String ttCode, String parentCode) {
 		UupmMenuInfoVo menuInfoVo = new UupmMenuInfoVo();
 		menuInfoVo.setTtCode(ttCode);
 		menuInfoVo.setParentCode(parentCode);
-		return this.uupmMenuDao.findMenuInfoList(menuInfoVo);
+		return this.findMenuInfoList(menuInfoVo);
 	}
 	
 //	public int addMenuForAdmin(String ttCode) {
@@ -87,13 +76,25 @@ public class UupmMenuService extends UupmBaseService<UupmMenuEntity> {
 	public List<UupmMenuInfoVo> findMenuInfoForAdmin(String ttCode) {
 		UupmMenuInfoVo menuInfoVo = new UupmMenuInfoVo();
 		menuInfoVo.setTtCode(ttCode);
-		return this.uupmMenuDao.findMenuInfoForAdminList(menuInfoVo);
+		return this.findMenuInfoForAdminList(menuInfoVo);
 	}
 	
 	public List<UupmMenuInfoVo> findMenuInfoForDefault(String ttCode) {
 		UupmMenuInfoVo menuInfoVo = new UupmMenuInfoVo();
 		menuInfoVo.setTtCode(ttCode);
-		return this.uupmMenuDao.findMenuInfoForDefaultList(menuInfoVo);
+		return this.findMenuInfoForDefaultList(menuInfoVo);
 	}
 	
+	
+	public List<UupmMenuInfoVo> findMenuInfoList(UupmMenuInfoVo menuInfoVo) {
+		return this.selectListByCustom("selectMenuInfo", menuInfoVo, true);
+	}
+	
+	public List<UupmMenuInfoVo> findMenuInfoForAdminList(UupmMenuInfoVo menuInfoVo) {
+		return this.selectListByCustom("selectMenuInfoForAdmin", menuInfoVo, true);
+	}
+	
+	public List<UupmMenuInfoVo> findMenuInfoForDefaultList(UupmMenuInfoVo menuInfoVo) {
+		return this.selectListByCustom("selectMenuInfoForDefault", menuInfoVo, true);
+	}
 }

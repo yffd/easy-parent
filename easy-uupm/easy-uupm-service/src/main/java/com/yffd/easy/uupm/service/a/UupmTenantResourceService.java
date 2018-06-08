@@ -1,20 +1,17 @@
-package com.yffd.easy.uupm.service;
+package com.yffd.easy.uupm.service.a;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
 import com.yffd.easy.framework.pojo.login.LoginInfo;
-import com.yffd.easy.uupm.dao.UupmTenantResourceDao;
-import com.yffd.easy.uupm.entity.UupmResourceEntity;
-import com.yffd.easy.uupm.entity.UupmTenantResourceEntity;
+import com.yffd.easy.uupm.entity.a.UupmResourceEntity;
+import com.yffd.easy.uupm.entity.a.UupmTenantResourceEntity;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -27,14 +24,6 @@ import com.yffd.easy.uupm.entity.UupmTenantResourceEntity;
 @Service
 public class UupmTenantResourceService extends UupmBaseService<UupmTenantResourceEntity> {
 
-	@Autowired
-	private UupmTenantResourceDao uupmTenantResourceDao;
-	
-	@Override
-	protected IMybatisCommonDao<UupmTenantResourceEntity> getBindDao() {
-		return this.uupmTenantResourceDao;
-	}
-
 	/**
 	 * 某租户所拥有的所有资源
 	 * @Date	2018年5月23日 上午11:30:33 <br/>
@@ -43,7 +32,7 @@ public class UupmTenantResourceService extends UupmBaseService<UupmTenantResourc
 	 * @return
 	 */
 	public List<UupmResourceEntity> findTenantResource(String ttCode) {
-		return this.uupmTenantResourceDao.selectTenantResource(ttCode);
+		return this.selectTenantResource(ttCode);
 	}
 	
 	/**
@@ -86,7 +75,15 @@ public class UupmTenantResourceService extends UupmBaseService<UupmTenantResourc
 	}
 	
 	public int delByRsCodes(Set<String> rsCodes) {
-		return this.uupmTenantResourceDao.delByRsCodes(rsCodes);
+		return this.deleteByProps("rsCodeIter", rsCodes);
+	}
+	
+	
+	
+	public List<UupmResourceEntity> selectTenantResource(String ttCode) {
+		UupmTenantResourceEntity entity = new UupmTenantResourceEntity();
+		entity.setTtCode(ttCode);
+		return this.selectListByCustom("selectTenantResource", entity, true);
 	}
 	
 }

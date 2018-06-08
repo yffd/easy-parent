@@ -1,4 +1,4 @@
-package com.yffd.easy.demo.shiro.uitl;
+package com.yffd.easy.demo.shiro.custom.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,8 +18,8 @@ import org.slf4j.LoggerFactory;
  * @since		 JDK 1.7+
  * @see 	 
  */
-public class SerializeUtils {
-	private static final Logger LOG = LoggerFactory.getLogger(SerializeUtils.class);
+public class ShiroSerializeUtils {
+	private static final Logger LOG = LoggerFactory.getLogger(ShiroSerializeUtils.class);
 
 	public static byte[] serialize(Object value) {
 		if(null==value) throw new NullPointerException("Can't serialize null");

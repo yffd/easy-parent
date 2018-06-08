@@ -22,9 +22,9 @@ import com.yffd.easy.framework.pojo.page.PageParam;
 import com.yffd.easy.framework.pojo.page.PageResult;
 import com.yffd.easy.framework.pojo.vo.DataGridVo;
 import com.yffd.easy.framework.pojo.vo.RespData;
-import com.yffd.easy.uupm.entity.UupmRoleResourceEntity;
-import com.yffd.easy.uupm.entity.UupmTenantResourceEntity;
-import com.yffd.easy.uupm.service.UupmRoleResourceService;
+import com.yffd.easy.uupm.entity.a.UupmRoleResourceEntity;
+import com.yffd.easy.uupm.entity.a.UupmTenantResourceEntity;
+import com.yffd.easy.uupm.service.a.UupmRoleResourceService;
 import com.yffd.easy.uupm.web.base.UupmBaseController;
 
 /**

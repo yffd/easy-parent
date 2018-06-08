@@ -1,4 +1,4 @@
-package com.yffd.easy.framework.common.persist.entity;
+package com.yffd.easy.framework.pojo.entity;
 
 import java.io.Serializable;
 import java.util.Date;

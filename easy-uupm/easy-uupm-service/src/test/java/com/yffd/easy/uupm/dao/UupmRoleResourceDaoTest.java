@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yffd.easy.uupm.base.UupmBaseDaoTest;
-import com.yffd.easy.uupm.entity.UupmRoleResourceEntity;
+import com.yffd.easy.uupm.entity.a.UupmRoleResourceEntity;
 
 /**
  * @Description  简单描述该类的功能（可选）.

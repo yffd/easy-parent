@@ -1,4 +1,4 @@
-package com.yffd.easy.uupm.service;
+package com.yffd.easy.uupm.service.a;
 
 import java.util.HashSet;
 import java.util.List;
@@ -11,9 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
 import com.yffd.easy.framework.common.exception.CommonBizException;
-import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
-import com.yffd.easy.uupm.dao.UupmResourceDao;
-import com.yffd.easy.uupm.entity.UupmResourceEntity;
+import com.yffd.easy.uupm.entity.a.UupmResourceEntity;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -30,14 +28,6 @@ public class UupmResourceService extends UupmBaseService<UupmResourceEntity> {
 	private UupmTenantResourceService uupmTenantResourceService;
 	@Autowired
 	private UupmRoleResourceService uupmRoleResourceService;
-	
-	@Autowired
-	private UupmResourceDao uupmResourceDao;
-	
-	@Override
-	protected IMybatisCommonDao<UupmResourceEntity> getBindDao() {
-		return this.uupmResourceDao;
-	}
 	
 	public Set<String> findRsCodesByTreeId(String treeId) {
 		if(EasyStringCheckUtils.isEmpty(treeId)) throw CommonBizException.BIZ_PARAMS_IS_EMPTY();
@@ -69,10 +59,14 @@ public class UupmResourceService extends UupmBaseService<UupmResourceEntity> {
 
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public int delByRsCodes(Set<String> rsCodes) {
-		int num = this.uupmResourceDao.delByRsCodes(rsCodes);	// 删除资源
+		int num = this.deleteByProps("rsCodeIter", rsCodes);	// 删除资源
 		this.uupmTenantResourceService.delByRsCodes(rsCodes);	// 删除 资源-租户关联
 		this.uupmRoleResourceService.delByRsCodes(rsCodes);		// 删除 资源-角色关联
 		return num;
+	}
+	
+	public Integer delByIds(Set<String> ids) {
+		return this.deleteByProps("idIter", ids);
 	}
 	
 }

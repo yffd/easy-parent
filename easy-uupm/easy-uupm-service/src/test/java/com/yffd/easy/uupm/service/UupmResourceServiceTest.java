@@ -7,7 +7,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yffd.easy.uupm.base.UupmBaseServiceTest;
-import com.yffd.easy.uupm.entity.UupmResourceEntity;
+import com.yffd.easy.uupm.entity.a.UupmResourceEntity;
+import com.yffd.easy.uupm.service.a.UupmResourceService;
 
 public class UupmResourceServiceTest extends UupmBaseServiceTest {
 

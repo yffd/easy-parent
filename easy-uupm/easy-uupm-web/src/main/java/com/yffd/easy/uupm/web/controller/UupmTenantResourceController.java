@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSON;
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
 import com.yffd.easy.framework.pojo.vo.RespData;
-import com.yffd.easy.uupm.entity.UupmResourceEntity;
+import com.yffd.easy.uupm.entity.a.UupmResourceEntity;
 import com.yffd.easy.uupm.pojo.factory.UupmResourceFactory;
 import com.yffd.easy.uupm.pojo.vo.easyui.UupmUIResTreeVo;
-import com.yffd.easy.uupm.service.UupmTenantResourceService;
+import com.yffd.easy.uupm.service.a.UupmTenantResourceService;
 import com.yffd.easy.uupm.web.base.UupmBaseController;
 
 /**

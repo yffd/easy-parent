@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.yffd.easy.common.core.tree.custom.EasyCustomTreeBuilder;
-import com.yffd.easy.uupm.entity.UupmResourceEntity;
+import com.yffd.easy.uupm.entity.a.UupmResourceEntity;
 import com.yffd.easy.uupm.pojo.vo.easyui.UupmUIResTreeVo;
 
 /**

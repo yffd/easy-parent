@@ -14,10 +14,10 @@ import com.yffd.easy.framework.pojo.page.PageParam;
 import com.yffd.easy.framework.pojo.page.PageResult;
 import com.yffd.easy.framework.pojo.vo.DataGridVo;
 import com.yffd.easy.framework.pojo.vo.RespData;
-import com.yffd.easy.uupm.entity.UupmUITreeEntity;
+import com.yffd.easy.uupm.entity.a.UupmUITreeEntity;
 import com.yffd.easy.uupm.pojo.factory.ui.UupmUITreeFactory;
 import com.yffd.easy.uupm.pojo.vo.easyui.UupmUIComboTreeVo;
-import com.yffd.easy.uupm.service.UupmUITreeService;
+import com.yffd.easy.uupm.service.a.UupmUITreeService;
 import com.yffd.easy.uupm.web.base.UupmBaseController;
 
 /**

@@ -1,5 +1,9 @@
 package com.yffd.easy.uupm.pojo.enums;
 
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @Description  租户类型枚举.
  * @Date		 2018年1月29日 下午3:32:20 <br/>
@@ -15,10 +19,10 @@ public enum UupmTenantTypeEnum {
 	OTHER_GROUP("4", "其它组织"),
 	;
 	private String code;
-	private String text;
-	private UupmTenantTypeEnum(String code, String text) {
+	private String desc;
+	private UupmTenantTypeEnum(String code, String desc) {
 		this.code = code;
-		this.text = text;
+		this.desc = desc;
 	}
 	public String getCode() {
 		return code;
@@ -26,11 +30,20 @@ public enum UupmTenantTypeEnum {
 	public void setCode(String code) {
 		this.code = code;
 	}
-	public String getText() {
-		return text;
+	public String getDesc() {
+		return desc;
 	}
-	public void setText(String text) {
-		this.text = text;
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+	
+	public static Map<String, String> getMap() {
+		Map<String, String> map = new HashMap<String, String>();
+		EnumSet<UupmAppSystemTypeEnum> enumSet = EnumSet.allOf(UupmAppSystemTypeEnum.class);
+        for (UupmAppSystemTypeEnum tmp : enumSet) {
+        	map.put(tmp.getCode(), tmp.getDesc());
+        }
+        return map;
 	}
 }
 

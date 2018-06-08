@@ -13,8 +13,8 @@ import com.yffd.easy.framework.pojo.page.PageParam;
 import com.yffd.easy.framework.pojo.page.PageResult;
 import com.yffd.easy.framework.pojo.vo.DataGridVo;
 import com.yffd.easy.framework.pojo.vo.RespData;
-import com.yffd.easy.uupm.entity.UupmTenantEntity;
-import com.yffd.easy.uupm.service.UupmTenantService;
+import com.yffd.easy.uupm.entity.a.UupmTenantEntity;
+import com.yffd.easy.uupm.service.a.UupmTenantService;
 import com.yffd.easy.uupm.web.base.UupmBaseController;
 
 /**

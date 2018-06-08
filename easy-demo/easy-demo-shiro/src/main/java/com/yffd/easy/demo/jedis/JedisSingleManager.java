@@ -11,7 +11,7 @@ import org.apache.shiro.cache.CacheException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.yffd.easy.demo.shiro.uitl.SerializeUtils;
+import com.yffd.easy.demo.shiro.custom.util.ShiroSerializeUtils;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -37,7 +37,7 @@ public class JedisSingleManager implements IJedisManager {
     @Override
     public <K, V> V get(K key) throws CacheException {
 		byte[] byteHkey = this.getHkeyId().getBytes();
-		byte[] byteField = SerializeUtils.serialize(key);
+		byte[] byteField = ShiroSerializeUtils.serialize(key);
 		byte[] byteValue = new byte[0];
 		Jedis jedis = null;
 		try {
@@ -49,15 +49,15 @@ public class JedisSingleManager implements IJedisManager {
 			this.close(jedis);
 		}
 		if(null==byteValue) return null;
-		return (V) SerializeUtils.deserialize(byteValue);
+		return (V) ShiroSerializeUtils.deserialize(byteValue);
 	}
 
     @Override
 	public <K, V> V put(K key, V value) throws CacheException {
 		V previos = this.get(key);
 		byte[] byteHkey = this.getHkeyId().getBytes();
-		byte[] byteField = SerializeUtils.serialize(key);
-		byte[] byteValue = SerializeUtils.serialize(value);
+		byte[] byteField = ShiroSerializeUtils.serialize(key);
+		byte[] byteValue = ShiroSerializeUtils.serialize(value);
 		Jedis jedis = null;
 		try {
 			jedis = this.getClient();
@@ -74,7 +74,7 @@ public class JedisSingleManager implements IJedisManager {
 	public <K, V> V remove(K key) throws CacheException {
 		V previos = this.get(key);
 		byte[] byteHkey = this.getHkeyId().getBytes();
-		byte[] byteField = SerializeUtils.serialize(key);
+		byte[] byteField = ShiroSerializeUtils.serialize(key);
 		Jedis jedis = null;
 		try {
 			jedis = this.getClient();
@@ -128,7 +128,7 @@ public class JedisSingleManager implements IJedisManager {
 			if(null!=keys && keys.size()>0) {
 				for(byte[] keyBytes : keys) {
 					if(null==keyBytes) continue;
-					K key = (K) SerializeUtils.deserialize(keyBytes);
+					K key = (K) ShiroSerializeUtils.deserialize(keyBytes);
 					result.add(key);
 				}
 			}
@@ -151,7 +151,7 @@ public class JedisSingleManager implements IJedisManager {
 			if(null!=valueList && valueList.size()>0) {
 				for(byte[] valueBytes : valueList) {
 					if(null==valueBytes) continue;
-					V value = (V) SerializeUtils.deserialize(valueBytes);
+					V value = (V) ShiroSerializeUtils.deserialize(valueBytes);
 					result.add(value);
 				}
 			}

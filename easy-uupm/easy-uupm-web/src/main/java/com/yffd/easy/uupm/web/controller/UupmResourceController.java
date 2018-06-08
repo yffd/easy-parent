@@ -17,10 +17,10 @@ import com.yffd.easy.framework.pojo.page.PageParam;
 import com.yffd.easy.framework.pojo.page.PageResult;
 import com.yffd.easy.framework.pojo.vo.DataGridVo;
 import com.yffd.easy.framework.pojo.vo.RespData;
-import com.yffd.easy.uupm.entity.UupmResourceEntity;
+import com.yffd.easy.uupm.entity.a.UupmResourceEntity;
 import com.yffd.easy.uupm.pojo.factory.UupmResourceFactory;
 import com.yffd.easy.uupm.pojo.vo.easyui.UupmUIResTreeVo;
-import com.yffd.easy.uupm.service.UupmResourceService;
+import com.yffd.easy.uupm.service.a.UupmResourceService;
 import com.yffd.easy.uupm.web.base.UupmBaseController;
 /**
  * @Description  简单描述该类的功能（可选）.

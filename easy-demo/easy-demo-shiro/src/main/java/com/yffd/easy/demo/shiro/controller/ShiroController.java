@@ -61,6 +61,7 @@ public class ShiroController {
             System.out.println("isRemembered:" + subject.isRemembered());
             if (subject.isAuthenticated()) {
                 request.getSession().setAttribute("user",user);
+                Object obj = request.getSession(false).getAttribute("shiroSavedRequest");
                 SavedRequest savedRequest = WebUtils.getSavedRequest(request);
                 // 获取保存的URL
                 if (savedRequest == null || savedRequest.getRequestUrl() == null) {

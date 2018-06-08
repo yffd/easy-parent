@@ -1,5 +1,7 @@
 package com.yffd.easy.demo.shiro.model;
 
+import java.io.Serializable;
+
 /**
  * @Description  简单描述该类的功能（可选）.
  * @Date		 2018年5月29日 下午5:09:13 <br/>
@@ -8,10 +10,19 @@ package com.yffd.easy.demo.shiro.model;
  * @since		 JDK 1.7+
  * @see 	 
  */
-public class User {
+public class User implements Serializable {
+	private static final long serialVersionUID = 5125161432089675152L;
+	private String userId;
 	private String userName;
 	private String password;
 	private String salt;
+
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 	public String getUserName() {
 		return userName;
 	}

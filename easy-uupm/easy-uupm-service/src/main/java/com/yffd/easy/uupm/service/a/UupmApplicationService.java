@@ -1,4 +1,4 @@
-package com.yffd.easy.uupm.service;
+package com.yffd.easy.uupm.service.a;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -6,10 +6,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
-import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
 import com.yffd.easy.framework.pojo.login.LoginInfo;
 import com.yffd.easy.uupm.dao.UupmApplicationDao;
-import com.yffd.easy.uupm.entity.UupmApplicationEntity;
+import com.yffd.easy.uupm.entity.a.UupmApplicationEntity;
 import com.yffd.easy.uupm.exception.UupmBizException;
 
 /**
@@ -22,14 +21,6 @@ import com.yffd.easy.uupm.exception.UupmBizException;
  */
 @Service
 public class UupmApplicationService extends UupmBaseService<UupmApplicationEntity> {
-
-	@Autowired
-	private UupmApplicationDao uupmApplicationDao;
-	
-	@Override
-	protected IMybatisCommonDao<UupmApplicationEntity> getBindDao() {
-		return uupmApplicationDao;
-	}
 
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public int saveAppCfg(UupmApplicationEntity model, LoginInfo loginInfo) {

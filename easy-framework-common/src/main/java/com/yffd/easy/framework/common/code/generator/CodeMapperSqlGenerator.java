@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
-import com.yffd.easy.framework.common.persist.entity.CommonPartialTreeEntity;
+import com.yffd.easy.framework.pojo.entity.CommonPartialTreeEntity;
 
 /**
  * @Description  Mapper中的sql片段拼写生成器.

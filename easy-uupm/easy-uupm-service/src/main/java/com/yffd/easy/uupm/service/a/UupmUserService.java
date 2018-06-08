@@ -1,4 +1,8 @@
-package com.yffd.easy.uupm.service;
+package com.yffd.easy.uupm.service.a;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -7,13 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
 import com.yffd.easy.framework.common.exception.CommonBizException;
-import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
+import com.yffd.easy.framework.common.persist.mybatis.constants.MybatisConstants;
 import com.yffd.easy.framework.pojo.login.LoginInfo;
 import com.yffd.easy.framework.pojo.page.PageParam;
 import com.yffd.easy.framework.pojo.page.PageResult;
-import com.yffd.easy.uupm.dao.UupmUserDao;
-import com.yffd.easy.uupm.entity.UupmAccountEntity;
-import com.yffd.easy.uupm.entity.UupmUserEntity;
+import com.yffd.easy.uupm.entity.a.UupmAccountEntity;
+import com.yffd.easy.uupm.entity.a.UupmUserEntity;
 import com.yffd.easy.uupm.pojo.vo.UupmUserInfoVo;
 
 /**
@@ -32,17 +35,9 @@ public class UupmUserService extends UupmBaseService<UupmUserEntity> {
 	@Autowired
 	private UupmUserRoleService uupmUserRoleService;
 	
-	@Autowired
-	private UupmUserDao uupmUserDao;
-
-	@Override
-	protected IMybatisCommonDao<UupmUserEntity> getBindDao() {
-		return uupmUserDao;
-	}
-	
 	public PageResult<UupmUserInfoVo> findUserInfoPage(UupmUserInfoVo userInfo, PageParam pageParam, LoginInfo loginInfo) {
 		this.beforeSetPropertiesForQuery(userInfo, loginInfo);
-		return this.uupmUserDao.findUserInfoPage(userInfo, pageParam);
+		return this.findUserInfoPage(userInfo, pageParam);
 	}
 	
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
@@ -60,5 +55,26 @@ public class UupmUserService extends UupmBaseService<UupmUserEntity> {
 		int num = this.delete(model, loginInfo);	// 删除用户
 		this.uupmUserRoleService.delByUserCode(userCode, loginInfo);	// 删除 用户-角色关联
 		return num;
+	}
+	
+	
+	public PageResult<UupmUserInfoVo> findUserInfoPage(UupmUserInfoVo userInfo, PageParam pageParam) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(MybatisConstants.PARAM_NAME_VO, userInfo);
+		params.put(MybatisConstants.PARAM_NAME_PAGE, pageParam);
+		return this.selectPageByCustom(
+				"findUserInfoList", 
+				"findUserInfoCount", 
+				params, pageParam, true);
+	}
+	
+	public List<UupmUserInfoVo> findUserInfoList(UupmUserInfoVo userInfo) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(MybatisConstants.PARAM_NAME_PROPS_MAP, userInfo);
+		return this.selectListByCustom("findUserInfoList", params, true);
+	}
+	
+	public UupmUserInfoVo findUserInfo(UupmUserInfoVo userInfoVo) {
+		return this.selectOneByCustom("findUserInfo", userInfoVo, true);
 	}
 }

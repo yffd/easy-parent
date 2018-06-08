@@ -1,4 +1,4 @@
-package com.yffd.easy.uupm.service;
+package com.yffd.easy.uupm.service.a;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -7,10 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
 import com.yffd.easy.framework.common.exception.CommonBizException;
-import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
 import com.yffd.easy.framework.pojo.login.LoginInfo;
-import com.yffd.easy.uupm.dao.UupmTenantDao;
-import com.yffd.easy.uupm.entity.UupmTenantEntity;
+import com.yffd.easy.uupm.entity.a.UupmTenantEntity;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -28,14 +26,6 @@ public class UupmTenantService extends UupmBaseService<UupmTenantEntity> {
 	@Autowired
 	private UupmTenantResourceService uupmTenantResourceService;
 	
-	@Autowired
-	private UupmTenantDao uupmTenantDao;
-	
-	@Override
-	protected IMybatisCommonDao<UupmTenantEntity> getBindDao() {
-		return this.uupmTenantDao;
-	}
-
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public int addTenantWithAccount(UupmTenantEntity model, LoginInfo loginInfo) {
 		if(null==model) throw CommonBizException.BIZ_PARAMS_IS_EMPTY();

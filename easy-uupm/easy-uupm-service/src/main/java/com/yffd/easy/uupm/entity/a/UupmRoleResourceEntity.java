@@ -4,7 +4,7 @@
  * @version 1.0
 */
 
-package com.yffd.easy.uupm.entity;
+package com.yffd.easy.uupm.entity.a;
 
 import com.yffd.easy.uupm.pojo.base.UupmBasePojo;
 

@@ -1,4 +1,4 @@
-package com.yffd.easy.uupm.service;
+package com.yffd.easy.uupm.service.a;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -7,11 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
 import com.yffd.easy.framework.common.exception.CommonBizException;
-import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
 import com.yffd.easy.framework.pojo.login.LoginInfo;
-import com.yffd.easy.uupm.dao.UupmRoleDao;
-import com.yffd.easy.uupm.entity.UupmRoleEntity;
-import com.yffd.easy.uupm.entity.UupmRoleResourceEntity;
+import com.yffd.easy.uupm.entity.a.UupmRoleEntity;
+import com.yffd.easy.uupm.entity.a.UupmRoleResourceEntity;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -28,13 +26,6 @@ public class UupmRoleService extends UupmBaseService<UupmRoleEntity> {
 	private UupmRoleResourceService uupmRoleResourceService;
 	@Autowired
 	private UupmUserRoleService uupmUserRoleService;
-	@Autowired
-	private UupmRoleDao uupmRoleDao;
-
-	@Override
-	protected IMybatisCommonDao<UupmRoleEntity> getBindDao() {
-		return uupmRoleDao;
-	}
 	
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public int delByRoleCode(String roleCode, LoginInfo loginInfo) {

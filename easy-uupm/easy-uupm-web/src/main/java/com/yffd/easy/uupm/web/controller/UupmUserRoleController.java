@@ -15,8 +15,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
 import com.yffd.easy.framework.pojo.vo.RespData;
-import com.yffd.easy.uupm.entity.UupmUserRoleEntity;
-import com.yffd.easy.uupm.service.UupmUserRoleService;
+import com.yffd.easy.uupm.entity.a.UupmUserRoleEntity;
+import com.yffd.easy.uupm.service.a.UupmUserRoleService;
 import com.yffd.easy.uupm.web.base.UupmBaseController;
 
 /**

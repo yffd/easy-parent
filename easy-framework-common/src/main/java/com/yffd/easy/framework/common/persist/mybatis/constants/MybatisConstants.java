@@ -1,4 +1,4 @@
-package com.yffd.easy.framework.common.constants;
+package com.yffd.easy.framework.common.persist.mybatis.constants;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -8,7 +8,7 @@ package com.yffd.easy.framework.common.constants;
  * @since		 JDK 1.7+
  * @see 	 
  */
-public class CommonConstants {
+public class MybatisConstants {
 
 	/** mapper xml 中的SQL ID，即statement=insertOneBy */
 	public static final String SQL_ID_INSERT_ONE_BY = "insertOneBy";

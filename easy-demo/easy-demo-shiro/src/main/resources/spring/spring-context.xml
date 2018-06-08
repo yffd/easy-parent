@@ -8,6 +8,8 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
 	default-autowire="byName" default-lazy-init="false">
 
+	<context:component-scan base-package="com.yffd.easy.demo.shiro" />
+
 	<!-- 引入属性文件 -->
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -25,4 +27,6 @@
     <import resource="classpath:spring/spring-shiro.xml" />
 	<!-- 导入cache的相关配置 -->
     <import resource="classpath:spring/spring-cache-redis.xml" />
+	<!-- 导入bean的相关配置 -->
+    <import resource="classpath:spring/spring-bean.xml" />
 </beans>

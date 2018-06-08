@@ -24,7 +24,7 @@ public class JedisCacheManager implements CacheManager {
 
 	@Override
 	public <K, V> Cache<K, V> getCache(String name) throws CacheException {
-		if(LOG.isInfoEnabled()) LOG.info("======= [shiro] : JedisCacheManager#getCache =======");
+		if(LOG.isInfoEnabled()) LOG.info(String.format("======= [shiro cache manager] : JedisCacheManager#getCache(%s) =======", name));
 		return new JedisCache<K, V>(this.getJedisManager());
 	}
 	

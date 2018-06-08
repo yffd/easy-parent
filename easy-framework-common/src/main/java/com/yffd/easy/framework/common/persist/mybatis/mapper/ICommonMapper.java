@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.yffd.easy.framework.common.persist.mybatis.constants.MybatisConstants;
 import com.yffd.easy.framework.pojo.page.PageParam;
 
 /**
@@ -21,15 +22,23 @@ public interface ICommonMapper<E> {
 	
 	public int insertListBy(List<E> entityList);
 	
-	public int updateBy(@Param("entity") E entity, @Param("entityOld") E entityOld, @Param("propsMap") Map<String, Object> propsMap);
+	public int updateBy(@Param(MybatisConstants.PARAM_NAME_ENTITY) E entity, 
+			@Param(MybatisConstants.PARAM_NAME_ENTITY_OLD) E entityOld, 
+			@Param(MybatisConstants.PARAM_NAME_PROPS_MAP) Map<String, Object> propsMap);
 	
-	public int deleteBy(@Param("entity") E entity, @Param("propsMap") Map<String, Object> propsMap);
+	public int deleteBy(@Param(MybatisConstants.PARAM_NAME_ENTITY) E entity, 
+			@Param(MybatisConstants.PARAM_NAME_PROPS_MAP) Map<String, Object> propsMap);
 	
-	public E selectOneBy(@Param("entity") E entity, @Param("propsMap") Map<String, Object> propsMap);
+	public E selectOneBy(@Param(MybatisConstants.PARAM_NAME_ENTITY) E entity, 
+			@Param(MybatisConstants.PARAM_NAME_PROPS_MAP) Map<String, Object> propsMap);
 	
-	public Integer selectCountBy(@Param("entity") E entity, @Param("propsMap") Map<String, Object> propsMap);
+	public Integer selectCountBy(@Param(MybatisConstants.PARAM_NAME_ENTITY) E entity, 
+			@Param(MybatisConstants.PARAM_NAME_PROPS_MAP) Map<String, Object> propsMap);
 	
-	public List<E> selectListBy(@Param("entity") E entity, @Param("propsMap") Map<String, Object> propsMap, @Param("orderBy") String orderBy, @Param("page") PageParam page);
+	public List<E> selectListBy(@Param(MybatisConstants.PARAM_NAME_ENTITY) E entity, 
+			@Param(MybatisConstants.PARAM_NAME_PROPS_MAP) Map<String, Object> propsMap, 
+			@Param(MybatisConstants.PARAM_NAME_ORDER_BY) String orderBy, 
+			@Param(MybatisConstants.PARAM_NAME_PAGE) PageParam page);
 	
 }
 

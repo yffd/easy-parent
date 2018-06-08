@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yffd.easy.uupm.entity.UupmSecUserEntity">
+
+
+	<!-- ######################################################################### -->
+	<!-- #########################   common sql begin    ######################### -->
+	<!-- ######################################################################### -->
+	
+	<!-- 表名 -->
+	<sql id="table_name"> uupm_sec_user </sql>
+	<!-- 列名 -->
+	<sql id="table_columns">
+		t.VERSION as version, t.DEL_FLAG as delFlag, t.CREATE_BY as createBy, t.CREATE_TIME as createTime, t.UPDATE_BY as updateBy, 
+		t.UPDATE_TIME as updateTime, t.ID as id, t.TT_CODE as ttCode, t.ACCOUNT_ID as accountId, t.ORG_CODE as orgCode, 
+		t.USER_CODE as userCode, t.USER_NAME as userName
+	</sql>
+	<!-- 分页条件 -->
+	<sql id="conditions_limit"><if test="page != null"> limit #{page.startIndex}, #{page.pageLimit} </if></sql>
+	<!-- 排序条件 -->
+	<sql id="conditions_orderby">
+		<choose>
+			<when test="orderBy != null and orderBy !=''"> ORDER BY #{orderBy} </when>
+			<otherwise> ORDER BY id desc </otherwise>
+		</choose>
+	</sql>
+	<!-- 动态组装复合查询条件 -->
+	<sql id="conditions_where">
+		<if test="entity != null">
+			<!-- Equal query -->
+			<if test="entity.version != null "> and t.VERSION = #{entity.version} </if>
+			<if test="entity.delFlag != null and entity.delFlag != ''"> and t.DEL_FLAG = #{entity.delFlag} </if>
+			<if test="entity.createBy != null and entity.createBy != ''"> and t.CREATE_BY = #{entity.createBy} </if>
+			<if test="entity.createTime != null "><![CDATA[ and t.CREATE_TIME = #{entity.createTime}]]> </if>
+			<if test="entity.updateBy != null and entity.updateBy != ''"> and t.UPDATE_BY = #{entity.updateBy} </if>
+			<if test="entity.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{entity.updateTime}]]> </if>
+			<if test="entity.id != null and entity.id != ''"> and t.ID = #{entity.id} </if>
+			<if test="entity.ttCode != null and entity.ttCode != ''"> and t.TT_CODE = #{entity.ttCode} </if>
+			<if test="entity.accountId != null and entity.accountId != ''"> and t.ACCOUNT_ID = #{entity.accountId} </if>
+			<if test="entity.orgCode != null and entity.orgCode != ''"> and t.ORG_CODE = #{entity.orgCode} </if>
+			<if test="entity.userCode != null and entity.userCode != ''"> and t.USER_CODE = #{entity.userCode} </if>
+			<!-- Like query -->
+			<if test="entity.userName != null and entity.userName != ''"> and t.USER_NAME like CONCAT(CONCAT('%', #{entity.userName}), '%') </if>
+		</if>
+		<if test="propsMap != null">
+			<!-- In query -->
+			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
+			and t.ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.ttCodeIter != null and propsMap.ttCodeIter.size()>0">
+			and t.TT_CODE in <foreach item="item" index="index" collection="propsMap.ttCodeIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.accountIdIter != null and propsMap.accountIdIter.size()>0">
+			and t.ACCOUNT_ID in <foreach item="item" index="index" collection="propsMap.accountIdIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.orgCodeIter != null and propsMap.orgCodeIter.size()>0">
+			and t.ORG_CODE in <foreach item="item" index="index" collection="propsMap.orgCodeIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.userCodeIter != null and propsMap.userCodeIter.size()>0">
+			and t.USER_CODE in <foreach item="item" index="index" collection="propsMap.userCodeIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+		</if>
+	</sql>
+	<!-- 条件查询 -->
+	<select id="selectListBy" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.entity.UupmSecUserEntity">
+		select <include refid="table_columns" />
+		from <include refid="table_name"/> as t 
+		<where>
+			<include refid="conditions_where" />
+		</where>
+		<include refid="conditions_orderby" />
+		<include refid="conditions_limit" />
+	</select>
+	<!-- 统计查询 -->
+	<select id="selectCountBy" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from 
+		<include refid="table_name"/> as t 
+		<where>
+			<include refid="conditions_where" />
+		</where>
+	</select>
+	<!-- 单条查询 -->
+	<select id="selectOneBy" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.entity.UupmSecUserEntity">
+		select <include refid="table_columns" /> 
+		from <include refid="table_name"/> as t 
+		<where>
+			<include refid="conditions_where" />
+		</where>
+	</select>
+	<!-- 单条插入 -->
+	<insert id="insertOneBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table_name" />
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TT_CODE, ACCOUNT_ID, ORG_CODE, USER_CODE, USER_NAME)
+		values
+		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{ttCode}, #{accountId}, #{orgCode}, #{userCode}, #{userName})
+	</insert>
+	<!-- 批量插入 -->
+	<insert id="insertListBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="table_name" />
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TT_CODE, ACCOUNT_ID, ORG_CODE, USER_CODE, USER_NAME)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+		(#{item.version},#{item.delFlag},#{item.createBy},#{item.createTime},#{item.updateBy},
+		#{item.updateTime},#{item.ttCode},#{item.accountId},#{item.orgCode},#{item.userCode},
+		#{item.userName})
+		</foreach>
+	</insert>
+	<!-- 更新 -->
+	<update id="updateBy" parameterType="java.util.Map">
+		update <include refid="table_name" />
+		<set>
+		<if test="entity != null">
+			VERSION = VERSION + 1, 
+			<if test="entity.delFlag != null and entity.delFlag != ''"> DEL_FLAG = #{entity.delFlag},  </if>
+			<if test="entity.updateBy != null and entity.updateBy != ''"> UPDATE_BY = #{entity.updateBy},  </if>
+			<if test="entity.updateTime != null"> UPDATE_TIME = #{entity.updateTime},  </if>
+			<if test="entity.ttCode != null and entity.ttCode != ''"> TT_CODE = #{entity.ttCode},  </if>
+			<if test="entity.accountId != null and entity.accountId != ''"> ACCOUNT_ID = #{entity.accountId},  </if>
+			<if test="entity.orgCode != null and entity.orgCode != ''"> ORG_CODE = #{entity.orgCode},  </if>
+			<if test="entity.userCode != null and entity.userCode != ''"> USER_CODE = #{entity.userCode},  </if>
+			<if test="entity.userName != null and entity.userName != ''"> USER_NAME = #{entity.userName},  </if>
+		</if>
+		</set>
+		<where>
+		<choose>
+		<when test="entityOld != null or propsMap != null">
+		<if test="entityOld != null">
+			<!-- Equal query -->
+			<if test="entityOld.version != null "> and VERSION = #{entityOld.version} </if>
+			<if test="entityOld.delFlag != null and entityOld.delFlag != ''"> and DEL_FLAG = #{entityOld.delFlag} </if>
+			<if test="entityOld.createBy != null and entityOld.createBy != ''"> and CREATE_BY = #{entityOld.createBy} </if>
+			<if test="entityOld.createTime != null "><![CDATA[ and CREATE_TIME = #{entityOld.createTime}]]> </if>
+			<if test="entityOld.updateBy != null and entityOld.updateBy != ''"> and UPDATE_BY = #{entityOld.updateBy} </if>
+			<if test="entityOld.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entityOld.updateTime}]]> </if>
+			<if test="entityOld.id != null and entityOld.id != ''"> and ID = #{entityOld.id} </if>
+			<if test="entityOld.ttCode != null and entityOld.ttCode != ''"> and TT_CODE = #{entityOld.ttCode} </if>
+			<if test="entityOld.accountId != null and entityOld.accountId != ''"> and ACCOUNT_ID = #{entityOld.accountId} </if>
+			<if test="entityOld.orgCode != null and entityOld.orgCode != ''"> and ORG_CODE = #{entityOld.orgCode} </if>
+			<if test="entityOld.userCode != null and entityOld.userCode != ''"> and USER_CODE = #{entityOld.userCode} </if>
+			<if test="entityOld.userName != null and entityOld.userName != ''"> and USER_NAME = #{entityOld.userName} </if>
+		</if>
+		<if test="propsMap != null">
+			<!-- In query -->
+			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
+			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.ttCodeIter != null and propsMap.ttCodeIter.size()>0">
+			and TT_CODE in <foreach item="item" index="index" collection="propsMap.ttCodeIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.accountIdIter != null and propsMap.accountIdIter.size()>0">
+			and ACCOUNT_ID in <foreach item="item" index="index" collection="propsMap.accountIdIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.orgCodeIter != null and propsMap.orgCodeIter.size()>0">
+			and ORG_CODE in <foreach item="item" index="index" collection="propsMap.orgCodeIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.userCodeIter != null and propsMap.userCodeIter.size()>0">
+			and USER_CODE in <foreach item="item" index="index" collection="propsMap.userCodeIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+		</if>
+		</when>
+		<otherwise>
+		<!-- 防止没有参数传递，导致全部更新 -->
+		and 1=2
+		</otherwise>
+		</choose>
+		</where>
+	</update>
+	<!-- 删除 -->
+	<delete id="deleteBy" parameterType="java.util.Map">
+		delete from <include refid="table_name" />
+		<where>
+		<choose>
+		<when test="entity != null or propsMap != null">
+		<if test="entity != null">
+			<!-- Equal query -->
+			<if test="entity.version != null "> and VERSION = #{entity.version} </if>
+			<if test="entity.delFlag != null and entity.delFlag != ''"> and DEL_FLAG = #{entity.delFlag} </if>
+			<if test="entity.createBy != null and entity.createBy != ''"> and CREATE_BY = #{entity.createBy} </if>
+			<if test="entity.createTime != null "><![CDATA[ and CREATE_TIME = #{entity.createTime}]]> </if>
+			<if test="entity.updateBy != null and entity.updateBy != ''"> and UPDATE_BY = #{entity.updateBy} </if>
+			<if test="entity.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entity.updateTime}]]> </if>
+			<if test="entity.id != null and entity.id != ''"> and ID = #{entity.id} </if>
+			<if test="entity.ttCode != null and entity.ttCode != ''"> and TT_CODE = #{entity.ttCode} </if>
+			<if test="entity.accountId != null and entity.accountId != ''"> and ACCOUNT_ID = #{entity.accountId} </if>
+			<if test="entity.orgCode != null and entity.orgCode != ''"> and ORG_CODE = #{entity.orgCode} </if>
+			<if test="entity.userCode != null and entity.userCode != ''"> and USER_CODE = #{entity.userCode} </if>
+			<if test="entity.userName != null and entity.userName != ''"> and USER_NAME = #{entity.userName} </if>
+		</if>
+		<if test="propsMap != null">
+			<!-- In query -->
+			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
+			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.ttCodeIter != null and propsMap.ttCodeIter.size()>0">
+			and TT_CODE in <foreach item="item" index="index" collection="propsMap.ttCodeIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.accountIdIter != null and propsMap.accountIdIter.size()>0">
+			and ACCOUNT_ID in <foreach item="item" index="index" collection="propsMap.accountIdIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.orgCodeIter != null and propsMap.orgCodeIter.size()>0">
+			and ORG_CODE in <foreach item="item" index="index" collection="propsMap.orgCodeIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.userCodeIter != null and propsMap.userCodeIter.size()>0">
+			and USER_CODE in <foreach item="item" index="index" collection="propsMap.userCodeIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+		</if>
+		</when>
+		<otherwise>
+		<!-- 防止没有参数传递，导致全部删除 -->
+		and 1=2
+		</otherwise>
+		</choose>
+		</where>
+	</delete>
+	<!-- ######################################################################### -->
+	<!-- ##########################   common sql end    ########################## -->
+	<!-- ######################################################################### -->
+
+	<select id="findUserInfo" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.pojo.vo.UupmUserInfoVo">
+		select t.ACCOUNT_ID as accountId, t.ACCOUNT_PWD as accountPwd, t.ACCOUNT_STATUS as accountStatus, t.SALT as salt 
+		, u.USER_CODE as userCode, u.USER_NAME as userName
+		, org.ORG_CODE as orgCode, org.ORG_NAME as orgName, org.DATA_PATH as dataPath
+		from uupm_account t
+		LEFT JOIN uupm_user u ON t.ACCOUNT_ID = u.USER_CODE
+		LEFT JOIN uupm_organization org ON u.TENANT_CODE = org.TENANT_CODE and u.ORG_CODE = org.ORG_CODE
+		where t.ACCOUNT_ID = #{accountId}
+	</select>
+	
+	
+	<!-- vo动态组装复合查询条件 -->
+	<sql id="vo_conditions_where">
+			<!-- Equal query -->
+			<if test="vo.ttCode != null and vo.ttCode != ''"> and t.TT_CODE = #{vo.ttCode} </if>
+			<if test="vo.accountId != null and vo.accountId != ''"> and t.ACCOUNT_ID = #{vo.accountId} </if>
+			<if test="vo.orgCode != null and vo.orgCode != ''"> and t.ORG_CODE = #{vo.orgCode} </if>
+			<if test="vo.userCode != null and vo.userCode != ''"> and t.USER_CODE = #{vo.userCode} </if>
+			<if test="vo.accountStatus != null and vo.accountStatus != ''"> and n.ACCOUNT_STATUS = #{vo.accountStatus} </if>
+			<if test="vo.accountType != null and vo.accountType != ''"> and n.ACCOUNT_TYPE = #{vo.accountType} </if>
+			<!-- Like query -->
+			<if test="vo.orgName != null and vo.orgName != ''"> and t.ORG_NAME like CONCAT(CONCAT('%', #{vo.orgName}), '%') </if>
+			<if test="vo.userName != null and vo.userName != ''"> and t.USER_NAME like CONCAT(CONCAT('%', #{vo.userName}), '%') </if>
+	</sql>
+
+	<select id="findUserInfoList" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.pojo.vo.UupmUserInfoVo">
+		select <include refid="table_columns" />
+		, m.ORG_NAME as orgName
+		, n.ACCOUNT_ID as accountId, n.ACCOUNT_STATUS as accountStatus, n.ACCOUNT_TYPE as accountType
+		from <include refid="table_name"/>  as t 
+		left join uupm_organization as m on t.ORG_CODE = m.ORG_CODE
+		left join uupm_account as n on t.USER_CODE = n.ACCOUNT_ID
+		<where>
+		<include refid="vo_conditions_where" />
+		</where>
+		<include refid="conditions_orderby" />
+		<include refid="conditions_limit" />
+	</select>
+	
+	<select id="findUserInfoCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from 
+		<include refid="table_name"/>  as t
+		left join uupm_account n on t.USER_CODE = n.ACCOUNT_ID
+		<where>
+		<include refid="vo_conditions_where" />
+		</where>
+	</select>
+	
+</mapper>

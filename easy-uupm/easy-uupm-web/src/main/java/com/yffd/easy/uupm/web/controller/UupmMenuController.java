@@ -11,7 +11,7 @@ import com.yffd.easy.framework.pojo.vo.RespData;
 import com.yffd.easy.uupm.pojo.factory.UupmMenuInfoFactory;
 import com.yffd.easy.uupm.pojo.vo.UupmMenuInfoVo;
 import com.yffd.easy.uupm.pojo.vo.UupmTreeMenuVo;
-import com.yffd.easy.uupm.service.UupmMenuService;
+import com.yffd.easy.uupm.service.a.UupmMenuService;
 import com.yffd.easy.uupm.web.base.UupmBaseController;
 
 /**

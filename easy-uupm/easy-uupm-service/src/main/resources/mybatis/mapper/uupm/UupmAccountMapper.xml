@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yffd.easy.uupm.entity.UupmAccountEntity">
+
+
+	<!-- ######################################################################### -->
+	<!-- #########################   common sql begin    ######################### -->
+	<!-- ######################################################################### -->
+	
+	<!-- 表名 -->
+	<sql id="table_name"> uupm_account </sql>
+	<!-- 列名 -->
+	<sql id="table_columns">
+		t.VERSION as version, t.DEL_FLAG as delFlag, t.CREATE_BY as createBy, t.CREATE_TIME as createTime, t.UPDATE_BY as updateBy, 
+		t.UPDATE_TIME as updateTime, t.ID as id, t.ACNT_ID as acntId, t.ACNT_PWD as acntPwd, t.ACNT_STATUS as acntStatus, 
+		t.ACNT_TYPE as acntType, t.NICK_NAME as nickName, t.SALT as salt
+	</sql>
+	<!-- 分页条件 -->
+	<sql id="conditions_limit"><if test="page != null"> limit #{page.startIndex}, #{page.pageLimit} </if></sql>
+	<!-- 排序条件 -->
+	<sql id="conditions_orderby">
+		<choose>
+			<when test="orderBy != null and orderBy !=''"> ORDER BY #{orderBy} </when>
+			<otherwise> ORDER BY id desc </otherwise>
+		</choose>
+	</sql>
+	<!-- 动态组装复合查询条件 -->
+	<sql id="conditions_where">
+		<if test="entity != null">
+			<!-- Equal query -->
+			<if test="entity.version != null "> and t.VERSION = #{entity.version} </if>
+			<if test="entity.delFlag != null and entity.delFlag != ''"> and t.DEL_FLAG = #{entity.delFlag} </if>
+			<if test="entity.createBy != null and entity.createBy != ''"> and t.CREATE_BY = #{entity.createBy} </if>
+			<if test="entity.createTime != null "><![CDATA[ and t.CREATE_TIME = #{entity.createTime}]]> </if>
+			<if test="entity.updateBy != null and entity.updateBy != ''"> and t.UPDATE_BY = #{entity.updateBy} </if>
+			<if test="entity.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{entity.updateTime}]]> </if>
+			<if test="entity.id != null and entity.id != ''"> and t.ID = #{entity.id} </if>
+			<if test="entity.acntId != null and entity.acntId != ''"> and t.ACNT_ID = #{entity.acntId} </if>
+			<if test="entity.acntPwd != null and entity.acntPwd != ''"> and t.ACNT_PWD = #{entity.acntPwd} </if>
+			<if test="entity.acntStatus != null and entity.acntStatus != ''"> and t.ACNT_STATUS = #{entity.acntStatus} </if>
+			<if test="entity.acntType != null and entity.acntType != ''"> and t.ACNT_TYPE = #{entity.acntType} </if>
+			<if test="entity.salt != null and entity.salt != ''"> and t.SALT = #{entity.salt} </if>
+			<!-- Like query -->
+			<if test="entity.nickName != null and entity.nickName != ''"> and t.NICK_NAME like CONCAT(CONCAT('%', #{entity.nickName}), '%') </if>
+		</if>
+		<if test="propsMap != null">
+			<!-- In query -->
+			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
+			and t.ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.acntIdIter != null and propsMap.acntIdIter.size()>0">
+			and t.ACNT_ID in <foreach item="item" index="index" collection="propsMap.acntIdIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+		</if>
+	</sql>
+	<!-- 条件查询 -->
+	<select id="selectListBy" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.entity.UupmAccountEntity">
+		select <include refid="table_columns" />
+		from <include refid="table_name"/> as t 
+		<where>
+			<include refid="conditions_where" />
+		</where>
+		<include refid="conditions_orderby" />
+		<include refid="conditions_limit" />
+	</select>
+	<!-- 统计查询 -->
+	<select id="selectCountBy" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from 
+		<include refid="table_name"/> as t 
+		<where>
+			<include refid="conditions_where" />
+		</where>
+	</select>
+	<!-- 单条查询 -->
+	<select id="selectOneBy" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.entity.UupmAccountEntity">
+		select <include refid="table_columns" /> 
+		from <include refid="table_name"/> as t 
+		<where>
+			<include refid="conditions_where" />
+		</where>
+	</select>
+	<!-- 单条插入 -->
+	<insert id="insertOneBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table_name" />
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, ACNT_ID, ACNT_PWD, ACNT_STATUS, ACNT_TYPE, NICK_NAME, SALT)
+		values
+		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{acntId}, #{acntPwd}, #{acntStatus}, #{acntType}, #{nickName}, #{salt})
+	</insert>
+	<!-- 批量插入 -->
+	<insert id="insertListBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="table_name" />
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, ACNT_ID, ACNT_PWD, ACNT_STATUS, ACNT_TYPE, NICK_NAME, SALT)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+		(#{item.version},#{item.delFlag},#{item.createBy},#{item.createTime},#{item.updateBy},
+		#{item.updateTime},#{item.acntId},#{item.acntPwd},#{item.acntStatus},#{item.acntType},
+		#{item.nickName},#{item.salt})
+		</foreach>
+	</insert>
+	<!-- 更新 -->
+	<update id="updateBy" parameterType="java.util.Map">
+		update <include refid="table_name" />
+		<set>
+		<if test="entity != null">
+			VERSION = VERSION + 1, 
+			<if test="entity.delFlag != null and entity.delFlag != ''"> DEL_FLAG = #{entity.delFlag},  </if>
+			<if test="entity.updateBy != null and entity.updateBy != ''"> UPDATE_BY = #{entity.updateBy},  </if>
+			<if test="entity.updateTime != null"> UPDATE_TIME = #{entity.updateTime},  </if>
+			<if test="entity.acntId != null and entity.acntId != ''"> ACNT_ID = #{entity.acntId},  </if>
+			<if test="entity.acntPwd != null and entity.acntPwd != ''"> ACNT_PWD = #{entity.acntPwd},  </if>
+			<if test="entity.acntStatus != null and entity.acntStatus != ''"> ACNT_STATUS = #{entity.acntStatus},  </if>
+			<if test="entity.acntType != null and entity.acntType != ''"> ACNT_TYPE = #{entity.acntType},  </if>
+			<if test="entity.nickName != null and entity.nickName != ''"> NICK_NAME = #{entity.nickName},  </if>
+			<if test="entity.salt != null and entity.salt != ''"> SALT = #{entity.salt},  </if>
+		</if>
+		</set>
+		<where>
+		<choose>
+		<when test="entityOld != null or propsMap != null">
+		<if test="entityOld != null">
+			<!-- Equal query -->
+			<if test="entityOld.version != null "> and VERSION = #{entityOld.version} </if>
+			<if test="entityOld.delFlag != null and entityOld.delFlag != ''"> and DEL_FLAG = #{entityOld.delFlag} </if>
+			<if test="entityOld.createBy != null and entityOld.createBy != ''"> and CREATE_BY = #{entityOld.createBy} </if>
+			<if test="entityOld.createTime != null "><![CDATA[ and CREATE_TIME = #{entityOld.createTime}]]> </if>
+			<if test="entityOld.updateBy != null and entityOld.updateBy != ''"> and UPDATE_BY = #{entityOld.updateBy} </if>
+			<if test="entityOld.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entityOld.updateTime}]]> </if>
+			<if test="entityOld.id != null and entityOld.id != ''"> and ID = #{entityOld.id} </if>
+			<if test="entityOld.acntId != null and entityOld.acntId != ''"> and ACNT_ID = #{entityOld.acntId} </if>
+			<if test="entityOld.acntPwd != null and entityOld.acntPwd != ''"> and ACNT_PWD = #{entityOld.acntPwd} </if>
+			<if test="entityOld.acntStatus != null and entityOld.acntStatus != ''"> and ACNT_STATUS = #{entityOld.acntStatus} </if>
+			<if test="entityOld.acntType != null and entityOld.acntType != ''"> and ACNT_TYPE = #{entityOld.acntType} </if>
+			<if test="entityOld.nickName != null and entityOld.nickName != ''"> and NICK_NAME = #{entityOld.nickName} </if>
+			<if test="entityOld.salt != null and entityOld.salt != ''"> and SALT = #{entityOld.salt} </if>
+		</if>
+		<if test="propsMap != null">
+			<!-- In query -->
+			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
+			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.acntIdIter != null and propsMap.acntIdIter.size()>0">
+			and ACNT_ID in <foreach item="item" index="index" collection="propsMap.acntIdIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+		</if>
+		</when>
+		<otherwise>
+		<!-- 防止没有参数传递，导致全部更新 -->
+		and 1=2
+		</otherwise>
+		</choose>
+		</where>
+	</update>
+	<!-- 删除 -->
+	<delete id="deleteBy" parameterType="java.util.Map">
+		delete from <include refid="table_name" />
+		<where>
+		<choose>
+		<when test="entity != null or propsMap != null">
+		<if test="entity != null">
+			<!-- Equal query -->
+			<if test="entity.version != null "> and VERSION = #{entity.version} </if>
+			<if test="entity.delFlag != null and entity.delFlag != ''"> and DEL_FLAG = #{entity.delFlag} </if>
+			<if test="entity.createBy != null and entity.createBy != ''"> and CREATE_BY = #{entity.createBy} </if>
+			<if test="entity.createTime != null "><![CDATA[ and CREATE_TIME = #{entity.createTime}]]> </if>
+			<if test="entity.updateBy != null and entity.updateBy != ''"> and UPDATE_BY = #{entity.updateBy} </if>
+			<if test="entity.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entity.updateTime}]]> </if>
+			<if test="entity.id != null and entity.id != ''"> and ID = #{entity.id} </if>
+			<if test="entity.acntId != null and entity.acntId != ''"> and ACNT_ID = #{entity.acntId} </if>
+			<if test="entity.acntPwd != null and entity.acntPwd != ''"> and ACNT_PWD = #{entity.acntPwd} </if>
+			<if test="entity.acntStatus != null and entity.acntStatus != ''"> and ACNT_STATUS = #{entity.acntStatus} </if>
+			<if test="entity.acntType != null and entity.acntType != ''"> and ACNT_TYPE = #{entity.acntType} </if>
+			<if test="entity.nickName != null and entity.nickName != ''"> and NICK_NAME = #{entity.nickName} </if>
+			<if test="entity.salt != null and entity.salt != ''"> and SALT = #{entity.salt} </if>
+		</if>
+		<if test="propsMap != null">
+			<!-- In query -->
+			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
+			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.acntIdIter != null and propsMap.acntIdIter.size()>0">
+			and ACNT_ID in <foreach item="item" index="index" collection="propsMap.acntIdIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+		</if>
+		</when>
+		<otherwise>
+		<!-- 防止没有参数传递，导致全部删除 -->
+		and 1=2
+		</otherwise>
+		</choose>
+		</where>
+	</delete>
+	<!-- ######################################################################### -->
+	<!-- ##########################   common sql end    ########################## -->
+	<!-- ######################################################################### -->
+
+</mapper>

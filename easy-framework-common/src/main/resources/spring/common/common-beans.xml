@@ -16,9 +16,11 @@
     http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
     ">
     
-	<bean id="mybatisCustomDao" class="com.yffd.easy.framework.common.persist.mybatis.dao.MybatisCustomDao">
+    <!-- mybatis dao support -->
+	<bean id="mybatisDaoSupport" class="com.yffd.easy.framework.common.persist.mybatis.dao.MybatisDaoSupport">
         <property name="sqlSession" ref="sqlSession"/>
     </bean>
+    
     <!-- springbean提取工具 -->
     <bean id="SpringBeanUtils" class="com.yffd.easy.framework.common.util.SpringBeanUtils"/>
     

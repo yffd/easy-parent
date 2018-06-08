@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
 import com.yffd.easy.framework.pojo.vo.RespData;
-import com.yffd.easy.uupm.entity.UupmDictionaryEntity;
-import com.yffd.easy.uupm.entity.UupmOrganizationEntity;
-import com.yffd.easy.uupm.entity.UupmUITreeEntity;
+import com.yffd.easy.uupm.entity.a.UupmDictionaryEntity;
+import com.yffd.easy.uupm.entity.a.UupmOrganizationEntity;
+import com.yffd.easy.uupm.entity.a.UupmUITreeEntity;
 import com.yffd.easy.uupm.pojo.factory.ui.UupmUIFactory;
 import com.yffd.easy.uupm.pojo.vo.easyui.UupmUIBaseTreeVo;
-import com.yffd.easy.uupm.service.UupmOrganizationService;
-import com.yffd.easy.uupm.service.UupmUITreeService;
+import com.yffd.easy.uupm.service.a.UupmOrganizationService;
+import com.yffd.easy.uupm.service.a.UupmUITreeService;
 import com.yffd.easy.uupm.web.base.UupmBaseController;
 
 /**

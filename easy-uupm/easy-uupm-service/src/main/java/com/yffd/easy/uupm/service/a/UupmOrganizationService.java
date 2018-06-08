@@ -1,17 +1,14 @@
-package com.yffd.easy.uupm.service;
+package com.yffd.easy.uupm.service.a;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
-import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
-import com.yffd.easy.uupm.dao.UupmOrganizationDao;
-import com.yffd.easy.uupm.entity.UupmOrganizationEntity;
+import com.yffd.easy.uupm.entity.a.UupmOrganizationEntity;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -24,21 +21,17 @@ import com.yffd.easy.uupm.entity.UupmOrganizationEntity;
 @Service
 public class UupmOrganizationService extends UupmBaseService<UupmOrganizationEntity> {
 
-	@Autowired
-	private UupmOrganizationDao uupmOrganizationDao;
-	
-	@Override
-	protected IMybatisCommonDao<UupmOrganizationEntity> getBindDao() {
-		return uupmOrganizationDao;
-	}
-
 	public Integer deleteByIds(String idStr) {
 		if(EasyStringCheckUtils.isEmpty(idStr)) return 0;
 		String[] idsArr = idStr.split(",");
 		if(idsArr.length==0) return 0;
 		List<String> idsList = Arrays.asList(idsArr);
 		Set<String> ids = new HashSet<String>(idsList);
-		return this.uupmOrganizationDao.deleteByIds(ids);
+		return this.deleteByIds(ids);
+	}
+	
+	public Integer deleteByIds(Set<String> ids) {
+		return this.deleteByProps("idIter", ids);
 	}
 	
 }

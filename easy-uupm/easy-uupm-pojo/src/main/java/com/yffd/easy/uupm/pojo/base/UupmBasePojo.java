@@ -1,6 +1,6 @@
 package com.yffd.easy.uupm.pojo.base;
 
-import com.yffd.easy.framework.common.persist.entity.CommonEntity;
+import com.yffd.easy.framework.pojo.entity.CommonEntity;
 
 /**
  * @Description  自定义持久化类基类.

@@ -1,14 +1,13 @@
-package com.yffd.easy.uupm.service;
+package com.yffd.easy.uupm.service.a;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
 import com.yffd.easy.framework.pojo.login.LoginInfo;
 import com.yffd.easy.framework.pojo.page.PageParam;
 import com.yffd.easy.framework.pojo.page.PageResult;
-import com.yffd.easy.uupm.dao.UupmAccountDao;
-import com.yffd.easy.uupm.entity.UupmAccountEntity;
+import com.yffd.easy.uupm.entity.a.UupmAccountEntity;
+import com.yffd.easy.uupm.pojo.enums.UupmStatusStyleEnum;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -21,14 +20,6 @@ import com.yffd.easy.uupm.entity.UupmAccountEntity;
 @Service
 public class UupmAccountService extends UupmBaseService<UupmAccountEntity> {
 
-	@Override
-	protected IMybatisCommonDao<UupmAccountEntity> getBindDao() {
-		return this.uupmAccountDao;
-	}
-
-	@Autowired
-	private UupmAccountDao uupmAccountDao;
-	
 	@Autowired
 	private UupmUserRoleService uupmUserRoleService;
 	@Autowired
@@ -43,13 +34,13 @@ public class UupmAccountService extends UupmBaseService<UupmAccountEntity> {
 	
 	public int addTenantAccount(UupmAccountEntity entity, LoginInfo loginInfo) {
 		entity.setAccountType("tenant");
-		entity.setAccountStatus("active");
+		entity.setAccountStatus(UupmStatusStyleEnum.ACTIVE.getCode());
 		return this.save(entity, loginInfo);
 	}
 	
 	public int addUserAccount(UupmAccountEntity entity, LoginInfo loginInfo) {
 		entity.setAccountType("user");
-		entity.setAccountStatus("active");
+		entity.setAccountStatus(UupmStatusStyleEnum.ACTIVE.getCode());
 		return this.save(entity, loginInfo);
 	}
 	

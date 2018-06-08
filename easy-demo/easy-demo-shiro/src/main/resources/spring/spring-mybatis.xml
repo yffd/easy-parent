@@ -36,7 +36,7 @@
 	<!-- 自动扫描Mapper接口文件 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<!-- 用来指定Mapper接口文件所在的包，多个包之间可以使用逗号或者分号进行分隔 -->
-		<property name="basePackage" value="com.yffd.easy.demo.shiro.mapper"></property>
+		<property name="basePackage" value="com.yffd.easy.demo.shiro.dao"></property>
 	</bean>
 	<!-- 配置Mybatis模板 -->
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">

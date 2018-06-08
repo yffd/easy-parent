@@ -44,17 +44,17 @@ public class UupmAccountController extends UupmBaseController {
 	
 	@RequestMapping(value="/addTenantAccount", method=RequestMethod.POST)
 	public RespData addTenantAccount(UupmAccountEntity paramModel) {
-		if(EasyStringCheckUtils.isEmpty(paramModel.getAccountId())
-				|| EasyStringCheckUtils.isEmpty(paramModel.getAccountPwd())) return this.error("参数无效");
+		if(EasyStringCheckUtils.isEmpty(paramModel.getAcntId())
+				|| EasyStringCheckUtils.isEmpty(paramModel.getAcntPwd())) return this.error("参数无效");
 		UupmAccountEntity model = new UupmAccountEntity();	// 存在校验
-		model.setAccountId(paramModel.getAccountId());
+		model.setAcntId(paramModel.getAcntId());
 		boolean exsist = this.uupmAccountService.exsist(model, getLoginInfo());
 		if(exsist) return this.error("账号已存在");
-		String accountId = paramModel.getAccountId();
-		String password = paramModel.getAccountPwd();
+		String accountId = paramModel.getAcntId();
+		String password = paramModel.getAcntPwd();
 		ShiroAccount shiroAccount = new ShiroAccount(accountId, password);
 		
-		paramModel.setAccountPwd(shiroAccount.getEncryptPwd());
+		paramModel.setAcntPwd(shiroAccount.getEncryptPwd());
 		paramModel.setSalt(shiroAccount.getCredentialsSalt());
 		int result = this.uupmAccountService.addTenantAccount(paramModel, getLoginInfo());
 		if(result==0) return this.error("添加失败");
@@ -63,9 +63,9 @@ public class UupmAccountController extends UupmBaseController {
 	
 	@RequestMapping(value="/update", method=RequestMethod.POST)
 	public RespData update(UupmAccountEntity paramModel) {
-		if(null==paramModel || EasyStringCheckUtils.isEmpty(paramModel.getAccountId())) return this.error("参数无效");
+		if(null==paramModel || EasyStringCheckUtils.isEmpty(paramModel.getAcntId())) return this.error("参数无效");
 		UupmAccountEntity oldModel = new UupmAccountEntity();
-		oldModel.setAccountId(paramModel.getAccountId());
+		oldModel.setAcntId(paramModel.getAcntId());
 		int result = this.uupmAccountService.update(paramModel, oldModel, getLoginInfo());
 		if(result==0) return this.error("更新失败");
 		return this.successAjax();

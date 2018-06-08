@@ -13,9 +13,9 @@ import com.yffd.easy.common.core.util.EasyStringCheckUtils;
 import com.yffd.easy.framework.pojo.vo.DataGridVo;
 import com.yffd.easy.framework.pojo.vo.PropertyGridVo;
 import com.yffd.easy.framework.pojo.vo.RespData;
-import com.yffd.easy.uupm.entity.UupmApplicationEntity;
+import com.yffd.easy.uupm.entity.a.UupmApplicationEntity;
 import com.yffd.easy.uupm.pojo.factory.UupmPropertyGridFactory;
-import com.yffd.easy.uupm.service.UupmApplicationService;
+import com.yffd.easy.uupm.service.a.UupmApplicationService;
 import com.yffd.easy.uupm.web.base.UupmBaseController;
 
 /**

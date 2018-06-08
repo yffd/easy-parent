@@ -33,6 +33,11 @@
   </properties>
   
   <dependencies>
+  	<dependency>
+		<groupId>com.yffd.easy</groupId>
+	  	<artifactId>easy-framework-pojo</artifactId>
+	  	<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
   	<!-- spring mvc start -->
 	<dependency>
 		<groupId>org.springframework</groupId>

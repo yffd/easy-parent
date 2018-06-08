@@ -14,10 +14,10 @@ import com.yffd.easy.framework.pojo.page.PageResult;
 import com.yffd.easy.framework.pojo.vo.DataGridVo;
 import com.yffd.easy.framework.pojo.vo.RespData;
 import com.yffd.easy.framework.web.shiro.login.account.ShiroAccount;
-import com.yffd.easy.uupm.entity.UupmAccountEntity;
-import com.yffd.easy.uupm.entity.UupmUserEntity;
+import com.yffd.easy.uupm.entity.a.UupmAccountEntity;
+import com.yffd.easy.uupm.entity.a.UupmUserEntity;
 import com.yffd.easy.uupm.pojo.vo.UupmUserInfoVo;
-import com.yffd.easy.uupm.service.UupmUserService;
+import com.yffd.easy.uupm.service.a.UupmUserService;
 import com.yffd.easy.uupm.web.base.UupmBaseController;
 
 /**

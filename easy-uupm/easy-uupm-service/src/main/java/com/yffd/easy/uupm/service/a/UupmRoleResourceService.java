@@ -1,19 +1,16 @@
-package com.yffd.easy.uupm.service;
+package com.yffd.easy.uupm.service.a;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
 import com.yffd.easy.framework.pojo.login.LoginInfo;
-import com.yffd.easy.uupm.dao.UupmRoleResourceDao;
-import com.yffd.easy.uupm.entity.UupmRoleResourceEntity;
+import com.yffd.easy.uupm.entity.a.UupmRoleResourceEntity;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -25,14 +22,6 @@ import com.yffd.easy.uupm.entity.UupmRoleResourceEntity;
  */
 @Service
 public class UupmRoleResourceService extends UupmBaseService<UupmRoleResourceEntity> {
-
-	@Autowired
-	private UupmRoleResourceDao uupmRoleResourceDao;
-	
-	@Override
-	protected IMybatisCommonDao<UupmRoleResourceEntity> getBindDao() {
-		return uupmRoleResourceDao;
-	}
 
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public int saveRoleResource(String roleCode, List<String> rsCodesList, LoginInfo loginInfo) {
@@ -54,7 +43,7 @@ public class UupmRoleResourceService extends UupmBaseService<UupmRoleResourceEnt
 	}
 	
 	public Set<String> findRsCode(Set<String> roleCodes) {
-		List<UupmRoleResourceEntity> resultList = this.uupmRoleResourceDao.findByRoleCodes(roleCodes);
+		List<UupmRoleResourceEntity> resultList = this.findByRoleCodes(roleCodes);
 		if(null==resultList ||resultList.size()==0) return null;
 		Set<String> rsCodes = new HashSet<String>();
 		for(UupmRoleResourceEntity model : resultList) {
@@ -75,6 +64,11 @@ public class UupmRoleResourceService extends UupmBaseService<UupmRoleResourceEnt
 	}
 	
 	public int delByRsCodes(Set<String> rsCodes) {
-		return this.uupmRoleResourceDao.delByRsCodes(rsCodes);
+		return this.deleteByProps("rsCodeIter", rsCodes);
 	}
+	
+	public List<UupmRoleResourceEntity> findByRoleCodes(Set<String> roleCodes) {
+		return this.selectListByProps("roleCodeIter", roleCodes, null);
+	}
+
 }

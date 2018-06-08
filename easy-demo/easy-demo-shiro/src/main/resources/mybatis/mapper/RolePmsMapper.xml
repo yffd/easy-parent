@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yffd.easy.demo.shiro.dao.IRolePmsDao">
+
+
+	<!-- ######################################################################### -->
+	<!-- #########################   common sql begin    ######################### -->
+	<!-- ######################################################################### -->
+	
+	<!-- 表名 -->
+	<sql id="table_name"> sec_role_permission </sql>
+	<!-- 列名 -->
+	<sql id="table_columns">
+		t.id as id, t.permission_id as pmsId, t.role_id as roleId
+	</sql>
+	<!-- 分页条件 -->
+	<sql id="conditions_limit"><if test="page != null"> limit #{page.startIndex}, #{page.pageLimit} </if></sql>
+	<!-- 排序条件 -->
+	<sql id="conditions_orderby">
+		<choose>
+			<when test="orderBy != null and orderBy !=''"> ORDER BY #{orderBy} </when>
+			<otherwise> ORDER BY id desc </otherwise>
+		</choose>
+	</sql>
+	<!-- 动态组装复合查询条件 -->
+	<sql id="conditions_where">
+		<if test="entity != null">
+			<!-- Equal query -->
+			<if test="entity.id != null and entity.id != ''"> and t.id = #{entity.id} </if>
+			<if test="entity.pmsId != null and entity.pmsId != ''"> and t.permission_id = #{entity.pmsId} </if>
+			<if test="entity.roleId != null and entity.roleId != ''"> and t.role_id = #{entity.roleId} </if>
+		</if>
+	</sql>
+	<!-- 条件查询 -->
+	<select id="selectListBy" parameterType="java.util.Map" resultType="com.yffd.easy.demo.shiro.model.RolePms">
+		select <include refid="table_columns" />
+		from <include refid="table_name"/> as t 
+		<where>
+			<include refid="conditions_where" />
+		</where>
+		<include refid="conditions_orderby" />
+		<include refid="conditions_limit" />
+	</select>
+	<!-- 统计查询 -->
+	<select id="selectCountBy" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from 
+		<include refid="table_name"/> as t 
+		<where>
+			<include refid="conditions_where" />
+		</where>
+	</select>
+	<!-- 单条查询 -->
+	<select id="selectOneBy" parameterType="java.util.Map" resultType="com.yffd.easy.demo.shiro.model.RolePms">
+		select <include refid="table_columns" /> 
+		from <include refid="table_name"/> as t 
+		<where>
+			<include refid="conditions_where" />
+		</where>
+	</select>
+	<!-- 单条插入 -->
+	<insert id="insertOneBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table_name" />
+		(id, permission_id, role_id)
+		values
+		(#{id}, #{pmsId}, #{roleId})
+	</insert>
+	<!-- 批量插入 -->
+	<insert id="insertListBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="table_name" />
+		(id, permission_id, role_id)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+		(#{item.id},#{item.pmsId},#{item.role_id})
+		</foreach>
+	</insert>
+	<!-- 更新 -->
+	<update id="updateBy" parameterType="java.util.Map">
+		update <include refid="table_name" />
+		<set>
+		<if test="entity != null">
+			VERSION = VERSION + 1, 
+			<if test="entity.pmsId != null and entity.pmsId != ''"> permission_id = #{entity.pmsId},  </if>
+			<if test="entity.roleId != null and entity.roleId != ''"> role_id = #{entity.roleId},  </if>
+		</if>
+		</set>
+		<where>
+			id = #{entityOld.id}
+		</where>
+	</update>
+	<!-- 删除 -->
+	<delete id="deleteBy" parameterType="java.util.Map">
+		delete from <include refid="table_name" />
+		<where>
+			id = #{entityOld.id}
+		</where>
+	</delete>
+	<!-- ######################################################################### -->
+	<!-- ##########################   common sql end    ########################## -->
+	<!-- ######################################################################### -->
+
+</mapper>

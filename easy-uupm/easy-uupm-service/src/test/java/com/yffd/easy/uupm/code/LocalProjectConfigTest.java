@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.yffd.easy.framework.common.code.generator.CodeGenerator;
-import com.yffd.easy.framework.common.persist.mybatis.dao.MybatisCommonDao;
+import com.yffd.easy.framework.common.persist.mybatis.dao.DefaultMybatisDao;
 import com.yffd.easy.framework.common.service.impl.CommonServiceImpl;
 
 /**
@@ -21,7 +21,7 @@ public class LocalProjectConfigTest extends CodeGenerator {
 	public static boolean covered = true;
 	
 	public static String daoPackageName = "com.yffd.easy.uupm.dao";
-	public static Class<?> daoSuperClazz = MybatisCommonDao.class;
+	public static Class<?> daoSuperClazz = DefaultMybatisDao.class;
 	
 	public static String servicePackageName = "com.yffd.easy.uupm.service";
 	public static Class<?> serviceSuperClazz = CommonServiceImpl.class;

@@ -7,8 +7,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Date;
 
-import com.yffd.easy.framework.common.persist.entity.CommonPartialTreeEntity;
-import com.yffd.easy.framework.common.persist.mybatis.dao.MybatisCommonDao;
+import com.yffd.easy.framework.common.persist.mybatis.dao.DefaultMybatisDao;
+import com.yffd.easy.framework.pojo.entity.CommonPartialTreeEntity;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -128,7 +128,7 @@ public class CodeFileDaoGenerator extends CodeGenerator {
 		CodeFileDaoGenerator generator = new CodeFileDaoGenerator();
 		String author = "ZhangST";
 		Class<?> pojoClazz = CommonPartialTreeEntity.class;
-		Class<?> superClazz = MybatisCommonDao.class;
+		Class<?> superClazz = DefaultMybatisDao.class;
 		String servicePackageName = "com.yffd.easy.xxx.dao";
 		generator.writeToConsole(pojoClazz, superClazz, servicePackageName, author);
 		

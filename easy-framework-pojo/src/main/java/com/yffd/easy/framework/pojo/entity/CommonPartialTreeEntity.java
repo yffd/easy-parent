@@ -4,7 +4,7 @@
  * @version 1.0
 */
 
-package com.yffd.easy.framework.common.persist.entity;
+package com.yffd.easy.framework.pojo.entity;
 
 /**
  * 
