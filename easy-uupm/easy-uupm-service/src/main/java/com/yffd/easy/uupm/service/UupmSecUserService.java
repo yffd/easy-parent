@@ -15,9 +15,9 @@ import com.yffd.easy.framework.common.persist.mybatis.constants.MybatisConstants
 import com.yffd.easy.framework.pojo.login.LoginInfo;
 import com.yffd.easy.framework.pojo.page.PageParam;
 import com.yffd.easy.framework.pojo.page.PageResult;
-import com.yffd.easy.uupm.entity.UupmAccountEntity;
-import com.yffd.easy.uupm.entity.UupmSecRelationRoleUser;
-import com.yffd.easy.uupm.entity.UupmSecUserEntity;
+import com.yffd.easy.uupm.pojo.entity.UupmAccountEntity;
+import com.yffd.easy.uupm.pojo.entity.UupmSecRelationRoleUser;
+import com.yffd.easy.uupm.pojo.entity.UupmSecUserEntity;
 import com.yffd.easy.uupm.pojo.vo.UupmUserInfoVo;
 
 /**

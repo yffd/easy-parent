@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
-import com.yffd.easy.framework.pojo.vo.RespData;
-import com.yffd.easy.uupm.entity.a.UupmOrganizationEntity;
-import com.yffd.easy.uupm.pojo.factory.UupmOrganizationFactory;
-import com.yffd.easy.uupm.pojo.vo.easyui.UupmUIOrgTreeVo;
-import com.yffd.easy.uupm.service.a.UupmOrganizationService;
+import com.yffd.easy.framework.web.model.RespModel;
+import com.yffd.easy.uupm.pojo.entity.UupmOrganizationEntity;
+import com.yffd.easy.uupm.service.UupmOrganizationService;
 import com.yffd.easy.uupm.web.base.UupmBaseController;
+import com.yffd.easy.uupm.web.model.UupmTreeOrganizationVo;
+import com.yffd.easy.uupm.web.model.factory.UupmTreeOrganizationVoFactory;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -32,21 +32,21 @@ public class UupmOrganizationController extends UupmBaseController {
 	@Autowired
 	private UupmOrganizationService uupmOrganizationService;
 	@Autowired
-	private UupmOrganizationFactory uupmOrganizationModelFactory;
+	private UupmTreeOrganizationVoFactory uupmTreeOrganizationVoFactory;
 	
 	@RequestMapping(value="/listTree", method=RequestMethod.POST)
-	public RespData listTree(@RequestParam Map<String, Object> paramMap) {
+	public RespModel listTree(@RequestParam Map<String, Object> paramMap) {
 		UupmOrganizationEntity paramModel = this.getModelParam(paramMap, UupmOrganizationEntity.class);
 		List<UupmOrganizationEntity> listResult = this.uupmOrganizationService.findList(paramModel, getLoginInfo());
 		if(null!=listResult && !listResult.isEmpty()) {
-			List<UupmUIOrgTreeVo> treeList = this.uupmOrganizationModelFactory.buildMultiTree(listResult);
+			List<UupmTreeOrganizationVo> treeList = this.uupmTreeOrganizationVoFactory.buildTree(listResult);
 			return this.successAjax(treeList);
 		}
 		return this.successAjax();
 	}
 	
 	@RequestMapping(value="/addRoot", method=RequestMethod.POST)
-	public RespData addRoot(UupmOrganizationEntity paramModel) {
+	public RespModel addRoot(UupmOrganizationEntity paramModel) {
 		if(EasyStringCheckUtils.isEmpty(paramModel.getOrgCode())) return this.errorAjax("参数无效");
 		UupmOrganizationEntity entity = new UupmOrganizationEntity();	// 存在判断
 		entity.setOrgCode(paramModel.getOrgCode());
@@ -60,7 +60,7 @@ public class UupmOrganizationController extends UupmBaseController {
 	}
 	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
-	public RespData add(UupmOrganizationEntity paramModel) {
+	public RespModel add(UupmOrganizationEntity paramModel) {
 		if(EasyStringCheckUtils.isEmpty(paramModel.getTreeId()) 
 				|| EasyStringCheckUtils.isEmpty(paramModel.getOrgCode())
 				|| EasyStringCheckUtils.isEmpty(paramModel.getParentCode())) return this.errorAjax("参数无效");
@@ -73,7 +73,7 @@ public class UupmOrganizationController extends UupmBaseController {
 	}
 	
 	@RequestMapping(value="/update", method=RequestMethod.POST)
-	public RespData update(UupmOrganizationEntity paramModel) {
+	public RespModel update(UupmOrganizationEntity paramModel) {
 		if(EasyStringCheckUtils.isEmpty(paramModel.getTreeId()) 
 				|| EasyStringCheckUtils.isEmpty(paramModel.getOrgCode())) return this.errorAjax("参数无效");
 		UupmOrganizationEntity entityOld = new UupmOrganizationEntity();
@@ -84,7 +84,7 @@ public class UupmOrganizationController extends UupmBaseController {
 	}
 	
 	@RequestMapping(value="/delTree", method=RequestMethod.POST)
-	public RespData delTree(@RequestParam Map<String, Object> paramMap) {
+	public RespModel delTree(@RequestParam Map<String, Object> paramMap) {
 		String treeId = (String) paramMap.get("treeId");
 		if(EasyStringCheckUtils.isEmpty(treeId)) return this.errorAjax("参数无效");
 		UupmOrganizationEntity entity = new UupmOrganizationEntity();
@@ -94,7 +94,7 @@ public class UupmOrganizationController extends UupmBaseController {
 	}
 	
 	@RequestMapping(value="/delByIds", method=RequestMethod.POST)
-	public RespData delByIds(String ids) {
+	public RespModel delByIds(String ids) {
 		if(EasyStringCheckUtils.isEmpty(ids)) return this.errorAjax("参数无效");
 		int result = this.uupmOrganizationService.deleteByIds(ids);
 		if(result==0) return this.errorAjax("删除失败");

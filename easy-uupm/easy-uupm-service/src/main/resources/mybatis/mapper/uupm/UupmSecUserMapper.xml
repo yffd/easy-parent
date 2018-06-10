@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yffd.easy.uupm.entity.UupmSecUserEntity">
+<mapper namespace="com.yffd.easy.uupm.pojo.entity.UupmSecUserEntity">
 
 
 	<!-- ######################################################################### -->
@@ -62,7 +62,7 @@
 		</if>
 	</sql>
 	<!-- 条件查询 -->
-	<select id="selectListBy" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.entity.UupmSecUserEntity">
+	<select id="selectListBy" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.pojo.entity.UupmSecUserEntity">
 		select <include refid="table_columns" />
 		from <include refid="table_name"/> as t 
 		<where>
@@ -80,7 +80,7 @@
 		</where>
 	</select>
 	<!-- 单条查询 -->
-	<select id="selectOneBy" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.entity.UupmSecUserEntity">
+	<select id="selectOneBy" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.pojo.entity.UupmSecUserEntity">
 		select <include refid="table_columns" /> 
 		from <include refid="table_name"/> as t 
 		<where>
@@ -217,52 +217,4 @@
 	<!-- ##########################   common sql end    ########################## -->
 	<!-- ######################################################################### -->
 
-	<select id="findUserInfo" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.pojo.vo.UupmUserInfoVo">
-		select t.ACCOUNT_ID as accountId, t.ACCOUNT_PWD as accountPwd, t.ACCOUNT_STATUS as accountStatus, t.SALT as salt 
-		, u.USER_CODE as userCode, u.USER_NAME as userName
-		, org.ORG_CODE as orgCode, org.ORG_NAME as orgName, org.DATA_PATH as dataPath
-		from uupm_account t
-		LEFT JOIN uupm_user u ON t.ACCOUNT_ID = u.USER_CODE
-		LEFT JOIN uupm_organization org ON u.TENANT_CODE = org.TENANT_CODE and u.ORG_CODE = org.ORG_CODE
-		where t.ACCOUNT_ID = #{accountId}
-	</select>
-	
-	
-	<!-- vo动态组装复合查询条件 -->
-	<sql id="vo_conditions_where">
-			<!-- Equal query -->
-			<if test="vo.ttCode != null and vo.ttCode != ''"> and t.TT_CODE = #{vo.ttCode} </if>
-			<if test="vo.accountId != null and vo.accountId != ''"> and t.ACCOUNT_ID = #{vo.accountId} </if>
-			<if test="vo.orgCode != null and vo.orgCode != ''"> and t.ORG_CODE = #{vo.orgCode} </if>
-			<if test="vo.userCode != null and vo.userCode != ''"> and t.USER_CODE = #{vo.userCode} </if>
-			<if test="vo.accountStatus != null and vo.accountStatus != ''"> and n.ACCOUNT_STATUS = #{vo.accountStatus} </if>
-			<if test="vo.accountType != null and vo.accountType != ''"> and n.ACCOUNT_TYPE = #{vo.accountType} </if>
-			<!-- Like query -->
-			<if test="vo.orgName != null and vo.orgName != ''"> and t.ORG_NAME like CONCAT(CONCAT('%', #{vo.orgName}), '%') </if>
-			<if test="vo.userName != null and vo.userName != ''"> and t.USER_NAME like CONCAT(CONCAT('%', #{vo.userName}), '%') </if>
-	</sql>
-
-	<select id="findUserInfoList" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.pojo.vo.UupmUserInfoVo">
-		select <include refid="table_columns" />
-		, m.ORG_NAME as orgName
-		, n.ACCOUNT_ID as accountId, n.ACCOUNT_STATUS as accountStatus, n.ACCOUNT_TYPE as accountType
-		from <include refid="table_name"/>  as t 
-		left join uupm_organization as m on t.ORG_CODE = m.ORG_CODE
-		left join uupm_account as n on t.USER_CODE = n.ACCOUNT_ID
-		<where>
-		<include refid="vo_conditions_where" />
-		</where>
-		<include refid="conditions_orderby" />
-		<include refid="conditions_limit" />
-	</select>
-	
-	<select id="findUserInfoCount" parameterType="java.util.Map" resultType="java.lang.Integer">
-		select count(1) from 
-		<include refid="table_name"/>  as t
-		left join uupm_account n on t.USER_CODE = n.ACCOUNT_ID
-		<where>
-		<include refid="vo_conditions_where" />
-		</where>
-	</select>
-	
 </mapper>

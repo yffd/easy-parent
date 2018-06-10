@@ -8,7 +8,7 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
-import com.yffd.easy.uupm.entity.UupmOrganizationEntity;
+import com.yffd.easy.uupm.pojo.entity.UupmOrganizationEntity;
 
 /**
  * @Description  简单描述该类的功能（可选）.

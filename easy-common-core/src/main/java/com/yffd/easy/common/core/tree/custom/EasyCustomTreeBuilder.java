@@ -15,12 +15,12 @@ import com.yffd.easy.common.core.tree.EasyTreeBuilderAbastract;
 public abstract class EasyCustomTreeBuilder<N, T extends EasyCustomTree> extends EasyTreeBuilderAbastract<N, T> {
 
 	@Override
-	protected List<T> getChildren(T node) {
+	public List<T> getChildren(T node) {
 		return (List<T>) node.getChildren();
 	}
 
 	@Override
-	protected void setChildren(T node, List<T> children) {
+	public void setChildren(T node, List<T> children) {
 		node.setChildren(children);
 	}
 

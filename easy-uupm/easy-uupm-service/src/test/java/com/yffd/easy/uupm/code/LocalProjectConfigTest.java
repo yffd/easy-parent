@@ -27,7 +27,8 @@ public class LocalProjectConfigTest extends CodeGenerator {
 	public static Class<?> serviceSuperClazz = CommonServiceImpl.class;
 	
 	
-	public static String baseDirPath = "D:\\java\\git-easy\\easy-parent\\";
+//	public static String baseDirPath = "D:\\java\\git-easy\\easy-parent\\";
+	public static String baseDirPath = "F:\\git_workspace\\easy-parent\\";
 	public static String javaRootDirPath = baseDirPath + "easy-uupm\\easy-uupm-service\\src\\main\\java";
 	public static String resourceRootDirPath = baseDirPath + "easy-uupm\\easy-uupm-service\\src";
 	

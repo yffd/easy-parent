@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yffd.easy.uupm.entity.UupmAccountEntity">
+<mapper namespace="com.yffd.easy.uupm.pojo.entity.UupmAccountEntity">
 
 
 	<!-- ######################################################################### -->
@@ -13,7 +13,7 @@
 	<sql id="table_columns">
 		t.VERSION as version, t.DEL_FLAG as delFlag, t.CREATE_BY as createBy, t.CREATE_TIME as createTime, t.UPDATE_BY as updateBy, 
 		t.UPDATE_TIME as updateTime, t.ID as id, t.ACNT_ID as acntId, t.ACNT_PWD as acntPwd, t.ACNT_STATUS as acntStatus, 
-		t.ACNT_TYPE as acntType, t.NICK_NAME as nickName, t.SALT as salt
+		t.ACNT_TYPE as acntType, t.NICK_NAME as nickName, t.SALT as salt, t.USER_CODE as userCode
 	</sql>
 	<!-- 分页条件 -->
 	<sql id="conditions_limit"><if test="page != null"> limit #{page.startIndex}, #{page.pageLimit} </if></sql>
@@ -40,6 +40,7 @@
 			<if test="entity.acntStatus != null and entity.acntStatus != ''"> and t.ACNT_STATUS = #{entity.acntStatus} </if>
 			<if test="entity.acntType != null and entity.acntType != ''"> and t.ACNT_TYPE = #{entity.acntType} </if>
 			<if test="entity.salt != null and entity.salt != ''"> and t.SALT = #{entity.salt} </if>
+			<if test="entity.userCode != null and entity.userCode != ''"> and t.USER_CODE = #{entity.userCode} </if>
 			<!-- Like query -->
 			<if test="entity.nickName != null and entity.nickName != ''"> and t.NICK_NAME like CONCAT(CONCAT('%', #{entity.nickName}), '%') </if>
 		</if>
@@ -51,10 +52,13 @@
 			<if test="propsMap.acntIdIter != null and propsMap.acntIdIter.size()>0">
 			and t.ACNT_ID in <foreach item="item" index="index" collection="propsMap.acntIdIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
+			<if test="propsMap.userCodeIter != null and propsMap.userCodeIter.size()>0">
+			and t.USER_CODE in <foreach item="item" index="index" collection="propsMap.userCodeIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
 		</if>
 	</sql>
 	<!-- 条件查询 -->
-	<select id="selectListBy" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.entity.UupmAccountEntity">
+	<select id="selectListBy" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.pojo.entity.UupmAccountEntity">
 		select <include refid="table_columns" />
 		from <include refid="table_name"/> as t 
 		<where>
@@ -72,7 +76,7 @@
 		</where>
 	</select>
 	<!-- 单条查询 -->
-	<select id="selectOneBy" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.entity.UupmAccountEntity">
+	<select id="selectOneBy" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.pojo.entity.UupmAccountEntity">
 		select <include refid="table_columns" /> 
 		from <include refid="table_name"/> as t 
 		<where>
@@ -83,19 +87,19 @@
 	<insert id="insertOneBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into
 		<include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, ACNT_ID, ACNT_PWD, ACNT_STATUS, ACNT_TYPE, NICK_NAME, SALT)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, ACNT_ID, ACNT_PWD, ACNT_STATUS, ACNT_TYPE, NICK_NAME, SALT, USER_CODE)
 		values
-		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{acntId}, #{acntPwd}, #{acntStatus}, #{acntType}, #{nickName}, #{salt})
+		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{acntId}, #{acntPwd}, #{acntStatus}, #{acntType}, #{nickName}, #{salt}, #{userCode})
 	</insert>
 	<!-- 批量插入 -->
 	<insert id="insertListBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
 		insert into <include refid="table_name" />
-		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, ACNT_ID, ACNT_PWD, ACNT_STATUS, ACNT_TYPE, NICK_NAME, SALT)
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, ACNT_ID, ACNT_PWD, ACNT_STATUS, ACNT_TYPE, NICK_NAME, SALT, USER_CODE)
 		values
 		<foreach collection="list" item="item" index="index" separator=",">
 		(#{item.version},#{item.delFlag},#{item.createBy},#{item.createTime},#{item.updateBy},
 		#{item.updateTime},#{item.acntId},#{item.acntPwd},#{item.acntStatus},#{item.acntType},
-		#{item.nickName},#{item.salt})
+		#{item.nickName},#{item.salt},#{item.userCode})
 		</foreach>
 	</insert>
 	<!-- 更新 -->
@@ -113,6 +117,7 @@
 			<if test="entity.acntType != null and entity.acntType != ''"> ACNT_TYPE = #{entity.acntType},  </if>
 			<if test="entity.nickName != null and entity.nickName != ''"> NICK_NAME = #{entity.nickName},  </if>
 			<if test="entity.salt != null and entity.salt != ''"> SALT = #{entity.salt},  </if>
+			<if test="entity.userCode != null and entity.userCode != ''"> USER_CODE = #{entity.userCode},  </if>
 		</if>
 		</set>
 		<where>
@@ -133,6 +138,7 @@
 			<if test="entityOld.acntType != null and entityOld.acntType != ''"> and ACNT_TYPE = #{entityOld.acntType} </if>
 			<if test="entityOld.nickName != null and entityOld.nickName != ''"> and NICK_NAME = #{entityOld.nickName} </if>
 			<if test="entityOld.salt != null and entityOld.salt != ''"> and SALT = #{entityOld.salt} </if>
+			<if test="entityOld.userCode != null and entityOld.userCode != ''"> and USER_CODE = #{entityOld.userCode} </if>
 		</if>
 		<if test="propsMap != null">
 			<!-- In query -->
@@ -141,6 +147,9 @@
 			</if>
 			<if test="propsMap.acntIdIter != null and propsMap.acntIdIter.size()>0">
 			and ACNT_ID in <foreach item="item" index="index" collection="propsMap.acntIdIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.userCodeIter != null and propsMap.userCodeIter.size()>0">
+			and USER_CODE in <foreach item="item" index="index" collection="propsMap.userCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
 		</when>
@@ -172,6 +181,7 @@
 			<if test="entity.acntType != null and entity.acntType != ''"> and ACNT_TYPE = #{entity.acntType} </if>
 			<if test="entity.nickName != null and entity.nickName != ''"> and NICK_NAME = #{entity.nickName} </if>
 			<if test="entity.salt != null and entity.salt != ''"> and SALT = #{entity.salt} </if>
+			<if test="entity.userCode != null and entity.userCode != ''"> and USER_CODE = #{entity.userCode} </if>
 		</if>
 		<if test="propsMap != null">
 			<!-- In query -->
@@ -180,6 +190,9 @@
 			</if>
 			<if test="propsMap.acntIdIter != null and propsMap.acntIdIter.size()>0">
 			and ACNT_ID in <foreach item="item" index="index" collection="propsMap.acntIdIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.userCodeIter != null and propsMap.userCodeIter.size()>0">
+			and USER_CODE in <foreach item="item" index="index" collection="propsMap.userCodeIter" open="(" separator="," close=") ">#{item}</foreach>
 			</if>
 		</if>
 		</when>

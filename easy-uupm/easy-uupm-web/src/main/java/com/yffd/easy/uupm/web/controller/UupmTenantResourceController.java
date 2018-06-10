@@ -1,22 +1,8 @@
 package com.yffd.easy.uupm.web.controller;
 
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSON;
-import com.yffd.easy.common.core.util.EasyStringCheckUtils;
-import com.yffd.easy.framework.pojo.vo.RespData;
-import com.yffd.easy.uupm.entity.a.UupmResourceEntity;
-import com.yffd.easy.uupm.pojo.factory.UupmResourceFactory;
-import com.yffd.easy.uupm.pojo.vo.easyui.UupmUIResTreeVo;
-import com.yffd.easy.uupm.service.a.UupmTenantResourceService;
 import com.yffd.easy.uupm.web.base.UupmBaseController;
 
 /**
@@ -31,42 +17,42 @@ import com.yffd.easy.uupm.web.base.UupmBaseController;
 @RequestMapping("/uupm/tenant/resource")
 public class UupmTenantResourceController extends UupmBaseController {
 
-	@Autowired
-	private UupmTenantResourceService uupmTenantResourceService;
-	@Autowired
-	private UupmResourceFactory uupmResourceModelFactory;
-	
-	// 租户资源授权
-	@RequestMapping(value="/saveTenantResource", method=RequestMethod.POST)
-	public RespData saveTenantResource(HttpServletRequest req) {
-		String ttCode = req.getParameter("ttCode");
-		String rsCodes = req.getParameter("rsCodes");
-		if(EasyStringCheckUtils.isEmpty(ttCode) || EasyStringCheckUtils.isEmpty(rsCodes)) return this.errorAjax("参数错误");
-		List<String> rsCodesList = JSON.parseArray(rsCodes, String.class);
-		if(null==rsCodesList || rsCodesList.size()==0) return this.errorAjax("参数错误");
-		int result = this.uupmTenantResourceService.saveTenantResource(ttCode, rsCodesList, getLoginInfo());
-		if(result==0) return this.errorAjax("授权失败");
-		return this.successAjax();
-	}
-		
-	// 查找某租户已拥有的资源编号
-	@RequestMapping(value="/findTenantResourceCodes", method=RequestMethod.POST)
-	public RespData findTenantResourceCodes(String ttCode) {
-		if(EasyStringCheckUtils.isEmpty(ttCode)) return this.errorAjax("参数错误");
-		Set<String> result = this.uupmTenantResourceService.findRsCodesByTtCode(ttCode);
-		return this.successAjax(result);
-	}
-	
-	// 当前登录租户所拥有的所有资源
-	@RequestMapping(value="/findTenantResource", method=RequestMethod.POST)
-	public RespData findTenantResource() {
-		String ttCode = this.getLoginInfo().getTtCode();
-		List<UupmResourceEntity> result = this.uupmTenantResourceService.findTenantResource(ttCode);
-		if(null!=result && !result.isEmpty()) {
-			List<UupmUIResTreeVo> treeList = this.uupmResourceModelFactory.buildMultiTree(result);
-			return this.successAjax(treeList);
-		}
-		return this.successAjax();
-	}
+//	@Autowired
+//	private UupmTenantResourceService uupmTenantResourceService;
+//	@Autowired
+//	private UupmResourceFactory uupmResourceModelFactory;
+//	
+//	// 租户资源授权
+//	@RequestMapping(value="/saveTenantResource", method=RequestMethod.POST)
+//	public RespData saveTenantResource(HttpServletRequest req) {
+//		String ttCode = req.getParameter("ttCode");
+//		String rsCodes = req.getParameter("rsCodes");
+//		if(EasyStringCheckUtils.isEmpty(ttCode) || EasyStringCheckUtils.isEmpty(rsCodes)) return this.errorAjax("参数错误");
+//		List<String> rsCodesList = JSON.parseArray(rsCodes, String.class);
+//		if(null==rsCodesList || rsCodesList.size()==0) return this.errorAjax("参数错误");
+//		int result = this.uupmTenantResourceService.saveTenantResource(ttCode, rsCodesList, getLoginInfo());
+//		if(result==0) return this.errorAjax("授权失败");
+//		return this.successAjax();
+//	}
+//		
+//	// 查找某租户已拥有的资源编号
+//	@RequestMapping(value="/findTenantResourceCodes", method=RequestMethod.POST)
+//	public RespData findTenantResourceCodes(String ttCode) {
+//		if(EasyStringCheckUtils.isEmpty(ttCode)) return this.errorAjax("参数错误");
+//		Set<String> result = this.uupmTenantResourceService.findRsCodesByTtCode(ttCode);
+//		return this.successAjax(result);
+//	}
+//	
+//	// 当前登录租户所拥有的所有资源
+//	@RequestMapping(value="/findTenantResource", method=RequestMethod.POST)
+//	public RespData findTenantResource() {
+//		String ttCode = this.getLoginInfo().getTtCode();
+//		List<UupmResourceEntity> result = this.uupmTenantResourceService.findTenantResource(ttCode);
+//		if(null!=result && !result.isEmpty()) {
+//			List<UupmEasyuiTreeResVo> treeList = this.uupmResourceModelFactory.buildMultiTree(result);
+//			return this.successAjax(treeList);
+//		}
+//		return this.successAjax();
+//	}
 	
 }

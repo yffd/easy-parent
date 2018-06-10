@@ -27,6 +27,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <script type="text/javascript" src="<%=basePath%>static/My97DatePicker/WdatePicker.js"></script>
 <script type="text/javascript" src="<%=basePath%>static/js/easy.common.ui.js"></script>
 <script type="text/javascript" src="<%=basePath%>static/js/easy.common.utils.js"></script>
+<script type="text/javascript" src="<%=basePath%>static/js/easy.common.dict.js"></script>
 
 <style type="text/css">
 	body {

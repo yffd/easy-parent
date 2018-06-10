@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.yffd.easy.framework.web.shiro.login.account.ShiroAccountInfo;
 import com.yffd.easy.framework.web.shiro.login.account.ShiroUserInfo;
 import com.yffd.easy.framework.web.shiro.login.service.ILoginService;
-import com.yffd.easy.uupm.service.a.UupmAccountService;
+import com.yffd.easy.uupm.service.UupmAccountService;
 
 /**
  * @Description  简单描述该类的功能（可选）.

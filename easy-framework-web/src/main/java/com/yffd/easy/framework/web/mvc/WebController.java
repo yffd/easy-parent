@@ -5,8 +5,8 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 
 import com.yffd.easy.framework.pojo.login.LoginInfo;
-import com.yffd.easy.framework.pojo.vo.RespData;
 import com.yffd.easy.framework.web.enums.WebCommonEnum;
+import com.yffd.easy.framework.web.model.RespModel;
 
 /**
  * @Description  web控制转发器基类.
@@ -48,8 +48,8 @@ public abstract class WebController {
 	 * @author  zhangST
 	 * @return
 	 */
-	protected RespData success() {
-		RespData entity = new RespData();
+	protected RespModel success() {
+		RespModel entity = new RespModel();
 		entity.setType(WebCommonEnum.REQUEST_SYNC.getValue());
 		entity.setStatus(WebCommonEnum.SUCCESS.getValue());
 		entity.setMsg(WebCommonEnum.SUCCESS.getDesc());
@@ -64,8 +64,8 @@ public abstract class WebController {
 	 * @param objects
 	 * @return
 	 */
-	protected RespData success(String msg, Object...objects) {
-		RespData entity = new RespData();
+	protected RespModel success(String msg, Object...objects) {
+		RespModel entity = new RespModel();
 		entity.setType(WebCommonEnum.REQUEST_SYNC.getValue());
 		entity.setStatus(WebCommonEnum.SUCCESS.getValue());
 		entity.setMsg(msg);
@@ -79,8 +79,8 @@ public abstract class WebController {
 	 * @author  zhangST
 	 * @return
 	 */
-	protected RespData successAjax() {
-		RespData entity = new RespData();
+	protected RespModel successAjax() {
+		RespModel entity = new RespModel();
 		entity.setType(WebCommonEnum.REQUEST_ASYNC.getValue());
 		entity.setStatus(WebCommonEnum.SUCCESS.getValue());
 		entity.setMsg(WebCommonEnum.SUCCESS.getDesc());
@@ -94,8 +94,8 @@ public abstract class WebController {
 	 * @param respData		响应数据
 	 * @return
 	 */
-	protected RespData successAjax(Object respData) {
-		RespData entity = new RespData();
+	protected RespModel successAjax(Object respData) {
+		RespModel entity = new RespModel();
 		entity.setType(WebCommonEnum.REQUEST_ASYNC.getValue());
 		entity.setStatus(WebCommonEnum.SUCCESS.getValue());
 		entity.setMsg(WebCommonEnum.SUCCESS.getDesc());
@@ -111,8 +111,8 @@ public abstract class WebController {
 	 * @param objects
 	 * @return
 	 */
-	protected RespData successAjax(String msg, Object...objects) {
-		RespData entity = new RespData();
+	protected RespModel successAjax(String msg, Object...objects) {
+		RespModel entity = new RespModel();
 		entity.setType(WebCommonEnum.REQUEST_ASYNC.getValue());
 		entity.setStatus(WebCommonEnum.SUCCESS.getValue());
 		entity.setMsg(msg);
@@ -126,8 +126,8 @@ public abstract class WebController {
 	 * @author  zhangST
 	 * @return
 	 */
-	protected RespData error() {
-		RespData entity = new RespData();
+	protected RespModel error() {
+		RespModel entity = new RespModel();
 		entity.setType(WebCommonEnum.REQUEST_SYNC.getValue());
 		entity.setStatus(WebCommonEnum.ERROR.getValue());
 		entity.setMsg(WebCommonEnum.ERROR.getDesc());
@@ -142,8 +142,8 @@ public abstract class WebController {
 	 * @param objects
 	 * @return
 	 */
-	protected RespData error(String msg, Object...objects) {
-		RespData entity = new RespData();
+	protected RespModel error(String msg, Object...objects) {
+		RespModel entity = new RespModel();
 		entity.setType(WebCommonEnum.REQUEST_SYNC.getValue());
 		entity.setStatus(WebCommonEnum.ERROR.getValue());
 		entity.setMsg(msg);
@@ -157,8 +157,8 @@ public abstract class WebController {
 	 * @author  zhangST
 	 * @return
 	 */
-	protected RespData errorAjax() {
-		RespData entity = new RespData();
+	protected RespModel errorAjax() {
+		RespModel entity = new RespModel();
 		entity.setType(WebCommonEnum.REQUEST_ASYNC.getValue());
 		entity.setStatus(WebCommonEnum.ERROR.getValue());
 		entity.setMsg(WebCommonEnum.ERROR.getDesc());
@@ -173,8 +173,8 @@ public abstract class WebController {
 	 * @param objects
 	 * @return
 	 */
-	protected RespData errorAjax(String msg, Object...objects) {
-		RespData entity = new RespData();
+	protected RespModel errorAjax(String msg, Object...objects) {
+		RespModel entity = new RespModel();
 		entity.setType(WebCommonEnum.REQUEST_ASYNC.getValue());
 		entity.setStatus(WebCommonEnum.ERROR.getValue());
 		entity.setMsg(msg);

@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yffd.easy.uupm.base.UupmBaseServiceTest;
-import com.yffd.easy.uupm.entity.UupmSecUserEntity;
+import com.yffd.easy.uupm.pojo.entity.UupmSecUserEntity;
 
 /**
  * @Description  简单描述该类的功能（可选）.

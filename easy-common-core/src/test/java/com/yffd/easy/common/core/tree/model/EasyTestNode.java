@@ -1,6 +1,8 @@
 package com.yffd.easy.common.core.tree.model;
 
-import com.yffd.easy.common.core.tree.node.EasyTreeNode;
+import java.util.List;
+
+import com.yffd.easy.common.core.tree.data.EasyTreeData;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -10,10 +12,12 @@ import com.yffd.easy.common.core.tree.node.EasyTreeNode;
  * @since		 JDK 1.7+
  * @see 	 
  */
-public class EasyTestNode implements EasyTreeNode {
+public class EasyTestNode implements EasyTreeData {
 	private static final long serialVersionUID = 1L;
 	private String id;
 	private String name;
+	
+	private List<EasyTestNode> children;
 	
 	public EasyTestNode() {
 	}
@@ -33,6 +37,7 @@ public class EasyTestNode implements EasyTreeNode {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
 	@Override
 	public String getIdValue() {
 		return this.id;
@@ -40,6 +45,15 @@ public class EasyTestNode implements EasyTreeNode {
 	@Override
 	public String getPidValue() {
 		return this.name;
+	}
+	@Override
+	public List<?> getChildren() {
+		return this.children;
+	}
+	@Override
+	public void setChildren(List<?> children) {
+		this.children = (List<EasyTestNode>) children;
+		
 	}
 	
 }

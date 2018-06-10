@@ -548,6 +548,28 @@
 		}
 	};
 	
+	$.initCombobox = function(selector, options) {
+		var opts = $.extend({
+			editable:false,
+			panelHeight: 120,
+		    valueField:'value',
+		    textField:'label',
+		}, options);
+		if(options && opts.data && (options.skipValues || options.selectValues)) {
+			opts.data = $.grep(opts.data, function(n,i){
+				if($.inArray(n['value'], options.selectValues) == -1) {
+					n['selected'] = false;
+				} else {
+					n['selected'] = true;
+				}
+				return $.inArray(n['value'], options.skipValues) == -1;
+		    });
+			if(options.selectValues && options.selectValues.length==0) opts.data[0]['selected'] = true;
+			if(!options.selectValues) opts.data[0]['selected'] = true;
+		}
+		return selector.combobox(opts);
+	}
+	
 	/***************** easyui默认实现的覆盖 END   *****************/
 	
 })(jQuery)

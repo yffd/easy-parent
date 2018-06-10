@@ -53,21 +53,21 @@ public class EasySampleTreeJsonTest {
         EasySampleTreeBuilder<EasyTestNode> builder = new EasySampleTreeBuilder<EasyTestNode>() {
 
 			@Override
-			protected EasySampleTree getTreeNode(EasyTestNode node) {
+			public EasySampleTree getTreeNode(EasyTestNode node) {
 				EasySampleTree tree = new EasySampleTree();
-				tree.setNodeValue(node);
+				tree.setDataValue(node);
 				tree.setIdValue(node.getId());
 				tree.setPidValue(node.getName());
 				return tree;
 			}
 			
 			@Override
-			protected Object getIdValue(EasyTestNode node) {
+			public Object getIdValue(EasyTestNode node) {
 				return node.getId();
 			}
 
 			@Override
-			protected Object getPidValue(EasyTestNode node) {
+			public Object getPidValue(EasyTestNode node) {
 				return node.getName();
 			}
 		};

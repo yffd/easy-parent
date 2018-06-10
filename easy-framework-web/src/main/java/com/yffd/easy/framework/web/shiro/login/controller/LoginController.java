@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.yffd.easy.framework.pojo.vo.RespData;
+import com.yffd.easy.framework.web.model.RespModel;
 import com.yffd.easy.framework.web.mvc.WebController;
 
 /**
@@ -29,7 +29,7 @@ import com.yffd.easy.framework.web.mvc.WebController;
 public class LoginController extends WebController {
 
 	@RequestMapping(value="/login")
-	public RespData login(HttpServletRequest req, HttpServletResponse resp) {
+	public RespModel login(HttpServletRequest req, HttpServletResponse resp) {
 		if("GET".equalsIgnoreCase(req.getMethod())) {
 			try {
 				resp.sendRedirect("/common/login.jsp");
@@ -58,7 +58,7 @@ public class LoginController extends WebController {
 	}
 	
 	@RequestMapping(value="/logout", method=RequestMethod.POST)
-	public RespData logout() {
+	public RespModel logout() {
 		if(null==this.getSession()) {
 			return this.successAjax();
 		}

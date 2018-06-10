@@ -15,12 +15,12 @@ import com.yffd.easy.common.core.tree.EasyTreeBuilderAbastract;
 public abstract class EasySampleTreeBuilder<N> extends EasyTreeBuilderAbastract<N, EasySampleTree> {
 
 	@Override
-	protected List<EasySampleTree> getChildren(EasySampleTree node) {
+	public List<EasySampleTree> getChildren(EasySampleTree node) {
 		return node.getChildren();
 	}
 
 	@Override
-	protected void setChildren(EasySampleTree node, List<EasySampleTree> children) {
+	public void setChildren(EasySampleTree node, List<EasySampleTree> children) {
 		node.setChildren(children);
 	}
 	

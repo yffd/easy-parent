@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
-import com.yffd.easy.framework.pojo.vo.DataGridVo;
-import com.yffd.easy.framework.pojo.vo.PropertyGridVo;
-import com.yffd.easy.framework.pojo.vo.RespData;
-import com.yffd.easy.uupm.entity.a.UupmApplicationEntity;
-import com.yffd.easy.uupm.pojo.factory.UupmPropertyGridFactory;
-import com.yffd.easy.uupm.service.a.UupmApplicationService;
+import com.yffd.easy.framework.web.model.RespModel;
+import com.yffd.easy.framework.web.model.easyui.EasyuiDataGridModel;
+import com.yffd.easy.uupm.pojo.entity.UupmAppSystemEntity;
+import com.yffd.easy.uupm.service.UupmAppSystemService;
 import com.yffd.easy.uupm.web.base.UupmBaseController;
+import com.yffd.easy.uupm.web.model.UupmPropertyGridVo;
+import com.yffd.easy.uupm.web.model.factory.UupmPropertyGridVoFactory;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -30,27 +30,27 @@ import com.yffd.easy.uupm.web.base.UupmBaseController;
 @RequestMapping("/uupm/application")
 public class UupmApplicationController extends UupmBaseController {
 	@Autowired
-	private UupmApplicationService uupmApplicationService;
+	private UupmAppSystemService uupmAppSystemService;
 	@Autowired
-	private UupmPropertyGridFactory uupmPropertyGridModelFactory;
+	private UupmPropertyGridVoFactory uupmPropertyGridModelFactory;
 	
 	@RequestMapping(value="/findAppCfg", method=RequestMethod.POST)
-	public RespData findAppCfg(@RequestParam Map<String, Object> paramMap) {
+	public RespModel findAppCfg(@RequestParam Map<String, Object> paramMap) {
 		String appCode = (String) paramMap.get("appCode");
 		if(EasyStringCheckUtils.isEmpty(appCode)) return this.errorAjax("参数无效");
-		UupmApplicationEntity entity = new UupmApplicationEntity();
+		UupmAppSystemEntity entity = new UupmAppSystemEntity();
 		entity.setAppCode(appCode);
-		UupmApplicationEntity result = this.uupmApplicationService.findOne(entity, getLoginInfo());
-		if(null==result) result = new UupmApplicationEntity();
-		List<PropertyGridVo> listResult = this.uupmPropertyGridModelFactory.createPropertyGridForApp(result);
-		DataGridVo dataGridVO = this.toDataGrid(listResult);
+		UupmAppSystemEntity result = this.uupmAppSystemService.findOne(entity, getLoginInfo());
+		if(null==result) result = new UupmAppSystemEntity();
+		List<UupmPropertyGridVo> listResult = this.uupmPropertyGridModelFactory.createPropertyGridForApp(result);
+		EasyuiDataGridModel dataGridVO = this.toDataGrid(listResult);
 		return this.successAjax(dataGridVO);
 	}
 	
 	@RequestMapping(value="/saveAppCfg", method=RequestMethod.POST)
-	public RespData saveAppCfg(UupmApplicationEntity paramModel) {
+	public RespModel saveAppCfg(UupmAppSystemEntity paramModel) {
 		if(null==paramModel || EasyStringCheckUtils.isEmpty(paramModel.getAppCode())) return this.error("参数无效");
-		int result = this.uupmApplicationService.saveAppCfg(paramModel, getLoginInfo());
+		int result = this.uupmAppSystemService.saveAppCfg(paramModel, getLoginInfo());
 		if(result==0) return this.error("保存配置失败");
 		return this.successAjax();
 	}

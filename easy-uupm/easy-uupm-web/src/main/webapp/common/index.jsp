@@ -41,8 +41,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
 <script type="text/javascript">
 $(function(){
-	initMenu();
-// 	initMenuLocal();
+// 	initMenu();
+	initMenuLocal();
 	if (utils.isLessThanIe8()) {
 		$.messager.show({
 			title : '警告',

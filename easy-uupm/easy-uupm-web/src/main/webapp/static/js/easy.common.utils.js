@@ -163,18 +163,4 @@
 		return this.format('yyyy-MM-dd');
 	}
 	
-	/**
-	 * 格式化字典，根据字典的值，返回显示文本
-	 * {value:"name", text:"名称"}
-	 */
-	utils.fmtDict = function(jsonData, val) {
-		var ret = "";
-		$.each(jsonData, function(index, obj) {
-			if(obj['id']==val) {
-				ret = obj['text'];
-				return false;
-			}
-		});
-		return ret;
-	}
 })(jQuery)

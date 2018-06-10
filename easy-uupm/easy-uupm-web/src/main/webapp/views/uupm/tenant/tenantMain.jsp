@@ -13,57 +13,32 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <jsp:include page="/common/layout/script.jsp"></jsp:include>
 
 <script type="text/javascript">
-	var $json_status = [ {id:"", text:"全部", "selected": true} ];
-	var $json_ttType = [ {id:"", text:"全部", "selected": true} ];
-	var $json_serveType = [ {id:"", text:"全部", "selected": true} ];
-	var $json_serveStatus = [ {id:"", text:"全部", "selected": true} ];
-
+	var $arr_statusStyle = [ {value:"", label:"全部", "selected": true} ];
+	var $arr_ttType = [ {value:"", label:"全部", "selected": true} ];
+	var $arr_ttServeType = [ {value:"", label:"全部", "selected": true} ];
+	var $arr_ttServeStatus = [ {value:"", label:"全部", "selected": true} ];
+	
 	var $openWindow = this;// 当前窗口
 	var $dg;
+	var $combobox_ttType;
+	var $combobox_ttStatus;
 	$(function() {
 		$dg = $('#dg_id');
 		// 初始化控件数据
-		$.post('/uupm/ui/listComboTree', 
-				{'treeIds':'status,tt-type,serve-type,serve-status'}, 
+		$.post('/uupm/common/listComboboxData', 
+				{'keyCodes':[uidict.statusStyle,uidict.ttType,uidict.ttServeType,uidict.ttServeStatus].toString()},
 				function(result) {
 					if("OK"==result.status) {
 						var jsonData = result.data;
-						$json_status = $json_status.concat(jsonData['status']);
-						$json_ttType = $json_ttType.concat(jsonData['tt-type']);
-						$json_serveType = $json_serveType.concat(jsonData['serve-type']);
-						$json_serveStatus = $json_serveStatus.concat(jsonData['serve-status']);
+						$arr_statusStyle = $arr_statusStyle.concat(jsonData[uidict.statusStyle]);
+						$arr_ttType = $arr_ttType.concat(jsonData[uidict.ttType]);
+						$arr_ttServeType = $arr_ttServeType.concat(jsonData[uidict.ttServeType]);
+						$arr_ttServeStatus = $arr_ttServeStatus.concat(jsonData[uidict.ttServeStatus]);
 						// 初始化datagrid组件
 						makeGrid();	
 						
-						$('input[name="ttType"]').combobox({
-							editable:false,
-							panelHeight: 120,
-						    valueField:'id',
-						    textField:'text',
-						    data: $json_ttType
-						});
-						$('input[name="ttStatus"]').combobox({
-							editable:false,
-							panelHeight: 120,
-							valueField:'id',
-						    textField:'text',
-						    data: $json_status
-						});
-						$('input[name="serveType"]').combobox({
-							editable:false,
-							panelHeight: 80,
-							valueField:'id',
-						    textField:'text',
-						    data: $json_serveType
-						});
-						$('input[name="serveStaus"]').combobox({
-							editable:false,
-							panelHeight: 80,
-							valueField:'id',
-						    textField:'text',
-						    data: $json_serveStatus
-						});
-						
+						$combobox_ttType = $.initCombobox($('input[name="ttType"]'), {data: $arr_ttType, skipValues:[], selectValues:[]});
+						$combobox_ttStatus = $.initCombobox($('input[name="ttStatus"]'), {data: $arr_ttType, skipValues:[], selectValues:[]});
 					}
 				}, 'json');
 		
@@ -103,22 +78,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						{field: 'ttCode', title: '租户编号', width: 100, align: 'left'},
 						{field: 'ttType', title: '租户类型', width: 100, align: 'left',
 							formatter: function(value, row) {
-								return utils.fmtDict($json_ttType, value);
+								return uidict.fmtDict($arr_ttType, value);
 							}	
 						},
 						{field: 'ttStatus', title: '租户状态', width: 100, align: 'left',
 							formatter: function(value, row) {
-								return utils.fmtDict($json_status, value);
+								return uidict.fmtDict($arr_statusStyle, value);
 							}	
 						},
 						{field: 'serveType', title: '服务方式', width: 100, align: 'left',
 							formatter: function(value, row) {
-								return utils.fmtDict($json_serveType, value);
+								return uidict.fmtDict($arr_ttServeType, value);
 							}
 						},
 						{field: 'serveStatus', title: '服务状态', width: 100, align: 'left',
 							formatter: function(value, row) {
-								return utils.fmtDict($json_serveStatus, value);
+								return uidict.fmtDict($arr_ttServeStatus, value);
 							}
 						}
 	                   ]]
@@ -139,8 +114,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	// 清除搜索条件
 	function cleanSearch() {
 		$('#searchForm_id input').val('');
-		$('input[name="ttType"]').combobox('select','');
-		$('input[name="ttStatus"]').combobox('select','');
+		$combobox_ttType.combobox('select','');
+		$combobox_ttStatus.combobox('select','');
 	}
 	
 	// 打开添加对话框
@@ -152,7 +127,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			href: 'views/uupm/tenant/tenantEdit.jsp',
 			onLoad:function(){
 				var editForm = parent.$.modalDialog.handler.find("#form_id");
-				setComboForSelected(editForm);
+				$.initCombobox(editForm.find('input[name="ttType"]'), {data: $arr_ttType, skipValues:[""], selectValues:[]});
+				$.initCombobox(editForm.find('input[name="ttStatus"]'), {data: $arr_statusStyle, skipValues:[""], selectValues:[]});
+				$.initCombobox(editForm.find('input[name="serveType"]'), {data: $arr_ttServeType, skipValues:[""], selectValues:[]});
+				$.initCombobox(editForm.find('input[name="serveStatus"]'), {data: $arr_ttServeStatus, skipValues:[""], selectValues:[]});
 			},
 			buttons: [{
 				text: '确定',
@@ -194,10 +172,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				href: 'views/uupm/tenant/tenantEdit.jsp',
 				onLoad:function(){
 					var editForm = parent.$.modalDialog.handler.find("#form_id");
-					setComboForSelected(editForm);
+					$.initCombobox(editForm.find('input[name="ttType"]'), {data: $arr_ttType, skipValues:[""], selectValues:[]});
+					$.initCombobox(editForm.find('input[name="ttStatus"]'), {data: $arr_statusStyle, skipValues:[""], selectValues:[]});
+					$.initCombobox(editForm.find('input[name="serveType"]'), {data: $arr_ttServeType, skipValues:[""], selectValues:[]});
+					$.initCombobox(editForm.find('input[name="serveStatus"]'), {data: $arr_ttServeStatus, skipValues:[""], selectValues:[]});
 					editForm.form("load", row);
-					editForm.find('input["pinyin"]').attr('readonly',true);
-					editForm.find('input["shortPinyin"]').attr('readonly',true);
+					editForm.find('input[name="shortPinyin"]').attr('readonly',true);
 				},
 				buttons: [{
 					text: '确定',
@@ -268,48 +248,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			});
 		}
 	}
-	// 设置控件选中
-	function setComboForSelected(selectForm) {
-		selectForm.find('input[name="ttType"]').combobox({
-			editable:false,
-			panelHeight: 120,
-			valueField:'id',
-		    textField:'text',
-		    data: $.grep($json_ttType, function(n,i){
-		    	if(i==1) n['selected']=true;
-		    	return i > 0;
-		    })
-		});
-		selectForm.find('input[name="ttStatus"]').combobox({
-			editable:false,
-			panelHeight: 120,
-			valueField:'id',
-		    textField:'text',
-		    data: $.grep($json_status, function(n,i){
-		    	if(i==1) n['selected']=true;
-		    	return i > 0;
-		    })
-		});
-		selectForm.find('input[name="serveType"]').combobox({
-			editable:false,
-			panelHeight: 80,
-			valueField:'id',
-		    textField:'text',
-		    data: $.grep($json_serveType, function(n,i){
-		    	if(i==1) n['selected']=true;
-		    	return i > 0;
-		    })
-		});
-		selectForm.find('input[name="serveStatus"]').combobox({
-			editable:false,
-			valueField:'id',
-		    textField:'text',
-		    data: $.grep($json_serveStatus, function(n,i){
-		    	if(i==1) n['selected']=true;
-		    	return i > 0;
-		    })
-		});
-	}	
 </script>
 </head>
 <body class="easyui-layout,fit:true">

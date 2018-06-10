@@ -7,10 +7,8 @@ import com.yffd.easy.framework.common.code.generator.CodeFileMapperXmlGenerator;
 import com.yffd.easy.framework.common.code.generator.CodeFileServiceGenerator;
 import com.yffd.easy.framework.common.code.generator.CodeMapperSqlGenerator;
 import com.yffd.easy.framework.common.code.generator.CodeMapperSqlTreeGenerator;
-import com.yffd.easy.uupm.entity.UupmAccountEntity;
-import com.yffd.easy.uupm.entity.a.UupmMenuEntity;
-import com.yffd.easy.uupm.entity.a.UupmResourceEntity;
-import com.yffd.easy.uupm.entity.a.UupmUITreeEntity;
+import com.yffd.easy.uupm.pojo.entity.UupmAccountEntity;
+import com.yffd.easy.uupm.pojo.entity.UupmResourceEntity;
 import com.yffd.easy.uupm.pojo.vo.UupmUserInfoVo;
 
 /**
@@ -27,43 +25,6 @@ public class WriteOneTest extends LocalProjectConfigTest {
 	private CodeFileMapperXmlGenerator mapperXmlGenerator = new CodeFileMapperXmlGenerator();
 	private CodeMapperSqlTreeGenerator sqlTreeGenerator = new CodeMapperSqlTreeGenerator();
 	private CodeMapperSqlGenerator sqlGenerator = new CodeMapperSqlGenerator();
-	
-	
-	/*****************************************************************************/
-	
-	@Test
-	public void writeToService() {
-		// TODO
-		Class<?> pojoClazz = UupmMenuEntity.class;
-		serviceGenerator.writeToFile(pojoClazz, serviceSuperClazz, servicePackageName, daoPackageName, author, outRootDirPath_service, covered);
-	}
-	
-	@Test
-	public void consoleToService() {
-		// TODO
-		Class<?> pojoClazz = UupmMenuEntity.class;
-		serviceGenerator.writeToConsole(pojoClazz, serviceSuperClazz, servicePackageName, daoPackageName, author);
-	}
-	
-	/*****************************************************************************/
-	
-	/*****************************************************************************/
-	
-	@Test
-	public void writeToDao() {
-		// TODO
-		Class<?> pojoClazz = UupmMenuEntity.class;
-		daoGenerator.writeToFile(pojoClazz, daoSuperClazz, daoPackageName, author, outRootDirPath_dao, covered);
-	}
-	
-	@Test
-	public void consoleToDao() {
-		// TODO
-		Class<?> pojoClazz = UupmMenuEntity.class;
-		daoGenerator.writeToConsole(pojoClazz, daoSuperClazz, daoPackageName, author);
-	}
-	
-	/*****************************************************************************/
 	
 	/*****************************************************************************/
 	
@@ -85,6 +46,43 @@ public class WriteOneTest extends LocalProjectConfigTest {
 	}
 	
 	/*****************************************************************************/
+	
+	/*****************************************************************************/
+	
+	@Test
+	public void writeToService() {
+		// TODO
+		Class<?> pojoClazz = UupmAccountEntity.class;
+		serviceGenerator.writeToFile(pojoClazz, serviceSuperClazz, servicePackageName, daoPackageName, author, outRootDirPath_service, covered);
+	}
+	
+	@Test
+	public void consoleToService() {
+		// TODO
+		Class<?> pojoClazz = UupmAccountEntity.class;
+		serviceGenerator.writeToConsole(pojoClazz, serviceSuperClazz, servicePackageName, daoPackageName, author);
+	}
+	
+	/*****************************************************************************/
+	
+	/*****************************************************************************/
+	
+	@Test
+	public void writeToDao() {
+		// TODO
+		Class<?> pojoClazz = UupmAccountEntity.class;
+		daoGenerator.writeToFile(pojoClazz, daoSuperClazz, daoPackageName, author, outRootDirPath_dao, covered);
+	}
+	
+	@Test
+	public void consoleToDao() {
+		// TODO
+		Class<?> pojoClazz = UupmAccountEntity.class;
+		daoGenerator.writeToConsole(pojoClazz, daoSuperClazz, daoPackageName, author);
+	}
+	
+	/*****************************************************************************/
+	
 	
 	
 	@Test
@@ -127,7 +125,7 @@ public class WriteOneTest extends LocalProjectConfigTest {
 	@Test
 	public void writeToOneOfAll() {
 		// TODO
-		Class<?> pojoClazz = UupmUITreeEntity.class;
+		Class<?> pojoClazz = UupmAccountEntity.class;
 		String sqlNamespace = daoGenerator.fmtDaoFullName(daoPackageName, pojoClazz);
 		mapperXmlGenerator.writeToFile(pojoClazz, sqlNamespace, outRootDirPath_mapper_xml, covered);
 		daoGenerator.writeToFile(pojoClazz, daoSuperClazz, daoPackageName, author, outRootDirPath_dao, covered);

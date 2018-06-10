@@ -135,4 +135,3 @@ public abstract class EasyTreeBuilderAbastract<N, T> {
 	}
 
 }
-

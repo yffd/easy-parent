@@ -13,22 +13,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <jsp:include page="/common/layout/script.jsp"></jsp:include>
 
 <script type="text/javascript">
-	var $json_status = [ {id:"", text:"全部", "selected": true} ];
 	var $openWindow = this;// 当前窗口
 	var $dg_left;
 	var $dg_right;
 	$(function() {
-		// 初始化控件数据
-		$.post('/uupm/ui/listComboTree', 
-				{'treeIds':'status'}, 
-				function(result) {
-					if("OK"==result.status) {
-						var jsonData = result.data;
-						$json_status = $json_status.concat(jsonData['status']);
-						// 初始化datagrid组件
-						makeGrid_left();
-					}
-				}, 'json');
+		// 初始化datagrid组件
+		makeGrid_left();
 	});
 	// 初始化datagrid组件
 	function makeGrid_left() {
@@ -66,12 +56,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			},
 			columns: [[
 	                   	{field: 'rsName', title: '名称', width:200,align: 'left'},
-						{field: 'rsCode', title: '编号', width: 100, align: 'left'},
-						{field: 'rsStatus', title: '状态', width: 100, align: 'left',
-							formatter: function(value, row) {
-								return utils.fmtDict($json_status, value);
-							}
-						}
+						{field: 'rsCode', title: '编号', width: 100, align: 'left'}
 	                   ]]
 		});
 	}

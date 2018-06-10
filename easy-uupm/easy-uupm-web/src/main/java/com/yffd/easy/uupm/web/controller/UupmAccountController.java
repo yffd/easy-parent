@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
 import com.yffd.easy.framework.pojo.page.PageParam;
 import com.yffd.easy.framework.pojo.page.PageResult;
-import com.yffd.easy.framework.pojo.vo.DataGridVo;
-import com.yffd.easy.framework.pojo.vo.RespData;
+import com.yffd.easy.framework.web.model.RespModel;
+import com.yffd.easy.framework.web.model.easyui.EasyuiDataGridModel;
 import com.yffd.easy.framework.web.shiro.login.account.ShiroAccount;
-import com.yffd.easy.uupm.entity.UupmAccountEntity;
+import com.yffd.easy.uupm.pojo.entity.UupmAccountEntity;
 import com.yffd.easy.uupm.service.UupmAccountService;
 import com.yffd.easy.uupm.web.base.UupmBaseController;
 
@@ -34,16 +34,16 @@ public class UupmAccountController extends UupmBaseController {
 	private UupmAccountService uupmAccountService;
 	
 	@RequestMapping(value="/listPage", method=RequestMethod.POST)
-	public RespData listPage(@RequestParam Map<String, Object> paramMap) {
+	public RespModel listPage(@RequestParam Map<String, Object> paramMap) {
 		PageParam paramPage = this.getPageParam(paramMap);
 		UupmAccountEntity paramModel = this.getModelParam(paramMap, UupmAccountEntity.class);
 		PageResult<UupmAccountEntity> pageResult = this.uupmAccountService.findTenantAccount(paramModel, paramPage, getLoginInfo());
-		DataGridVo dataGridVO = this.toDataGrid(pageResult);
+		EasyuiDataGridModel dataGridVO = this.toDataGrid(pageResult);
 		return this.successAjax(dataGridVO);
 	}
 	
 	@RequestMapping(value="/addTenantAccount", method=RequestMethod.POST)
-	public RespData addTenantAccount(UupmAccountEntity paramModel) {
+	public RespModel addTenantAccount(UupmAccountEntity paramModel) {
 		if(EasyStringCheckUtils.isEmpty(paramModel.getAcntId())
 				|| EasyStringCheckUtils.isEmpty(paramModel.getAcntPwd())) return this.error("参数无效");
 		UupmAccountEntity model = new UupmAccountEntity();	// 存在校验
@@ -62,7 +62,7 @@ public class UupmAccountController extends UupmBaseController {
 	}
 	
 	@RequestMapping(value="/update", method=RequestMethod.POST)
-	public RespData update(UupmAccountEntity paramModel) {
+	public RespModel update(UupmAccountEntity paramModel) {
 		if(null==paramModel || EasyStringCheckUtils.isEmpty(paramModel.getAcntId())) return this.error("参数无效");
 		UupmAccountEntity oldModel = new UupmAccountEntity();
 		oldModel.setAcntId(paramModel.getAcntId());
@@ -72,7 +72,7 @@ public class UupmAccountController extends UupmBaseController {
 	}
 	
 	@RequestMapping(value="/delById", method=RequestMethod.POST)
-	public RespData delById(String id) {
+	public RespModel delById(String id) {
 		if(EasyStringCheckUtils.isEmpty(id)) return this.errorAjax("参数无效");
 		UupmAccountEntity model = new UupmAccountEntity();
 		model.setId(id);

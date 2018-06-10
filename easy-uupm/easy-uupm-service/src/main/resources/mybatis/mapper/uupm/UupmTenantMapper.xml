@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yffd.easy.uupm.pojo.entity.UupmTenantEntity">
+
+
+	<!-- ######################################################################### -->
+	<!-- #########################   common sql begin    ######################### -->
+	<!-- ######################################################################### -->
+	
+	<!-- 表名 -->
+	<sql id="table_name"> uupm_tenant </sql>
+	<!-- 列名 -->
+	<sql id="table_columns">
+		t.VERSION as version, t.DEL_FLAG as delFlag, t.CREATE_BY as createBy, t.CREATE_TIME as createTime, t.UPDATE_BY as updateBy, 
+		t.UPDATE_TIME as updateTime, t.ID as id, t.TT_CODE as ttCode, t.PINYIN as pinyin, t.SERVE_STATUS as serveStatus, 
+		t.SERVE_TYPE as serveType, t.SHORT_PINYIN as shortPinyin, t.TT_NAME as ttName, t.TT_STATUS as ttStatus, t.TT_TYPE as ttType
+	</sql>
+	<!-- 分页条件 -->
+	<sql id="conditions_limit"><if test="page != null"> limit #{page.startIndex}, #{page.pageLimit} </if></sql>
+	<!-- 排序条件 -->
+	<sql id="conditions_orderby">
+		<choose>
+			<when test="orderBy != null and orderBy !=''"> ORDER BY #{orderBy} </when>
+			<otherwise> ORDER BY id desc </otherwise>
+		</choose>
+	</sql>
+	<!-- 动态组装复合查询条件 -->
+	<sql id="conditions_where">
+		<if test="entity != null">
+			<!-- Equal query -->
+			<if test="entity.version != null "> and t.VERSION = #{entity.version} </if>
+			<if test="entity.delFlag != null and entity.delFlag != ''"> and t.DEL_FLAG = #{entity.delFlag} </if>
+			<if test="entity.createBy != null and entity.createBy != ''"> and t.CREATE_BY = #{entity.createBy} </if>
+			<if test="entity.createTime != null "><![CDATA[ and t.CREATE_TIME = #{entity.createTime}]]> </if>
+			<if test="entity.updateBy != null and entity.updateBy != ''"> and t.UPDATE_BY = #{entity.updateBy} </if>
+			<if test="entity.updateTime != null "><![CDATA[ and t.UPDATE_TIME = #{entity.updateTime}]]> </if>
+			<if test="entity.id != null and entity.id != ''"> and t.ID = #{entity.id} </if>
+			<if test="entity.ttCode != null and entity.ttCode != ''"> and t.TT_CODE = #{entity.ttCode} </if>
+			<if test="entity.pinyin != null and entity.pinyin != ''"> and t.PINYIN = #{entity.pinyin} </if>
+			<if test="entity.serveStatus != null and entity.serveStatus != ''"> and t.SERVE_STATUS = #{entity.serveStatus} </if>
+			<if test="entity.serveType != null and entity.serveType != ''"> and t.SERVE_TYPE = #{entity.serveType} </if>
+			<if test="entity.shortPinyin != null and entity.shortPinyin != ''"> and t.SHORT_PINYIN = #{entity.shortPinyin} </if>
+			<if test="entity.ttStatus != null and entity.ttStatus != ''"> and t.TT_STATUS = #{entity.ttStatus} </if>
+			<if test="entity.ttType != null and entity.ttType != ''"> and t.TT_TYPE = #{entity.ttType} </if>
+			<!-- Like query -->
+			<if test="entity.ttName != null and entity.ttName != ''"> and t.TT_NAME like CONCAT(CONCAT('%', #{entity.ttName}), '%') </if>
+		</if>
+		<if test="propsMap != null">
+			<!-- In query -->
+			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
+			and t.ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.ttCodeIter != null and propsMap.ttCodeIter.size()>0">
+			and t.TT_CODE in <foreach item="item" index="index" collection="propsMap.ttCodeIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+		</if>
+	</sql>
+	<!-- 条件查询 -->
+	<select id="selectListBy" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.pojo.entity.UupmTenantEntity">
+		select <include refid="table_columns" />
+		from <include refid="table_name"/> as t 
+		<where>
+			<include refid="conditions_where" />
+		</where>
+		<include refid="conditions_orderby" />
+		<include refid="conditions_limit" />
+	</select>
+	<!-- 统计查询 -->
+	<select id="selectCountBy" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from 
+		<include refid="table_name"/> as t 
+		<where>
+			<include refid="conditions_where" />
+		</where>
+	</select>
+	<!-- 单条查询 -->
+	<select id="selectOneBy" parameterType="java.util.Map" resultType="com.yffd.easy.uupm.pojo.entity.UupmTenantEntity">
+		select <include refid="table_columns" /> 
+		from <include refid="table_name"/> as t 
+		<where>
+			<include refid="conditions_where" />
+		</where>
+	</select>
+	<!-- 单条插入 -->
+	<insert id="insertOneBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table_name" />
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TT_CODE, PINYIN, SERVE_STATUS, SERVE_TYPE, SHORT_PINYIN, TT_NAME, TT_STATUS, TT_TYPE)
+		values
+		(#{version}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{ttCode}, #{pinyin}, #{serveStatus}, #{serveType}, #{shortPinyin}, #{ttName}, #{ttStatus}, #{ttType})
+	</insert>
+	<!-- 批量插入 -->
+	<insert id="insertListBy" parameterType="java.util.Map" keyProperty="id" useGeneratedKeys="true">
+		insert into <include refid="table_name" />
+		(VERSION, DEL_FLAG, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, TT_CODE, PINYIN, SERVE_STATUS, SERVE_TYPE, SHORT_PINYIN, TT_NAME, TT_STATUS, TT_TYPE)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+		(#{item.version},#{item.delFlag},#{item.createBy},#{item.createTime},#{item.updateBy},
+		#{item.updateTime},#{item.ttCode},#{item.pinyin},#{item.serveStatus},#{item.serveType},
+		#{item.shortPinyin},#{item.ttName},#{item.ttStatus},#{item.ttType})
+		</foreach>
+	</insert>
+	<!-- 更新 -->
+	<update id="updateBy" parameterType="java.util.Map">
+		update <include refid="table_name" />
+		<set>
+		<if test="entity != null">
+			VERSION = VERSION + 1, 
+			<if test="entity.delFlag != null and entity.delFlag != ''"> DEL_FLAG = #{entity.delFlag},  </if>
+			<if test="entity.updateBy != null and entity.updateBy != ''"> UPDATE_BY = #{entity.updateBy},  </if>
+			<if test="entity.updateTime != null"> UPDATE_TIME = #{entity.updateTime},  </if>
+			<if test="entity.ttCode != null and entity.ttCode != ''"> TT_CODE = #{entity.ttCode},  </if>
+			<if test="entity.pinyin != null and entity.pinyin != ''"> PINYIN = #{entity.pinyin},  </if>
+			<if test="entity.serveStatus != null and entity.serveStatus != ''"> SERVE_STATUS = #{entity.serveStatus},  </if>
+			<if test="entity.serveType != null and entity.serveType != ''"> SERVE_TYPE = #{entity.serveType},  </if>
+			<if test="entity.shortPinyin != null and entity.shortPinyin != ''"> SHORT_PINYIN = #{entity.shortPinyin},  </if>
+			<if test="entity.ttName != null and entity.ttName != ''"> TT_NAME = #{entity.ttName},  </if>
+			<if test="entity.ttStatus != null and entity.ttStatus != ''"> TT_STATUS = #{entity.ttStatus},  </if>
+			<if test="entity.ttType != null and entity.ttType != ''"> TT_TYPE = #{entity.ttType},  </if>
+		</if>
+		</set>
+		<where>
+		<choose>
+		<when test="entityOld != null or propsMap != null">
+		<if test="entityOld != null">
+			<!-- Equal query -->
+			<if test="entityOld.version != null "> and VERSION = #{entityOld.version} </if>
+			<if test="entityOld.delFlag != null and entityOld.delFlag != ''"> and DEL_FLAG = #{entityOld.delFlag} </if>
+			<if test="entityOld.createBy != null and entityOld.createBy != ''"> and CREATE_BY = #{entityOld.createBy} </if>
+			<if test="entityOld.createTime != null "><![CDATA[ and CREATE_TIME = #{entityOld.createTime}]]> </if>
+			<if test="entityOld.updateBy != null and entityOld.updateBy != ''"> and UPDATE_BY = #{entityOld.updateBy} </if>
+			<if test="entityOld.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entityOld.updateTime}]]> </if>
+			<if test="entityOld.id != null and entityOld.id != ''"> and ID = #{entityOld.id} </if>
+			<if test="entityOld.ttCode != null and entityOld.ttCode != ''"> and TT_CODE = #{entityOld.ttCode} </if>
+			<if test="entityOld.pinyin != null and entityOld.pinyin != ''"> and PINYIN = #{entityOld.pinyin} </if>
+			<if test="entityOld.serveStatus != null and entityOld.serveStatus != ''"> and SERVE_STATUS = #{entityOld.serveStatus} </if>
+			<if test="entityOld.serveType != null and entityOld.serveType != ''"> and SERVE_TYPE = #{entityOld.serveType} </if>
+			<if test="entityOld.shortPinyin != null and entityOld.shortPinyin != ''"> and SHORT_PINYIN = #{entityOld.shortPinyin} </if>
+			<if test="entityOld.ttName != null and entityOld.ttName != ''"> and TT_NAME = #{entityOld.ttName} </if>
+			<if test="entityOld.ttStatus != null and entityOld.ttStatus != ''"> and TT_STATUS = #{entityOld.ttStatus} </if>
+			<if test="entityOld.ttType != null and entityOld.ttType != ''"> and TT_TYPE = #{entityOld.ttType} </if>
+		</if>
+		<if test="propsMap != null">
+			<!-- In query -->
+			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
+			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.ttCodeIter != null and propsMap.ttCodeIter.size()>0">
+			and TT_CODE in <foreach item="item" index="index" collection="propsMap.ttCodeIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+		</if>
+		</when>
+		<otherwise>
+		<!-- 防止没有参数传递，导致全部更新 -->
+		and 1=2
+		</otherwise>
+		</choose>
+		</where>
+	</update>
+	<!-- 删除 -->
+	<delete id="deleteBy" parameterType="java.util.Map">
+		delete from <include refid="table_name" />
+		<where>
+		<choose>
+		<when test="entity != null or propsMap != null">
+		<if test="entity != null">
+			<!-- Equal query -->
+			<if test="entity.version != null "> and VERSION = #{entity.version} </if>
+			<if test="entity.delFlag != null and entity.delFlag != ''"> and DEL_FLAG = #{entity.delFlag} </if>
+			<if test="entity.createBy != null and entity.createBy != ''"> and CREATE_BY = #{entity.createBy} </if>
+			<if test="entity.createTime != null "><![CDATA[ and CREATE_TIME = #{entity.createTime}]]> </if>
+			<if test="entity.updateBy != null and entity.updateBy != ''"> and UPDATE_BY = #{entity.updateBy} </if>
+			<if test="entity.updateTime != null "><![CDATA[ and UPDATE_TIME = #{entity.updateTime}]]> </if>
+			<if test="entity.id != null and entity.id != ''"> and ID = #{entity.id} </if>
+			<if test="entity.ttCode != null and entity.ttCode != ''"> and TT_CODE = #{entity.ttCode} </if>
+			<if test="entity.pinyin != null and entity.pinyin != ''"> and PINYIN = #{entity.pinyin} </if>
+			<if test="entity.serveStatus != null and entity.serveStatus != ''"> and SERVE_STATUS = #{entity.serveStatus} </if>
+			<if test="entity.serveType != null and entity.serveType != ''"> and SERVE_TYPE = #{entity.serveType} </if>
+			<if test="entity.shortPinyin != null and entity.shortPinyin != ''"> and SHORT_PINYIN = #{entity.shortPinyin} </if>
+			<if test="entity.ttName != null and entity.ttName != ''"> and TT_NAME = #{entity.ttName} </if>
+			<if test="entity.ttStatus != null and entity.ttStatus != ''"> and TT_STATUS = #{entity.ttStatus} </if>
+			<if test="entity.ttType != null and entity.ttType != ''"> and TT_TYPE = #{entity.ttType} </if>
+		</if>
+		<if test="propsMap != null">
+			<!-- In query -->
+			<if test="propsMap.idIter != null and propsMap.idIter.size()>0">
+			and ID in <foreach item="item" index="index" collection="propsMap.idIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+			<if test="propsMap.ttCodeIter != null and propsMap.ttCodeIter.size()>0">
+			and TT_CODE in <foreach item="item" index="index" collection="propsMap.ttCodeIter" open="(" separator="," close=") ">#{item}</foreach>
+			</if>
+		</if>
+		</when>
+		<otherwise>
+		<!-- 防止没有参数传递，导致全部删除 -->
+		and 1=2
+		</otherwise>
+		</choose>
+		</where>
+	</delete>
+	<!-- ######################################################################### -->
+	<!-- ##########################   common sql end    ########################## -->
+	<!-- ######################################################################### -->
+
+</mapper>

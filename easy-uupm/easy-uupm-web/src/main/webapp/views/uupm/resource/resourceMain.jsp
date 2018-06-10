@@ -19,12 +19,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	var $dg_right;
 	$(function() {
 		// 初始化控件数据
-		$.post('/uupm/ui/listComboTree', 
-				{'treeIds':'rs-type'}, 
+		$.post('/uupm/common/listComboboxData', 
+				{'keyCodes':[uidict.rsType].toString()}, 
 				function(result) {
 					if("OK"==result.status) {
 						var jsonData = result.data;
-						$json_rsType = $json_rsType.concat(jsonData['rs-type']);
+						$json_rsType = $json_rsType.concat(jsonData['rsType']);
 						// 初始化datagrid组件
 						makeGrid_left();
 						makeGrid_right();
@@ -116,7 +116,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						{field: 'treeId', title: '树ID', width: 100, align: 'left'},
 						{field: 'rsType', title: '类型', width: 100, align: 'left',
 							formatter: function(value, row) {
-								return utils.fmtDict($json_rsType, value);
+								return uidict.fmtDict($json_rsType, value);
 							}	
 						},
 						{field: 'seqNo', title: '序号', width: 100, align: 'left'},

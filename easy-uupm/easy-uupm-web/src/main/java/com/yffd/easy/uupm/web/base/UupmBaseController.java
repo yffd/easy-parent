@@ -8,7 +8,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
 import com.yffd.easy.framework.pojo.login.LoginInfo;
-import com.yffd.easy.framework.web.mvc.WebDataController;
+import com.yffd.easy.framework.web.mvc.WebEasyuiController;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -18,7 +18,7 @@ import com.yffd.easy.framework.web.mvc.WebDataController;
  * @since		 JDK 1.7+
  * @see 	 
  */
-public class UupmBaseController extends WebDataController {
+public class UupmBaseController extends WebEasyuiController {
 	protected static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	@InitBinder

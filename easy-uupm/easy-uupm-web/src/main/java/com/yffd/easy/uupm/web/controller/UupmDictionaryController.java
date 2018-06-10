@@ -1,23 +1,8 @@
 package com.yffd.easy.uupm.web.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.yffd.easy.common.core.util.EasyStringCheckUtils;
-import com.yffd.easy.framework.pojo.page.PageParam;
-import com.yffd.easy.framework.pojo.page.PageResult;
-import com.yffd.easy.framework.pojo.vo.DataGridVo;
-import com.yffd.easy.framework.pojo.vo.RespData;
-import com.yffd.easy.uupm.entity.a.UupmDictionaryEntity;
-import com.yffd.easy.uupm.pojo.factory.UupmDictionaryFactory;
-import com.yffd.easy.uupm.pojo.vo.UupmTreeDictVo;
-import com.yffd.easy.uupm.service.a.UupmDictionaryService;
 import com.yffd.easy.uupm.web.base.UupmBaseController;
 
 /**
@@ -32,11 +17,11 @@ import com.yffd.easy.uupm.web.base.UupmBaseController;
 @RequestMapping("/uupm/dictionary")
 public class UupmDictionaryController extends UupmBaseController {
 
-	@Autowired
-	private UupmDictionaryService uupmDictionaryService;
-	@Autowired
-	private UupmDictionaryFactory uupmDictionaryModelFactory;
-	
+//	@Autowired
+//	private UupmDictionaryService uupmDictionaryService;
+//	@Autowired
+//	private UupmDictionaryFactory uupmDictionaryModelFactory;
+//	
 //	@RequestMapping(value="/listCategory", method=RequestMethod.POST)
 //	public RespData listCategory(@RequestParam Map<String, Object> paramMap) {
 //		PageParam paramPage = this.getPageParam(paramMap);

@@ -17,7 +17,7 @@ import com.alibaba.fastjson.JSON;
  */
 public class EasySampleTreeJson {
 
-	public static <T extends EasySampleTree > String getTreeJson(T tree) {
+	public static <T extends EasySampleTree> String getTreeJson(T tree) {
 		if(null==tree) return null;
 		Map<String, Object> map = new HashMap<String, Object>();
 		EasySampleTreeJson.children(tree, map);
@@ -25,7 +25,7 @@ public class EasySampleTreeJson {
 	}
 	
 	private static <T extends EasySampleTree> List<EasySampleTree> children(T tree, Map<String, Object> map) {
-		Object node = tree.getNodeValue();
+		Object node = tree.getDataValue();
 		map.putAll(JSON.parseObject(JSON.toJSONString(node), Map.class));
 		
 		List<Map<String, Object>> list = (List<Map<String, Object>>) map.get("chilren");
@@ -40,7 +40,7 @@ public class EasySampleTreeJson {
 		} else {
 			for(EasySampleTree child : children) {
 				Map<String, Object> tmp = new HashMap<>();
-				tmp.putAll(JSON.parseObject(JSON.toJSONString(child.getNodeValue()), Map.class));
+				tmp.putAll(JSON.parseObject(JSON.toJSONString(child.getDataValue()), Map.class));
 				tmp.put("children", children(child, tmp));
 				list.add(tmp);
 			}

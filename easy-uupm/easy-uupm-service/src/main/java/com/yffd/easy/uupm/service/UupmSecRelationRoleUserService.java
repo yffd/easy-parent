@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
 import com.yffd.easy.framework.common.exception.CommonBizException;
 import com.yffd.easy.framework.pojo.login.LoginInfo;
-import com.yffd.easy.uupm.entity.UupmSecRelationRolePms;
-import com.yffd.easy.uupm.entity.UupmSecRelationRoleUser;
+import com.yffd.easy.uupm.pojo.entity.UupmSecRelationRolePms;
+import com.yffd.easy.uupm.pojo.entity.UupmSecRelationRoleUser;
 
 /**
  * @Description  简单描述该类的功能（可选）.

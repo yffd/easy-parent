@@ -15,13 +15,13 @@ import com.alibaba.fastjson.JSON;
 import com.yffd.easy.common.core.util.EasyStringCheckUtils;
 import com.yffd.easy.framework.pojo.page.PageParam;
 import com.yffd.easy.framework.pojo.page.PageResult;
-import com.yffd.easy.framework.pojo.vo.DataGridVo;
-import com.yffd.easy.framework.pojo.vo.RespData;
-import com.yffd.easy.uupm.entity.a.UupmResourceEntity;
-import com.yffd.easy.uupm.pojo.factory.UupmResourceFactory;
-import com.yffd.easy.uupm.pojo.vo.easyui.UupmUIResTreeVo;
-import com.yffd.easy.uupm.service.a.UupmResourceService;
+import com.yffd.easy.framework.web.model.RespModel;
+import com.yffd.easy.framework.web.model.easyui.EasyuiDataGridModel;
+import com.yffd.easy.uupm.pojo.entity.UupmResourceEntity;
+import com.yffd.easy.uupm.service.UupmResourceService;
 import com.yffd.easy.uupm.web.base.UupmBaseController;
+import com.yffd.easy.uupm.web.model.UupmTreeResourceVo;
+import com.yffd.easy.uupm.web.model.factory.UupmTreeResourceVoFactory;
 /**
  * @Description  简单描述该类的功能（可选）.
  * @Date		 2018年04月03日 14时09分26秒 <br/>
@@ -37,44 +37,44 @@ public class UupmResourceController extends UupmBaseController {
 	@Autowired
 	private UupmResourceService uupmResourceService;
 	@Autowired
-	private UupmResourceFactory uupmResourceModelFactory;
+	private UupmTreeResourceVoFactory uupmTreeResourceVoFactory;
 	
 	@RequestMapping(value="/listRoot", method=RequestMethod.POST)
-	public RespData listRoot(@RequestParam Map<String, Object> paramMap) {
+	public RespModel listRoot(@RequestParam Map<String, Object> paramMap) {
 		PageParam paramPage = this.getPageParam(paramMap);
 		UupmResourceEntity model = new UupmResourceEntity();
 		model.setParentCode("root");
 		PageResult<UupmResourceEntity> pageResult = this.uupmResourceService.findPage(model, paramPage, getLoginInfo());
-		DataGridVo dataGridVO = this.toDataGrid(pageResult);
+		EasyuiDataGridModel dataGridVO = this.toDataGrid(pageResult);
 		return this.successAjax(dataGridVO);
 	}
 	
 	@RequestMapping(value="/listTree", method=RequestMethod.POST)
-	public RespData listTree(@RequestParam Map<String, Object> paramMap) {
+	public RespModel listTree(@RequestParam Map<String, Object> paramMap) {
 		String treeId = (String) paramMap.get("treeId");
 		if(EasyStringCheckUtils.isEmpty(treeId)) return this.successAjax();
 		UupmResourceEntity model = new UupmResourceEntity();
 		model.setTreeId(treeId);
 		List<UupmResourceEntity> listResult = this.uupmResourceService.findList(model, getLoginInfo());
 		if(null!=listResult && !listResult.isEmpty()) {
-			List<UupmUIResTreeVo> treeList = this.uupmResourceModelFactory.buildMultiTree(listResult, treeId);
+			List<UupmTreeResourceVo> treeList = this.uupmTreeResourceVoFactory.buildMultiTree(listResult, treeId);
 			return this.successAjax(treeList);
 		}
 		return this.successAjax();
 	}
 	
 	@RequestMapping(value="/listAllTree", method=RequestMethod.POST)
-	public RespData listAllTree() {
+	public RespModel listAllTree() {
 		List<UupmResourceEntity> listResult = this.uupmResourceService.findAll();
 		if(null!=listResult && !listResult.isEmpty()) {
-			List<UupmUIResTreeVo> treeList = this.uupmResourceModelFactory.buildMultiTree(listResult);
+			List<UupmTreeResourceVo> treeList = this.uupmTreeResourceVoFactory.buildMultiTree(listResult);
 			return this.successAjax(treeList);
 		}
 		return this.successAjax();
 	}
 	
 	@RequestMapping(value="/addRoot", method=RequestMethod.POST)
-	public RespData addRoot(UupmResourceEntity paramModel) {
+	public RespModel addRoot(UupmResourceEntity paramModel) {
 		if(EasyStringCheckUtils.isEmpty(paramModel.getRsCode())) return this.errorAjax("参数无效");
 		UupmResourceEntity model = new UupmResourceEntity();	// 存在判断
 		model.setRsCode(paramModel.getRsCode());
@@ -88,7 +88,7 @@ public class UupmResourceController extends UupmBaseController {
 	}
 	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
-	public RespData add(UupmResourceEntity paramModel) {
+	public RespModel add(UupmResourceEntity paramModel) {
 		if(EasyStringCheckUtils.isEmpty(paramModel.getTreeId()) 
 				|| EasyStringCheckUtils.isEmpty(paramModel.getRsCode())
 				|| EasyStringCheckUtils.isEmpty(paramModel.getParentCode())) return this.errorAjax("参数无效");
@@ -102,7 +102,7 @@ public class UupmResourceController extends UupmBaseController {
 	}
 	
 	@RequestMapping(value="/update", method=RequestMethod.POST)
-	public RespData update(UupmResourceEntity paramModel) {
+	public RespModel update(UupmResourceEntity paramModel) {
 		if(EasyStringCheckUtils.isEmpty(paramModel.getTreeId()) 
 				|| EasyStringCheckUtils.isEmpty(paramModel.getRsCode())) return this.errorAjax("参数无效");
 		UupmResourceEntity oldModel = new UupmResourceEntity();
@@ -114,20 +114,20 @@ public class UupmResourceController extends UupmBaseController {
 	}
 	
 	@RequestMapping(value="/delByTreeId", method=RequestMethod.POST)
-	public RespData delByTreeId(String treeId) {
+	public RespModel delByTreeId(String treeId) {
 		if(EasyStringCheckUtils.isEmpty(treeId)) return this.errorAjax("参数无效");
-		int result = this.uupmResourceService.delByTreeId(treeId);
+		int result = this.uupmResourceService.delCascadeByTreeId(treeId);
 		if(result==0) return this.errorAjax("删除失败");
 		return this.successAjax();
 	}
 	
 	@RequestMapping(value="/delByRsCodes", method=RequestMethod.POST)
-	public RespData delByRsCodes(String rsCodes) {
+	public RespModel delByRsCodes(String rsCodes) {
 		if(EasyStringCheckUtils.isEmpty(rsCodes)) return this.errorAjax("参数无效");
 		List<String> rsCodeList = JSON.parseArray(rsCodes, String.class);
 		if(null==rsCodeList || rsCodeList.size()==0) return this.errorAjax("参数无效");
 		Set<String> rsCodeSet = new HashSet<String>(rsCodeList);
-		int result = this.uupmResourceService.delByRsCodes(rsCodeSet);
+		int result = this.uupmResourceService.delCascadeByRsCodes(rsCodeSet);
 		if(result==0) return this.errorAjax("删除失败");
 		return this.successAjax();
 	}

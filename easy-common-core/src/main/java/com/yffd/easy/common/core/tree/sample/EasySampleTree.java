@@ -17,7 +17,7 @@ public class EasySampleTree implements Serializable {
 	
 	private Object idValue;
 	private Object pidValue;
-	private Object nodeValue;
+	private Object dataValue;
 	private List<EasySampleTree> children;
 	public Object getIdValue() {
 		return idValue;
@@ -31,11 +31,11 @@ public class EasySampleTree implements Serializable {
 	public void setPidValue(Object pidValue) {
 		this.pidValue = pidValue;
 	}
-	public Object getNodeValue() {
-		return nodeValue;
+	public Object getDataValue() {
+		return dataValue;
 	}
-	public void setNodeValue(Object nodeValue) {
-		this.nodeValue = nodeValue;
+	public void setDataValue(Object dataValue) {
+		this.dataValue = dataValue;
 	}
 	public List<EasySampleTree> getChildren() {
 		return children;
