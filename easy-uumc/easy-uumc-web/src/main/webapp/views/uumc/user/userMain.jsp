@@ -59,6 +59,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				if("OK"==result.status) {
 					var jsonData = result.data;
 					$combotree_data_org = jsonData['org'];
+					$combotree_data_org[0]['id']='';
+					console.info($combotree_data_org);
 					initCombotree($('input[name="orgCode"]'), null, $combotree_data_org);
 				}
 			}, 'json');
