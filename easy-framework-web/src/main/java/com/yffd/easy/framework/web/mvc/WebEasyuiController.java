@@ -10,8 +10,8 @@ import com.yffd.easy.common.core.exception.EasyCommonException;
 import com.yffd.easy.common.core.util.ValidUtils;
 import com.yffd.easy.framework.pojo.page.PageParam;
 import com.yffd.easy.framework.pojo.page.PageResult;
-import com.yffd.easy.framework.web.model.easyui.EasyuiDataGridModel;
-import com.yffd.easy.framework.web.model.easyui.EasyuiSearchVo;
+import com.yffd.easy.framework.web.mvc.model.easyui.DataGridModel;
+import com.yffd.easy.framework.web.mvc.model.easyui.SearchModel;
 
 public class WebEasyuiController extends WebController {
 	public static final Integer PAGE_LIMIT_DEFAUL = 30;
@@ -23,9 +23,9 @@ public class WebEasyuiController extends WebController {
 	 * @param pageResult
 	 * @return
 	 */
-	public EasyuiDataGridModel toDataGrid(PageResult<?> pageResult) {
+	public DataGridModel toDataGrid(PageResult<?> pageResult) {
 		if(null==pageResult) return null;
-		EasyuiDataGridModel vo = new EasyuiDataGridModel();
+		DataGridModel vo = new DataGridModel();
 		if(null!=pageResult.getRecordList())
 			vo.setRows(pageResult.getRecordList());
 		Long total = (long) pageResult.getPageParam().getTotalRecord();
@@ -40,9 +40,9 @@ public class WebEasyuiController extends WebController {
 	 * @param list
 	 * @return
 	 */
-	public EasyuiDataGridModel toDataGrid(List<?> list) {
+	public DataGridModel toDataGrid(List<?> list) {
 		if(null==list) return null;
-		EasyuiDataGridModel vo = new EasyuiDataGridModel();
+		DataGridModel vo = new DataGridModel();
 		vo.setRows(list);
 		Long total = (long) list.size();
 		vo.setTotal(total);
@@ -56,7 +56,7 @@ public class WebEasyuiController extends WebController {
 	 * @param searchBoxVO
 	 * @return
 	 */
-	public PageParam getPageParam(EasyuiSearchVo searchBoxVO) {
+	public PageParam getPageParam(SearchModel searchBoxVO) {
 		Integer pageNum = 1;
 		Integer pageLimit = PAGE_LIMIT_DEFAUL;
 		if(null==searchBoxVO) {

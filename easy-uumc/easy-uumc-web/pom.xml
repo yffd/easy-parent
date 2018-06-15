@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.yffd.easy</groupId>
+    <artifactId>easy-uumc</artifactId>
+    <version>0.0.1</version>
+  </parent>
+  <groupId>com.yffd.easy</groupId>
+  <artifactId>easy-uumc-web</artifactId>
+  <version>0.0.1</version>
+  <packaging>war</packaging>
+  <name>easy-uumc-web</name>
+  <url>http://maven.apache.org</url>
+  <properties>
+    <easy.uumc.service.version>0.0.1</easy.uumc.service.version>
+    <easy.framework.web.version>0.0.1</easy.framework.web.version>
+  </properties>
+  
+  <dependencies>
+    <dependency>
+  		<groupId>com.yffd.easy</groupId>
+	  	<artifactId>easy-uumc-service</artifactId>
+	  	<version>${easy.uumc.service.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.yffd.easy</groupId>
+  		<artifactId>easy-framework-web</artifactId>
+  		<version>${easy.framework.web.version}</version>
+  	</dependency>
+  	<!-- Servlet start -->
+	<dependency>
+		<groupId>javax.servlet</groupId>
+      		<artifactId>javax.servlet-api</artifactId>
+		<version>${javax.servlet.api.version}</version>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>javax.servlet.jsp</groupId>
+		<artifactId>jsp-api</artifactId>
+		<version>${jsp.api.version}</version>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>jstl</artifactId>
+		<version>${jstl.version}</version>
+		<scope>provided</scope>
+	</dependency>
+	<!-- Servlet end -->
+    <dependency>
+      	<groupId>junit</groupId>
+      	<artifactId>junit</artifactId>
+      	<scope>test</scope>
+    </dependency>
+    
+  </dependencies>
+  <build>
+    <finalName>easy-uumc-web</finalName>
+  	<resources>
+  		<resource>
+  			<targetPath>${project.build.directory}/classes</targetPath>
+    		<directory>src/main/resources</directory>
+   		</resource>
+	</resources>
+	
+	<plugins>
+  		<plugin>
+			<!-- jetty插件 -->
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>maven-jetty-plugin</artifactId>
+			<configuration>
+				<contextPath>/</contextPath>
+				<scanIntervalSeconds>10</scanIntervalSeconds>
+				<scanIntervalSeconds>5</scanIntervalSeconds>
+                <scanTargetPatterns>
+               	    <scanTargetPattern>
+               	   	  <directory>src/main/resources</directory>
+               	   	  <excludes>  
+	                     <exclude>db_script/*.*</exclude>  
+	                 </excludes> 
+               	    </scanTargetPattern>
+                </scanTargetPatterns>
+                <webAppConfig>
+               	    <tempDirectory>${project.build.directory}/work</tempDirectory>
+                    <contextPath>/</contextPath>	<!-- http://host:port/demo/ -->  
+                </webAppConfig>
+				<connectors>
+					<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+						<port>8886</port>
+						<maxIdleTime>60000</maxIdleTime>
+					</connector>
+				</connectors>
+			</configuration>
+		</plugin>
+		<plugin>
+			<!-- 发布插件 -->
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-deploy-plugin</artifactId>
+			<configuration>
+				<skip>true</skip>
+			</configuration>
+		</plugin>
+  	</plugins>
+  </build>
+</project>

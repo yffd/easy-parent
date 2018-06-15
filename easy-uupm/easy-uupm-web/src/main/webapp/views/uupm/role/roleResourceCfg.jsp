@@ -49,7 +49,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	// 初始化组件
 	function makeGrid_left() {
 		$dg_left.datagrid({
-		    url:'uupm/role/listPage',
+		    url:'uupm/sec/role/listPage',
 		    width: 'auto',
 		    height: $(this).height()-commonui.remainHeight-20-$('#tb_id_left').height(),
 			pagination: true,

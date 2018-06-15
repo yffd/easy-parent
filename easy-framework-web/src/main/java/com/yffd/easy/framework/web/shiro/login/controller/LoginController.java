@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.yffd.easy.framework.web.model.RespModel;
 import com.yffd.easy.framework.web.mvc.WebController;
+import com.yffd.easy.framework.web.mvc.model.RespModel;
 
 /**
  * @Description  简单描述该类的功能（可选）.

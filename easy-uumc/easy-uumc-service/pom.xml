@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.yffd.easy</groupId>
+    <artifactId>easy-uumc</artifactId>
+    <version>0.0.1</version>
+  </parent>
+  <groupId>com.yffd.easy</groupId>
+  <artifactId>easy-uumc-service</artifactId>
+  <version>0.0.1</version>
+  <name>easy-uumc-service</name>
+  <url>http://maven.apache.org</url>
+  <properties>
+    <easy.uumc.pojo.version>0.0.1</easy.uumc.pojo.version>
+    <easy.framework.common.version>0.0.1</easy.framework.common.version>
+  </properties>
+  
+  <dependencies>
+  	<dependency>
+	  	<groupId>com.yffd.easy</groupId>
+  		<artifactId>easy-uumc-pojo</artifactId>
+	    <version>${easy.uumc.pojo.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.yffd.easy</groupId>
+	  	<artifactId>easy-framework-common</artifactId>
+	  	<version>${easy.framework.common.version}</version>
+  	</dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
 import com.yffd.easy.framework.web.enums.WebCommonEnum;
-import com.yffd.easy.framework.web.model.RespModel;
+import com.yffd.easy.framework.web.mvc.model.RespModel;
 
 /**
  * @Description  简单描述该类的功能（可选）.

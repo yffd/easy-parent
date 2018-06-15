@@ -23,6 +23,15 @@ public class CodeFileServiceGenerator extends CodeGenerator {
 	private static final String TEMPLATE_PATH = "com\\yffd\\easy\\framework\\common\\code\\template\\XxxService.template";
 	private CodeFileDaoGenerator daoGenerator = new CodeFileDaoGenerator();
 	
+	public String fmtServiceFullName(String servicePackageName, Class<?> pojoClazz) {
+		return servicePackageName + "." + this.fmtPojoName(pojoClazz, null, "Service");
+	}
+	
+	public String fmtServiceAliasName(Class<?> pojoClazz) {
+		String simpleName = this.fmtServiceSimpleName(pojoClazz);
+		return simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
+	}
+	
 	public String fmtServiceSimpleName(Class<?> pojoClazz) {
 		return this.fmtPojoName(pojoClazz, null, "Service");
 	}

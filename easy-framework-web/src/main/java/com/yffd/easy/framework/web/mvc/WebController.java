@@ -6,7 +6,7 @@ import org.apache.shiro.subject.Subject;
 
 import com.yffd.easy.framework.pojo.login.LoginInfo;
 import com.yffd.easy.framework.web.enums.WebCommonEnum;
-import com.yffd.easy.framework.web.model.RespModel;
+import com.yffd.easy.framework.web.mvc.model.RespModel;
 
 /**
  * @Description  web控制转发器基类.

@@ -13,7 +13,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <jsp:include page="/common/layout/script.jsp"></jsp:include>
 
 <script type="text/javascript">
-	var $json_status = [{id:"", text:"全部", "selected": true}];
+	var $arr_statusStyle = [{value:"", label:"全部", "selected": true}];
 
 	var $openWindow = this;// 当前窗口
 	var $dg;
@@ -21,21 +21,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	$(function() {
 		$dg = $('#dg_id');
 		// 初始化控件数据
-		$.post('/uupm/ui/listComboTree', 
-				{'treeIds':'status'},
+		$.post('/uupm/common/listComboboxData', 
+				{'keyCodes':[uidict.statusStyle].toString()},
 				function(result) {
 					if("OK"==result.status) {
 						var jsonData = result.data;
-						$json_status = $json_status.concat(jsonData['status']);
+						$arr_statusStyle = $arr_statusStyle.concat(jsonData['statusStyle']);
 						
 						makeGrid_left();	// 初始化datagrid组件
-						$combobox_roleStatus = $('input[name="roleStatus"]').combobox({
-							editable:false,
-							panelHeight: 120,
-						    valueField:'id',
-						    textField:'text',
-						    data: $json_status
-						});
+						$combobox_roleStatus = $.initCombobox($('input[name="roleStatus"]'), {data: $arr_statusStyle, skipValues:[], selectValues:[]});
 						
 					}
 				}, 'json');
@@ -44,7 +38,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	// 初始化datagrid组件
 	function makeGrid_left() {
 		$dg.datagrid({
-		    url:'uupm/role/listPage',
+		    url:'uupm/sec/role/listPage',
 		    width: 'auto',
 		    height: $(this).height()-commonui.remainHeight-$('.search-form-div').height(),
 			pagination: true,
@@ -76,7 +70,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						{field: 'roleCode', title: '编号', width: 100, align: 'left'},
 						{field: 'roleStatus', title: '状态', width: 100, align: 'left',
 							formatter: function(value, row) {
-								return utils.fmtDict($json_status, value);
+								return uidict.fmtDict($arr_statusStyle, value);
 							}
 						},
 						{field: 'createTime', title: '创建时间', width: 100, align: 'center',
@@ -103,9 +97,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	// 清除搜索条件
 	function cleanSearch() {
 		$('#searchForm_id input').val('');
-		
-		var val = $combobox_roleStatus.combobox('getData');
-		$combobox_roleStatus.combobox('select',val[0]['id']);
+		$combobox_roleStatus.combobox('select','');
 	}
 	
 	// 打开添加对话框
@@ -117,7 +109,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			href: 'views/uupm/role/roleEdit.jsp',
 			onLoad:function(){
 				var editForm = parent.$.modalDialog.handler.find("#form_id");
-				setComboForSelected(editForm);
+				$.initCombobox(editForm.find('input[name="roleStatus"]'), {data: $arr_statusStyle, skipValues:[""], selectValues:[]});
 			},
 			buttons: [{
 				text: '确定',
@@ -125,7 +117,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				handler: function() {
 					var editForm = parent.$.modalDialog.handler.find("#form_id");
 					var obj = utils.serializeObject(editForm);
-					$.post('uupm/role/add', obj, function(result) {
+					$.post('uupm/sec/role/add', obj, function(result) {
 						if("OK"==result.status) {
 							parent.$.modalDialog.handler.dialog('close');
 							$dg.datagrid('reload');
@@ -159,7 +151,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				href: 'views/uupm/role/roleEdit.jsp',
 				onLoad:function(){
 					var editForm = parent.$.modalDialog.handler.find("#form_id");
-					setComboForSelected(editForm);
+					$.initCombobox(editForm.find('input[name="roleStatus"]'), {data: $arr_statusStyle, skipValues:[""], selectValues:[]});
 					editForm.form("load", row);
 					editForm.find('input[name="roleCode"]').attr('readonly',true);
 				},
@@ -169,7 +161,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					handler: function() {
 						var editForm = parent.$.modalDialog.handler.find("#form_id");
 						var obj = utils.serializeObject(editForm);
-						$.post('uupm/role/update', obj, function(result) {
+						$.post('uupm/sec/role/update', obj, function(result) {
 							if("OK"==result.status) {
 								parent.$.modalDialog.handler.dialog('close');
 								$dg.datagrid('reload');
@@ -205,7 +197,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		if(row) {
 			parent.$.messager.confirm("提示","确定要删除记录吗?",function(r){  
 			    if(r) {
-			    	$.post("uupm/role/delByRoleCode", {roleCode: row.roleCode}, function(result) {
+			    	$.post("uupm/sec/role/delByRoleCode", {roleCode: row.roleCode}, function(result) {
 						if(result.status=='OK') {
 							var rowIndex = $dg.datagrid('getRowIndex', row);
 							$dg.datagrid('deleteRow', rowIndex);
@@ -226,19 +218,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			});
 		}
 	}
-	// 设置控件选中
-	function setComboForSelected(selectForm) {
-		selectForm.find('input[name="roleStatus"]').combobox({
-			editable:false,
-			panelHeight: 120,
-			valueField:'id',
-		    textField:'text',
-		    data: $.grep($json_status, function(n,i){
-		    	if(i==1) n['selected']=true;
-		    	return i > 0;	//返回true，进行选取
-		    })
-		});
-	}	
 </script>
 </head>
 <body class="easyui-layout,fit:true">

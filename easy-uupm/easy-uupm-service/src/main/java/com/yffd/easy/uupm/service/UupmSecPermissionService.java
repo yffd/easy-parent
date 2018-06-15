@@ -32,36 +32,36 @@ public class UupmSecPermissionService extends UupmBaseService<UupmSecPermissionE
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
 	public int savePermission(String ttCode, List<String> rsCodesList, LoginInfo loginInfo) {
 		if (EasyStringCheckUtils.isEmpty(ttCode)) throw CommonBizException.BIZ_PARAMS_IS_EMPTY();
-		if (null == rsCodesList || rsCodesList.size() == 0) return 0;
 		// 删除已有关联
 		UupmSecPermissionEntity relationEentity = new UupmSecPermissionEntity();
 		relationEentity.setTtCode(ttCode);
-		this.delete(relationEentity, null);
+		int delNum = this.delete(relationEentity, null);
+		if (null == rsCodesList || rsCodesList.size() == 0) return delNum;
 		// 添加关联
 		List<UupmSecPermissionEntity> entityList = new ArrayList<>();
-		for(String rsCode : rsCodesList) {
+		for (String rsCode : rsCodesList) {
 			UupmSecPermissionEntity entity = new UupmSecPermissionEntity();
 			entity.setTtCode(ttCode);
 			entity.setRsCode(rsCode);
 			entity.setPmsCode(ttCode + ":" + rsCode);
 			entityList.add(entity);
 		}
-		if(entityList.size()==0) return 0;
+		if (entityList.size()==0) return 0;
 		return this.save(entityList, loginInfo);
 	}
 	
-//	public Set<String> findRsCodes(String ttCode) {
-//		if(EasyStringCheckUtils.isEmpty(ttCode)) throw CommonBizException.BIZ_PARAMS_IS_EMPTY();
-//		UupmSecPermissionEntity entity = new UupmSecPermissionEntity();
-//		entity.setTtCode(ttCode);
-//		List<UupmSecPermissionEntity> list = this.findList(entity, null);
-//		if(null==list || list.size()==0) return null;
-//		Set<String> codes = new HashSet<String>();
-//		for(UupmSecPermissionEntity rs : list) {
-//			codes.add(rs.getRsCode());
-//		}
-//		return codes;
-//	}
+	public Set<String> findPmsRsCodes(String ttCode) {
+		if (EasyStringCheckUtils.isEmpty(ttCode)) throw CommonBizException.BIZ_PARAMS_IS_EMPTY();
+		UupmSecPermissionEntity entity = new UupmSecPermissionEntity();
+		entity.setTtCode(ttCode);
+		List<UupmSecPermissionEntity> list = this.findList(entity, null);
+		if(null==list || list.size()==0) return null;
+		Set<String> codes = new HashSet<String>();
+		for(UupmSecPermissionEntity rs : list) {
+			codes.add(rs.getRsCode());
+		}
+		return codes;
+	}
 //	public Set<String> findPmsCodes(String rsCode) {
 //		if(EasyStringCheckUtils.isEmpty(rsCode)) throw CommonBizException.BIZ_PARAMS_IS_EMPTY();
 //		UupmSecPermissionEntity entity = new UupmSecPermissionEntity();

@@ -133,10 +133,10 @@ function initMenuLocal() {
         },{
         	"id": "sys-113",
             "pid": "sys",
-            "text": "租户资源定制管理",
+            "text": "租户授权管理",
             "state": "open",
             "iconCls": "icon-sys",
-            "inUrl": "views/uupm/tenant/tenantResourceCfg.jsp",
+            "inUrl": "views/uupm/permission/permissionCfg.jsp",
             "rsType": "M"
         },{
         	"id": "sys-114",
@@ -191,7 +191,7 @@ function initMenuLocal() {
         },{
         	"id": "sys-182",
             "pid": "sys",
-            "text": "用户角色定制管理",
+            "text": "用户授权管理",
             "state": "open",
             "iconCls": "icon-sys",
             "inUrl": "views/uupm/user/userRoleCfg.jsp",
@@ -212,7 +212,7 @@ function initMenuLocal() {
         },{
         	"id": "sys-192",
             "pid": "19",
-            "text": "角色资源定制管理",
+            "text": "角色授权管理",
             "state": "open",
             "iconCls": "icon-sys",
             "inUrl": "views/uupm/role/roleResourceCfg.jsp",

@@ -5,17 +5,17 @@
   <parent>
     <groupId>com.yffd.easy</groupId>
     <artifactId>easy-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
   </parent>
   <groupId>com.yffd.easy</groupId>
   <artifactId>easy-framework-web</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
   <name>easy-framework-web</name>
   <url>http://maven.apache.org</url>
   
   <properties>
-    <easy.common.core.version>0.0.1-SNAPSHOT</easy.common.core.version>
-    <easy.framework.pojo.version>0.0.1-SNAPSHOT</easy.framework.pojo.version>
+    <easy.common.core.version>0.0.1</easy.common.core.version>
+    <easy.framework.pojo.version>0.0.1</easy.framework.pojo.version>
     
     <spring.version>4.2.6.RELEASE</spring.version>
     <!-- fileupload start -->

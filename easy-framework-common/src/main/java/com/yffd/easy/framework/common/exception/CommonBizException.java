@@ -32,8 +32,22 @@ public class CommonBizException extends EasyCommonException {
 	 * @author  zhangST
 	 * @return
 	 */
+	public static final EasyCommonException BIZ_PARAMS_ERROR() {
+		return new EasyCommonException("5B0102", "业务参数错误.");
+	}
+	
+	public static final EasyCommonException BIZ_PARAMS_ERROR(String msg) {
+		return new EasyCommonException("5B0102", msg);
+	}
+	
+	/**
+	 * 业务参数为空
+	 * @Date	2018年3月19日 下午2:02:20 <br/>
+	 * @author  zhangST
+	 * @return
+	 */
 	public static final EasyCommonException BIZ_PARAMS_IS_EMPTY() {
-		return new EasyCommonException("5B0102", "业务参数为空.");
+		return new EasyCommonException("5B0103", "业务参数为空.");
 	}
 	
 }

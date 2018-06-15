@@ -1,11 +1,7 @@
 package ##PACKAGE_NAME##;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.yffd.easy.framework.common.persist.mybatis.dao.IMybatisCommonDao;
 ##IMPORT_SUPER_CLASS_FULL_NAME##
-import ##DAO_FULL_NAME##;
 import ##POJO_FULL_NAME##;
 
 /**
@@ -19,12 +15,4 @@ import ##POJO_FULL_NAME##;
 @Service
 ##CLASS_HEAD## {
 
-	@Autowired
-	private ##DAO_SIMPLE_NAME## ##DAO_ALIAS_NAME##;
-
-	@Override
-	protected IMybatisCommonDao<##POJO_SIMPLE_NAME##> getBindDao() {
-		return ##DAO_ALIAS_NAME##;
-	}
-	
 }
