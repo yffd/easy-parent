@@ -48,7 +48,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		$dg_left.datagrid({
 			url:'uumc/sys/application/listPage',
 		    width: 'auto',
-		    height: $(this).height()-commonui.remainHeight-20,
+		    height: 'auto',
 		    fit:true, rownumbers: true, animate: true, collapsible: true, fitColumns: true, 
 		    border: false, striped: true, singleSelect: true, showHeader: true,
 			pagination: true,

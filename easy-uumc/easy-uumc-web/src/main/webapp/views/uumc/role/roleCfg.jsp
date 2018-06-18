@@ -206,7 +206,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </script>
 </head>
 <body class="easyui-layout">
-	<div class="search-form-div" data-options="region:'north',border:false,title:'高级查询',iconCls:'icon-search',collapsible:true" style="height:85px;">
+	<div data-options="region:'north',border:false,title:'高级查询',iconCls:'icon-search',collapsible:true" style="height:85px;">
 		<div class="badge-div" >
 			<span class="badge-title">提示</span>
 			<p style="margin:0px;padding:2px;">
@@ -217,7 +217,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <div data-options="region:'west',title:'角色列表',split:true,border:true" style="width:500px;">
 		<table id="dg_id_left"></table>
 		<div id="tb_id_left" style="background-color: #F5F5F5;padding-left:25px;">
-	    	<table cellpadding="0" cellspacing="0">
+	    	<table>
 				<tr>
 					<td style="padding-left:10px;padding-bottom:2px;">
 						<input id="searchbox_id_left" type="text"/>

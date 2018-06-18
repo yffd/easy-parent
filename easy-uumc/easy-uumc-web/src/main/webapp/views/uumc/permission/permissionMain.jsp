@@ -26,8 +26,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		$dg.datagrid({
 		    url:'uumc/permission/listPage',
 		    width: 'auto',
-		    height: $(this).height()-commonui.remainHeight-$('.search-form-div').height(),
-			rownumbers: true, animate: true, collapsible: true, fitColumns: true,
+		    height: 'auto',
+			fit: true, rownumbers: true, animate: true, collapsible: true, fitColumns: true,
 			border: false, striped: true, singleSelect: true,
 			pagination: true,
 			pageSize: commonui.pageSize,
@@ -171,36 +171,34 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	}
 </script>
 </head>
-<body class="easyui-layout,fit:true">
-	<div class="search-form-div" data-options="region:'north',border:false,title:'高级查询',iconCls:'icon-search',collapsible:true">
+<body class="easyui-layout">
+	<div data-options="region:'north',border:false,title:'高级查询',iconCls:'icon-search',collapsible:true">
 		<div class="badge-div-hidden" >
 			<span class="badge-title">提示</span>
 			<p style="margin:0px;padding:2px;">
 				xxx<span class="badge-info"><strong>yyy</strong></span>，
 			</p>
 		</div>
-		<form id="searchForm_id">
-			<table class="search-form-table">
-				<tr>
-					<th>权限名称：</th>
-					<td>
-						<input name="pmsName" type="text" />
-					</td>
-					<th>权限编号：</th>
-					<td>
-						<input name="pmsCode" type="text" />
-					</td>
-				</tr>
-				<tr>
-					<td colspan="5"></td>
-					<td style="text-align:right;padding-right:20px;">
-						<a href="javascript:void(0);" class="easyui-linkbutton" onclick="_search();">查询</a> 
-						<a href="javascript:void(0);" class="easyui-linkbutton" onclick="cleanSearch();">重置</a>
-					</td>
-				</tr>
-				
-			</table>
-		</form>
+		<div class="form-div">
+			<form id="searchForm_id">
+				<table class="search-form-table">
+					<tr>
+						<th>权限名称：</th>
+						<td><input name="pmsName" type="text" /></td>
+						<th>权限编号：</th>
+						<td><input name="pmsCode" type="text" /></td>
+					</tr>
+					<tr>
+						<td colspan="3"></td>
+						<td style="text-align:right;padding-right:20px;">
+							<a href="javascript:void(0);" class="easyui-linkbutton" onclick="_search();">查询</a> 
+							<a href="javascript:void(0);" class="easyui-linkbutton" onclick="cleanSearch();">重置</a>
+						</td>
+					</tr>
+					<tr></tr>
+				</table>
+			</form>
+		</div>
 	</div>
 	
 	<div data-options="region:'center',border:false" style="overflow:hidden;">

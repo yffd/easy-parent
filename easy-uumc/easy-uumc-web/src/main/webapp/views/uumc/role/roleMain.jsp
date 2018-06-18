@@ -224,32 +224,27 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				xxx<span class="badge-info"><strong>yyy</strong></span>，
 			</p>
 		</div>
-		<form id="searchForm_id">
-			<table class="search-form-table">
-				<tr>
-					<th>名称：</th>
-					<td>
-						<input name="roleName" type="text" />
-					</td>
-					<th>编号：</th>
-					<td>
-						<input name="roleCode" type="text" />
-					</td>
-					<th>状态：</th>
-					<td>
-						<input name="roleStatus" type="text" />
-					</td>
-				</tr>
-				<tr>
-					<td colspan="5"></td>
-					<td style="text-align:right;padding-right:20px;">
-						<a href="javascript:void(0);" class="easyui-linkbutton" onclick="_search();">查询</a> 
-						<a href="javascript:void(0);" class="easyui-linkbutton" onclick="cleanSearch();">重置</a>
-					</td>
-				</tr>
-				
-			</table>
-		</form>
+		<div class="form-div">
+			<form id="searchForm_id">
+				<table class="search-form-table">
+					<tr>
+						<th>名称：</th>
+						<td><input name="roleName" type="text" /></td>
+						<th>编号：</th>
+						<td><input name="roleCode" type="text" /></td>
+						<th>状态：</th>
+						<td><input name="roleStatus" type="text" /></td>
+					</tr>
+					<tr>
+						<td colspan="5"></td>
+						<td style="text-align:right;padding-right:20px;">
+							<a href="javascript:void(0);" class="easyui-linkbutton" onclick="_search();">查询</a> 
+							<a href="javascript:void(0);" class="easyui-linkbutton" onclick="cleanSearch();">重置</a>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
 	</div>
 	
 	<div data-options="region:'center',border:false" style="overflow:hidden;">
