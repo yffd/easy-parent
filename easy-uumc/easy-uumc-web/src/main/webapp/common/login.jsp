@@ -14,10 +14,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <title>欢迎登陆</title>
 <link rel="shortcut icon" href="/favicon.ico" />
 <base href="<%=basePath%>">
-<link rel="stylesheet" type="text/css" href="static/css/login.css">
-<script type="text/javascript" src="static/js/jquery-1.8.0.min.js"></script>
-<script type="text/javascript" src="static/js/jquery-jrumble.js"></script>
-<script type="text/javascript" src="static/js/easy.common.login.js"></script>
+<link rel="stylesheet" type="text/css" href="static/common/css/login.css">
+<script type="text/javascript" src="static/jquery/jquery-1.8.0.min.js"></script>
+<script type="text/javascript" src="static/jquery/jquery-jrumble.js"></script>
+<script type="text/javascript" src="static/common/js/easy-login.js"></script>
 <script type="text/javascript">
 $(function() {
 	$('#login').show().animate({
@@ -68,13 +68,13 @@ $(function() {
 	<div id="alertMessage"></div>
 	<div id="successLogin"></div>
 	<div class="text_success">
-		<img src="static/images/loader_green.gif" alt="Please wait" /> <span>登陆成功!请稍后....</span>
+		<img src="static/common/imgs/loader_green.gif" alt="Please wait" /> <span>登陆成功!请稍后....</span>
 	</div>
 	<div id="login">
-		<div class="logo" style="background-image:url(static/images/typelogin.png);"></div>
+		<div class="logo" style="background-image:url(static/common/imgs/typelogin.png);"></div>
 		<div class="inner">
 			<div class="toplogo">
-				<img src="static/images/toplogo-jeecg.png" />
+				<img src="static/common/imgs/toplogo-jeecg.png" />
 			</div>
 			<div class="formLogin">
 				<form id="formLogin" action="login/" method="post">

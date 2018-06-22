@@ -102,6 +102,153 @@
        	return str;
 	};
 	
+
+	easyUtils.enums = {
+    		status : 'status',
+		    acntType : "acntType",
+			appSysType : "appSysType",
+			ttType : "ttType",
+			ttServeStatus : "ttServeStatus",
+			ttServeType : "ttServeType",
+			rsType : "rsType",
+			
+			org : "org"
+    };
+	easyUtils.getText = function(dataArray, value, idField, textField) {
+		var ret = "";
+		if(!value) return ret;
+		if(!idField) idField = 'value';
+		if(!textField) textField = 'text';
+		$.each(dataArray, function(index, obj) {
+			if(obj) {
+				if(obj[idField]==value) {
+					ret = obj[textField];
+					return false;
+				}
+			}
+		});
+		return ret;
+	}
+	easyUtils.getTextFromTree = function(dataTree, value, idField, textField) {
+		var ret = "";
+		if(!value) return ret;
+		if(!idField) idField = 'id';
+		if(!textField) textField = 'text';
+		$.each(dataTree, function(index, obj) {
+			if(obj[idField]==value) {
+				ret = obj[textField];
+				return false;
+			} else {
+				var children = obj['children'];
+				while (children) {
+					$.each(children, function(index, obj){
+						if(obj[idField]==value) {
+							ret = obj[textField];
+							children = null;
+							return false;
+						} else {
+							children = obj['children'];
+						}
+					});
+				}
+			}
+		});
+		return ret;
+	}
+	
+	
+	/*
+	 * 定义图标样式的数组
+	 */
+	easyUtils.iconData = [{
+		value : '',
+		text : '默认',
+		selected : true
+	},{
+		value : 'icon-adds',
+		text : 'icon-adds'
+	},{
+		value : 'icon-ok',
+		text : 'icon-ok'
+	},{
+		value : 'icon-tip',
+		text : 'icon-tip'
+	},{
+		value : 'icon-remove',
+		text : 'icon-remove'
+	},{
+		value : 'icon-undo',
+		text : 'icon-undo'
+	},{
+		value : 'icon-cancel',
+		text : 'icon-cancel'
+	},{
+		value : 'icon-save',
+		text : 'icon-save'
+	},{
+		value : 'icon-config',
+		text : 'icon-config'
+	},{
+		value : 'icon-comp',
+		text : 'icon-comp'
+	},{
+		value : 'icon-sys',
+		text : 'icon-sys'
+	},{
+		value : 'icon-db',
+		text : 'icon-db'
+	},{
+		value : 'icon-pro',
+		text : 'icon-pro'
+	},{
+		value : 'icon-role',
+		text : 'icon-role'
+	},{
+		value : 'icon-bug',
+		text : 'icon-bug'
+	},{
+		value : 'icon-time',
+		text : 'icon-time'
+	},{
+		value : 'icon-easy icon-easy-sys',
+		text : 'icon-easy-sys'
+	},{
+		value : 'icon-easy icon-easy-set',
+		text : 'icon-easy-set'
+	},{
+		value : 'icon-easy icon-easy-add',
+		text : 'icon-easy-add'
+	},{
+		value : 'icon-easy icon-easy-nav',
+		text : 'icon-easy-nav'
+	},{
+		value : 'icon-easy icon-easy-users',
+		text : 'icon-easy-users'
+	},{
+		value : 'icon-easy icon-easy-role',
+		text : 'icon-easy-role'
+	},{
+		value : 'icon-easy icon-easy-set',
+		text : 'icon-easy-set'
+	},{
+		value : 'icon-easy icon-easy-log',
+		text : 'icon-easy-log'
+	},{
+		value : 'icon-easy icon-easy-delete',
+		text : 'icon-easy-delete'
+	},{
+		value : 'icon-easy icon-easy-edit',
+		text : 'icon-easy-edit'
+	},{
+		value : 'icon-easy icon-easy-magic',
+		text : 'icon-easy-magic'
+	},{
+		value : 'icon-easy icon-easy-database',
+		text : 'icon-easy-database'
+	}];
+	
+	
+	/*********************** 日期 扩展 ************************/
 	/**
 	 * 扩展javascript Date对象，将 Date 转化为指定格式的String；
 	 * 月(M)、日(d)、12小时(h)、24小时(H)、分(m)、秒(s)、周(E)、季度(q) 可以用 1-2 个占位符；
@@ -162,57 +309,5 @@
 	 */
 	Date.prototype.formatShortDate = function() {
 		return this.format('yyyy-MM-dd');
-	}
-	
-	
-	easyUtils.enums = {
-    		status : 'status',
-		    acntType : "acntType",
-			appSysType : "appSysType",
-			ttType : "ttType",
-			ttServeStatus : "ttServeStatus",
-			ttServeType : "ttServeType",
-			rsType : "rsType"
-    };
-	easyUtils.getText = function(dataArray, value, idField, textField) {
-		var ret = "";
-		if(!value) return ret;
-		if(!idField) idField = 'id';
-		if(!textField) textField = 'text';
-		$.each(jsonData, function(index, obj) {
-			if(obj) {
-				if(obj[idField]==value) {
-					ret = obj[textField];
-					return false;
-				}
-			}
-		});
-		return ret;
-	}
-	easyUtils.getTextFromTree = function(dataTree, value, idField, textField) {
-		var ret = "";
-		if(!value) return ret;
-		if(!idField) idField = 'id';
-		if(!textField) textField = 'text';
-		$.each(dataTree, function(index, obj) {
-			if(obj[idField]==value) {
-				ret = obj[textField];
-				return false;
-			} else {
-				var children = obj['children'];
-				while (children) {
-					$.each(children, function(index, obj){
-						if(obj[idField]==value) {
-							ret = obj[textField];
-							children = null;
-							return false;
-						} else {
-							children = obj['children'];
-						}
-					});
-				}
-			}
-		});
-		return ret;
 	}
 })(jQuery)

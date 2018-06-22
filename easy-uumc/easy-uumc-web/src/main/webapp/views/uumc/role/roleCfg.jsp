@@ -13,21 +13,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <jsp:include page="/common/layout/script.jsp"></jsp:include>
 
 <script type="text/javascript">
-	var $json_status = [ {id:"", text:"全部", "selected": true} ];
 	var $openWindow = this;// 当前窗口
+	var $combo_data = {};
 	var $dg_left;
 	var $dg_right;
 	$(function() {
 		$dg_left = $('#dg_id_left');
 		// 初始化控件数据
 		$.post('/uumc/common/listComboboxData', 
-				{'keyCodes':[uidict.status].toString()},
+				{'keyCodes':[easyUtils.enums.status].toString()},
 				function(result) {
 					if("OK"==result.status) {
 						var jsonData = result.data;
-						$json_status = $json_status.concat(jsonData[uidict.status]);
-						
-						makeGrid_left();	// 初始化datagrid组件
+						$combo_data[easyUtils.enums.status] = jsonData[easyUtils.enums.status];
+						// 初始化datagrid组件
+						makeGrid_left();	
 						makeGrid_right();
 					}
 				}, 'json');
@@ -62,20 +62,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    url:'uumc/role/listPage',
 		    width: 'auto',
 		    height: 'auto',
-			fit: true, rownumbers: true, animate: true, collapsible: true, fitColumns: true,
+			fit: true, rownumbers: true, animate: true, collapsible: false, fitColumns: true,
 			border: false, striped: true, singleSelect: true,
 			pagination: true,
-			pageSize: commonui.pageSize,
+			pageSize: easyuiExt.pageSize,
 			toolbar: '#tb_id_left',
+			idField: 'roleCode',
 			loadFilter: function(result) {
 		    	if("OK"==result.status) {
 		    		return result.data || {'total':0, 'rows':[]};
 		    	} else {
-		    		$.messager.show({
-						title :commonui.msg_title,
-						timeout : commonui.msg_timeout,
-						msg : result.msg
-					});
+		    		easyuiExt.showMsg(result.msg);
 		    		return {'total':0, 'rows':[]};
 	    		}
 	    	},
@@ -83,12 +80,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    		findHavePmsCodes(rowIndex, rowData);
             },
 	        columns: [[
-						{field: 'ck', checkbox: true},
 						{field: 'roleName', title: '名称', width: 200, align: 'left'},
 						{field: 'roleCode', title: '编号', width: 100, align: 'left'},
 						{field: 'roleStatus', title: '状态', width: 100, align: 'left',
 							formatter: function(value, row) {
-								return uidict.fmtDict($json_status, value);
+								return easyUtils.getText($combo_data[easyUtils.enums.status], value);
 							}
 						},
 						{field: 'remark', title: '备注', width: 100, align: 'left'}
@@ -101,21 +97,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    url:'uumc/permission/listPage',
 		    width: 'auto',
 		    height: 'auto',
-			fit: true, rownumbers: true, animate: true, collapsible: true, fitColumns: true,
+			fit: true, rownumbers: true, animate: true, collapsible: false, fitColumns: true,
 			border: false, striped: true, singleSelect: false, 
 			pagination: true,
-			pageSize: commonui.pageSize,
+			pageSize: easyuiExt.pageSize,
 			toolbar: '#tb_id_right',
 			idField: 'pmsCode',
 			loadFilter: function(result) {
 		    	if("OK"==result.status) {
 		    		return result.data || {'total':0, 'rows':[]};
 		    	} else {
-		    		$.messager.show({
-						title :commonui.msg_title,
-						timeout : commonui.msg_timeout,
-						msg : result.msg
-					});
+		    		easyuiExt.showMsg(result.msg);
 		    		return {'total':0, 'rows':[]};
 	    		}
 	    	},
@@ -133,12 +125,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	function saveCfg() {
 		var row_left = $dg_left.datagrid('getSelected');//获取选中的行-单行
 		if(!row_left) {
-			parent.$.messager.show({
-				title :commonui.msg_title,
-				timeout : commonui.msg_timeout,
-				msg : "请选择一行【角色】记录"
-			});
-			return;
+			easyuiExt.showMsg('请选择一行【角色】记录'); return;
 		}
 		var rows_right = $dg_right.datagrid('getSelections');//获取选中的行-多行
 		var pmsCodeArr = [];
@@ -152,18 +139,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				var roleCode = row_left.roleCode;
 				var data={"roleCode":roleCode, "pmsCodes": JSON.stringify(pmsCodeArr)};
 				$.post("uumc/role/saveCfg", data, function(result) {
-					$.messager.show({
-						title :commonui.msg_title,
-						timeout : commonui.msg_timeout,
-						msg : result.msg
-					});
-				}, "JSON").error(function() {
-					$.messager.show({
-						title :commonui.msg_title,
-						timeout : commonui.msg_timeout,
-						msg : "分配失败！"
-					});
-				});
+					easyuiExt.showMsg(result.msg);
+				}, "JSON");
 			}
 		});
 	}
@@ -178,18 +155,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						$dg_right.datagrid('selectRecord', n);
 					});
 				} else {
-					$.messager.show({
-						title :commonui.msg_title,
-						timeout : commonui.msg_timeout,
-						msg : "该【角色】暂无权限"
-					});
+					easyuiExt.showMsg('该【角色】暂无权限');
 				}
 			} else {
-				$.messager.show({
-					title :commonui.msg_title,
-					timeout : commonui.msg_timeout,
-					msg : result.msg
-				});
+				easyuiExt.showMsg(result.msg);
 			}
 			
 		}, "json");
@@ -206,13 +175,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </script>
 </head>
 <body class="easyui-layout">
-	<div data-options="region:'north',border:false,title:'高级查询',iconCls:'icon-search',collapsible:true" style="height:85px;">
+	<div data-options="region:'north',border:false,title:'高级查询',iconCls:'icon-search',collapsible:true" style="overflow:hidden;">
 		<div class="badge-div" >
 			<span class="badge-title">提示</span>
 			<p style="margin:0px;padding:2px;">
 				请<span class="label-info"><strong>双击角色</strong></span>查看已授权信息！
 			</p>
 		</div>
+		<div class="form-div"></div>
 	</div>
     <div data-options="region:'west',title:'角色列表',split:true,border:true" style="width:500px;">
 		<table id="dg_id_left"></table>

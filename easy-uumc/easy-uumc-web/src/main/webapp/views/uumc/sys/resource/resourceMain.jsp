@@ -13,18 +13,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <jsp:include page="/common/layout/script.jsp"></jsp:include>
 
 <script type="text/javascript">
-	var $arr_rsType = [ {value:"", label:"全部", "selected": true} ];
 	var $openWindow = this;// 当前窗口
+	var $combo_data = {};
 	var $dg_left;
 	var $dg_right;
 	$(function() {
 		// 初始化控件数据
 		$.post('/uumc/common/listComboboxData', 
-				{'keyCodes':[uidict.rsType].toString()}, 
+				{'keyCodes':[easyUtils.enums.rsType].toString()}, 
 				function(result) {
 					if("OK"==result.status) {
 						var jsonData = result.data;
-						$arr_rsType = $arr_rsType.concat(jsonData[uidict.rsType]);
+						$combo_data[easyUtils.enums.rsType] = jsonData[easyUtils.enums.rsType];
 						// 初始化datagrid组件
 						makeGrid_left();
 						makeGrid_right();
@@ -49,20 +49,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			url:'uumc/sys/application/listPage',
 		    width: 'auto',
 		    height: 'auto',
-		    fit:true, rownumbers: true, animate: true, collapsible: true, fitColumns: true, 
+		    fit:true, rownumbers: true, animate: true, collapsible: false, fitColumns: true, 
 		    border: false, striped: true, singleSelect: true, showHeader: true,
 			pagination: true,
-			pageSize: commonui.pageSize,
+			pageSize: easyuiExt.pageSize,
 			toolbar: '#tb_id_left',
 		    loadFilter: function(result) {
 		    	if("OK"==result.status) {
 		    		return result.data || {'total':0, 'rows':[]};
 		    	} else {
-		    		$.messager.show({
-						title :commonui.msg_title,
-						timeout : commonui.msg_timeout,
-						msg : result.msg
-					});
+		    		easyuiExt.showMsg(result.msg);
 		    		return {'total':0, 'rows':[]};
 	    		}
 	    	},
@@ -80,9 +76,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		$dg_right = $('#dg_id_right');
 		$dg_right.treegrid({
 		    width: 'auto',
-		    height: $(this).height()-commonui.remainHeight-20,
-		    fit:true, rownumbers: true, animate: true, collapsible: true, fitColumns: true,
-			fit:true, border: false, striped: true, singleSelect: true, showHeader: true,
+		    height: 'auto',
+		    fit:true, rownumbers: true, animate: true, collapsible: false, fitColumns: true,
+			border: false, striped: true, singleSelect: true, showHeader: true,
 			toolbar: '#tb_id_right',
 			idField: 'id',
 			treeField: 'rsName',
@@ -90,11 +86,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    	if("OK"==result.status) {
 		    		return result.data || [];
 		    	} else {
-		    		$.messager.show({
-						title :commonui.msg_title,
-						timeout : commonui.msg_timeout,
-						msg : result.msg
-					});
+		    		easyuiExt.showMsg(result.msg);
 		    		return [];
 	    		}
 	    	},
@@ -111,7 +103,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						{field: 'rsCode', title: '编号', width: 200, align: 'left'},
 						{field: 'rsType', title: '类型', width: 100, align: 'left',
 							formatter: function(value, row) {
-								return uidict.fmtDict($arr_rsType, value);
+								return easyUtils.getText($combo_data[easyUtils.enums.rsType], value);
 							}	
 						},
 						{field: 'seqNo', title: '序号', width: 100, align: 'left'},
@@ -126,21 +118,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		var row_left = $dg_left.datagrid('getSelected');
 		var row_right = $dg_right.treegrid('getSelected');
 		if(!row_left) {
-			$.messager.show({
-				title :commonui.msg_title,
-				timeout : commonui.msg_timeout,
-				msg : "请选择一行【系统应用】记录!"
-			});
+			easyuiExt.showMsg('请选择一行【系统应用】记录!');
 			return;
 		}
 		parent.$.modalDialog({
 			title: "添加",
-			width: 800,
-			height: 400,
 			href: 'views/uumc/sys/resource/resourceEdit.jsp',
 			onLoad:function() {
 				var editForm = parent.$.modalDialog.handler.find("#form_id");
-				$.initCombobox(editForm.find('input[name="rsType"]'), {data: $arr_rsType, skipValues:[""], selectValues:[]});
+				editForm.find('input[name="rsType"]').combobox({data: $combo_data[easyUtils.enums.status], all: false});
 				editForm.find('input[name="appCode"]').val(row_left.appCode);
 				editForm.find('input[name="appName"]').val(row_left.appName);
 				if(row_right) {
@@ -162,11 +148,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							parent.$.modalDialog.handler.dialog('close');
 							$dg_right.treegrid('reload');
 				    	}
-						$.messager.show({
-							title :commonui.msg_title,
-							timeout : commonui.msg_timeout,
-							msg : result.msg
-						});
+						easyuiExt.showMsg(result.msg);
 					}, 'json');
 				}
 			},{
@@ -185,21 +167,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		var row_left = $dg_left.datagrid('getSelected');
 		var row_right = $dg_right.treegrid('getSelected');
 		if(!row_left || !row_right) {
-			$.messager.show({
-				title :commonui.msg_title,
-				timeout : commonui.msg_timeout,
-				msg : "请选择一行【系统应用】和【系统资源】记录!"
-			});
-			return;
+			easyuiExt.showMsg('请选择一行【资源】记录!'); return;
 		}
 		parent.$.modalDialog({
 			title: "编辑",
-			width: 800,
-			height: 400,
 			href: 'views/uumc/sys/resource/resourceEdit.jsp',
 			onLoad:function(){
 				var editForm = parent.$.modalDialog.handler.find("#form_id");
-				$.initCombobox(editForm.find('input[name="rsType"]'), {data: $arr_rsType, skipValues:[""], selectValues:[]});
+				editForm.find('input[name="rsType"]').combobox({data: $combo_data[easyUtils.enums.status], all: false});
 				editForm.form("load", row_right);
 				editForm.find('input[name="appCode"]').val(row_left.appCode);
 				editForm.find('input[name="appName"]').val(row_left.appName);
@@ -218,11 +193,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							parent.$.modalDialog.handler.dialog('close');
 							$dg_right.treegrid('reload');
 				    	}
-						$.messager.show({
-							title :commonui.msg_title,
-							timeout : commonui.msg_timeout,
-							msg : result.msg
-						});
+						easyuiExt.showMsg(result.msg);
 					}, 'json');
 				}
 			},{
@@ -240,11 +211,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	function removeFunc_right() {
 		var row = $dg_right.treegrid('getSelected');
 		if(!row) {
-			$.messager.show({
-				title :commonui.msg_title,
-				msg : "请选择一行【资源】记录!",
-				timeout : commonui.msg_timeout
-			});
+			easyuiExt.showMsg('请选择一行【资源】记录!');
 			return;
 		}
 		parent.$.messager.confirm("提示","确定要删除该记录吗？如果该节点有子节点，将会级联删除其子节点。",function(r){  
@@ -254,11 +221,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					if(result.status=='OK') {
 						$dg_right.treegrid('remove', row.id);
 					}
-					$.messager.show({
-						title :commonui.msg_title,
-						timeout : commonui.msg_timeout,
-						msg : result.msg
-					});
+					easyuiExt.showMsg(result.msg);
 				}, "json");
 		    }  
 		});
@@ -308,7 +271,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </script>
 </head>
 <body class="easyui-layout">
-    <div data-options="region:'west',title:'系统应用列表',split:true,border:true" style="width:400px;">
+    <div data-options="region:'west',title:'系统应用列表',split:true,border:true" style="overflow:hidden;width:400px;">
 		<table id="dg_id_left"></table>
 		<div id="tb_id_left" style="display:none;padding:5px;height:auto">
 	    	<table cellpadding="0" cellspacing="0">

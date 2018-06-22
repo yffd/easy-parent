@@ -10,7 +10,7 @@ body {
 	font-size: 12px;
 	color: #363636;
 	background-repeat: repeat-x;
-	background-image: url(../../static/images/pick_bg.jpg);
+	background-image: url(../imgs/pick_bg.jpg);
 
 }
 .clear {
@@ -70,7 +70,7 @@ body {
 	width: 444px;
 	z-index: -1;
 	margin-top: 5px;
-	background-image: url(../../static/images/shadowForm.png);
+	background-image: url(../imgs/shadowForm.png);
 	height: 33px;
 	margin-left: 70px;
 }
@@ -118,17 +118,17 @@ body {
 #login .userName {
 	background-color: rgb(250, 255, 189);
 	background-image: none;
-	background-image: url(../../static/images/user_.png);
+	background-image: url(../imgs/user_.png);
 }
 #login .password {
 	background-color: rgb(250, 255, 189);
 	background-image: none;
-	background-image: url(../../static/images/pass_.png);
+	background-image: url(../imgs/pass_.png);
 }
 #login .captcha {
 	top:5px;
 	left:10px;
-	background-image: url(../../static/images/code.png);
+	background-image: url(../imgs/code.png);
 }
 #login .loginButton{
 	width:80%;
@@ -330,7 +330,7 @@ img {
 }
 
 #preloader {
-	background: #000000 url(../../static/images/preloader.gif) no-repeat 12px 10px;
+	background: #000000 url(../../static/common/imgs/preloader.gif) no-repeat 12px 10px;
 	font-size: 11px;
 	height: 20px;
 	left: 50%;

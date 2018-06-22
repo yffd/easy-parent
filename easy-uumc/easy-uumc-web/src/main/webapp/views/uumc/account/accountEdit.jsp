@@ -6,7 +6,6 @@
 			<form id="form_id" method="post" >
 				<input type="hidden" name="id"/>
 				<fieldset>
-					<legend class="text-center text-primary">用户基本信息</legend>
 					<table>
 						<tr>
 							<th>账号ID：</th>

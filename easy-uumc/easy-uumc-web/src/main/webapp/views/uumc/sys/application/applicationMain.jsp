@@ -27,20 +27,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    url:'uumc/sys/application/listPage',
 		    width: 'auto',
 		    height: 'auto',
-			rownumbers: true, animate: true, collapsible: true, fitColumns: true,
-			fit: true, border: false, striped: true, singleSelect: true,
+		    fit: true, rownumbers: true, animate: true, collapsible: false, fitColumns: true,
+			border: false, striped: true, singleSelect: true,
 			pagination: true,
-			pageSize: commonui.pageSize,
+			pageSize: easyuiExt.pageSize,
 			toolbar: '#tb_id',
 			loadFilter: function(result) {
 		    	if("OK"==result.status) {
 		    		return result.data || {'total':0, 'rows':[]};
 		    	} else {
-		    		$.messager.show({
-						title :commonui.msg_title,
-						msg : result.msg,
-						timeout : commonui.msg_timeout
-					});
+		    		easyuiExt.showMsg(result.msg);
 		    		return {'total':0, 'rows':[]};
 	    		}
 	    	},
@@ -93,11 +89,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							parent.$.modalDialog.handler.dialog('close');
 							$dg.datagrid('reload');
 				    	}
-						$.messager.show({
-							title :commonui.msg_title,
-							timeout : commonui.msg_timeout,
-							msg : result.msg
-						});
+						easyuiExt.showMsg(result.msg);
 					}, 'json');
 				}
 			},{
@@ -114,88 +106,64 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	// 打开修改对话框
 	function openEditDlg() {
 		var row = $dg.datagrid('getSelected');
-		if(row) {
-			parent.$.modalDialog({
-				title: "编辑",
-				href: 'views/uumc/sys/application/applicationEdit.jsp',
-				onLoad:function(){
-					var editForm = parent.$.modalDialog.handler.find("#form_id");
-					editForm.form("load", row);
-					editForm.find("input[name='appCode']").attr('readonly', true);
-				},
-				buttons: [{
-					text: '确定',
-					iconCls: 'icon-ok',
-					handler: function() {
-						var editForm = parent.$.modalDialog.handler.find("#form_id");
-						var obj = utils.serializeObject(editForm);
-						$.post('uumc/sys/application/update', obj, function(result) {
-							if("OK"==result.status) {
-								parent.$.modalDialog.handler.dialog('close');
-								$dg.datagrid('reload');
-					    	}
-							$.messager.show({
-								title :commonui.msg_title,
-								timeout : commonui.msg_timeout,
-								msg : result.msg
-							});
-						}, 'json');
-					}
-				},{
-					text: '取消',
-					iconCls: 'icon-cancel',
-					handler: function() {
-						parent.$.modalDialog.handler.dialog('destroy');
-						parent.$.modalDialog.handler = undefined;
-					}
-				}]
-			});
-		} else {
-			$.messager.show({
-				title :commonui.msg_title,
-				msg : "请选择一行记录!",
-				timeout : commonui.msg_timeout
-			});
+		if(!row) {
+			easyuiExt.showMsg('请选择一行记录!'); return;
 		}
+		parent.$.modalDialog({
+			title: "编辑",
+			href: 'views/uumc/sys/application/applicationEdit.jsp',
+			onLoad:function(){
+				var editForm = parent.$.modalDialog.handler.find("#form_id");
+				editForm.form("load", row);
+				editForm.find("input[name='appCode']").attr('readonly', true);
+			},
+			buttons: [{
+				text: '确定',
+				iconCls: 'icon-ok',
+				handler: function() {
+					var editForm = parent.$.modalDialog.handler.find("#form_id");
+					var obj = utils.serializeObject(editForm);
+					$.post('uumc/sys/application/update', obj, function(result) {
+						if("OK"==result.status) {
+							parent.$.modalDialog.handler.dialog('close');
+							$dg.datagrid('reload');
+				    	}
+						easyuiExt.showMsg(result.msg);
+					}, 'json');
+				}
+			},{
+				text: '取消',
+				iconCls: 'icon-cancel',
+				handler: function() {
+					parent.$.modalDialog.handler.dialog('destroy');
+					parent.$.modalDialog.handler = undefined;
+				}
+			}]
+		});
 	}
 	
 	// 删除
 	function removeFunc() {
 		var row = $dg.datagrid('getSelected');
-		if(row) {
-			parent.$.messager.confirm("提示","确定要删除记录吗?",function(r){  
-			    if(r) {
-			    	$.post("uumc/sys/application/delById", {id: row.id}, function(result) {
-						if(result.status=='OK') {
-							var rowIndex = $dg.datagrid('getRowIndex', row);
-							$dg.datagrid('deleteRow', rowIndex);
-						}
-						$.messager.show({
-							title :commonui.msg_title,
-							timeout : commonui.msg_timeout,
-							msg : result.msg
-						});
-					}, "JSON").error(function() {
-						$.messager.show({
-							title :commonui.msg_title,
-							timeout : commonui.msg_timeout,
-							msg : result.msg
-						});
-					});
-			    }  
-			});
-		} else {
-			$.messager.show({
-				title :commonui.msg_title,
-				timeout : commonui.msg_timeout,
-				msg : "请选择一行记录!"
-			});
+		if(!row) {
+			easyuiExt.showMsg('请选择一行记录!'); return;
 		}
+		parent.$.messager.confirm("提示","确定要删除记录吗?",function(r){  
+		    if(r) {
+		    	$.post("uumc/sys/application/delById", {id: row.id}, function(result) {
+					if(result.status=='OK') {
+						var rowIndex = $dg.datagrid('getRowIndex', row);
+						$dg.datagrid('deleteRow', rowIndex);
+					}
+					easyuiExt.showMsg(result.msg);
+				}, "JSON");
+		    }  
+		});
 	}
 </script>
 </head>
 <body class="easyui-layout">
-	<div class="search-form-div" data-options="region:'north',border:false,title:'高级查询',iconCls:'icon-search',collapsible:true" style="overflow:hidden;">
+	<div class="search-form-div" data-options="region:'north',border:false,title:'高级查询',iconCls:'icon-search'" style="overflow:hidden;">
 		<div class="badge-div-hidden" >
 			<span class="badge-title">提示</span>
 			<p style="margin:0px;padding:2px;">

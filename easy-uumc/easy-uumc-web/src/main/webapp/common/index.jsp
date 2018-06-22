@@ -43,7 +43,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 $(function(){
 // 	initMenu();
 	initMenuLocal();
-	if (utils.isLessThanIe8()) {
+	if (easyUtils.isLessThanIe8()) {
 		$.messager.show({
 			title : '警告',
 			msg : '您使用的浏览器版本太低！<br/>建议您使用谷歌浏览器来获得更快的页面响应效果！',

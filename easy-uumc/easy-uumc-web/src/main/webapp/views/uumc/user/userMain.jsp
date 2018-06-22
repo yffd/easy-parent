@@ -13,72 +13,31 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <jsp:include page="/common/layout/script.jsp"></jsp:include>
 
 <script type="text/javascript">
-	var $arr_status = [ {value:"", label:"全部", "selected": true} ];
-	var $arr_acntType = [ {value:"", label:"全部", "selected": true} ];
-	var $combotree_data_org;
 	var $openWindow = this;// 当前窗口
+	var $combo_data = {};
 	var $dg;
-	var $combobox_userStatus;
-	function initCombotree(selector, checkedValue, arrData) {
-		if(!checkedValue) {
-			if(arrData && arrData[0]) {
-				checkedValue = arrData[0]['id'];
-			}
-		}
-		$combotree_org = selector.combotree({value: checkedValue, data: arrData});
-	}
-	function fmtCombotree(treeData, value) {
-		console.info(treeData);
-		var ret = "";
-		if(!value) return ret;
-		$.each(treeData, function(index, obj) {
-			if(obj['id']==value) {
-				ret = obj['text'];
-				return false;
-			} else {
-				var children = obj['children'];
-				while (children) {
-					$.each(children, function(index, obj){
-						if(obj['id']==value) {
-							ret = obj['text'];
-							children = null;
-						} else {
-							children = obj['children'];
-						}
-					});
-				}
-			}
-		});
-		if(treeData['id']==value) {
-			ret = obj['text'];
-			return ret;
-		}
-		return ret;
-	}
 	$(function() {
 		// 初始化控件数据
 		$.post('/uumc/common/listComboboxData', 
-				{'keyCodes':[uidict.status,uidict.acntType].toString()},
+				{'keyCodes':[easyUtils.enums.status,easyUtils.enums.acntType].toString()},
 				function(result) {
 					if("OK"==result.status) {
 						var jsonData = result.data;
-						$arr_status = $arr_status.concat(jsonData[uidict.status]);
-						$arr_acntType = $arr_acntType.concat(jsonData[uidict.acntType]);
+						$combo_data[easyUtils.enums.status] = jsonData[easyUtils.enums.status];
+						$combo_data[easyUtils.enums.acntType] = jsonData[easyUtils.enums.acntType];
 						// 初始化datagrid组件
 						makeGrid();	
-						$combobox_userStatus = $.initCombobox($('input[name="userStatus"]'), {data: $arr_status, skipValues:[], selectValues:[]});
+						$('#userStatus_id').combobox({data: $combo_data[easyUtils.enums.status], all:true, skipValues:[], selectValues:[]});
 					}
 				}, 'json');
 		
 	});
 	$.post('/uumc/common/listCombotreeData', 
-			{'keyCodes':['org'].toString()}, 
+			{'keyCodes':[easyUtils.enums.org].toString()}, 
 			function(result) {
 				if("OK"==result.status) {
 					var jsonData = result.data;
-					$combotree_data_org = jsonData['org'];
-// 					$combotree_data_org[0]['id']='';
-					initCombotree($('input[name="orgCode"]'), null, $combotree_data_org);
+					$combo_data[easyUtils.enums.org] = jsonData[easyUtils.enums.org];
 				}
 			}, 'json');
 	
@@ -92,17 +51,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			fit: true, rownumbers: true, animate: true, collapsible: false, fitColumns: true,
 			border: false, striped: true, singleSelect: true,
 			pagination: true,
-			pageSize: commonui.pageSize,
+			pageSize: easyuiExt.pageSize,
 			toolbar: '#tb_id',
 			loadFilter: function(result) {
 		    	if("OK"==result.status) {
 		    		return result.data || {'total':0, 'rows':[]};
 		    	} else {
-		    		$.messager.show({
-						title :commonui.msg_title,
-						timeout : commonui.msg_timeout,
-						msg : result.msg
-					});
+		    		easyuiExt.showMsg(result.msg);
 		    		return {'total':0, 'rows':[]};
 	    		}
 	    	},
@@ -130,13 +85,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						{field: 'userCode', title: '用户编号', width: 100, align: 'left'},
 						{field: 'userStatus', title: '用户状态', width: 100, align: 'left',
 							formatter: function(value, row) {
-								return uidict.fmtDict($arr_status, value);
+								return easyUtils.getText($combo_data[easyUtils.enums.status], value);
 							}
 						},
 						{field: 'orgCode', title: '机构编号', width: 100, align: 'left'},
 						{field: 'orgName', title: '机构名称', width: 100, align: 'left',
 							formatter: function(value, row) {
-								return fmtCombotree($combotree_data_org, row.orgCode);
+								return easyUtils.getTextFromTree($combo_data[easyUtils.enums.org], row.orgCode);
 							}
 						},
 						{field: 'createTime', title: '创建时间', width: 100, align: 'center',
@@ -162,7 +117,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	// 清除搜索条件
 	function cleanSearch() {
 		$('#searchForm_id input').val('');
-		$combobox_userStatus.combobox('select','');
+		$('#userStatus_id').combobox('setValue', '');
 	}
 	
 	// 打开添加对话框
@@ -172,10 +127,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			href: 'views/uumc/user/userAdd.jsp',
 			onLoad:function(){
 				var editForm = parent.$.modalDialog.handler.find("#form_id");
-				$.initCombobox(editForm.find('input[name="userStatus"]'), {data: $arr_status, skipValues:[""], selectValues:[]});
-				$.initCombobox(editForm.find('input[name="acntStatus"]'), {data: $arr_status, skipValues:[""], selectValues:[]});
-				$.initCombobox(editForm.find('input[name="acntType"]'), {data: $arr_acntType, skipValues:[""], selectValues:['user']});
-				initCombotree(editForm.find('input[name="orgCode"]'), null, $combotree_data_org);
+				editForm.find('input[name="userStatus"]').combobox({data: $combo_data[easyUtils.enums.status], all: false});
+				editForm.find('input[name="acntStatus"]').combobox({data: $combo_data[easyUtils.enums.status], all: false});
+				editForm.find('input[name="acntType"]').combobox({data: $combo_data[easyUtils.enums.acntType], all: false, selectValues:['user']});
+				editForm.find('input[name="orgCode"]').combotree({data: $combo_data[easyUtils.enums.org], value: $combo_data[easyUtils.enums.org][0]['id']});
 			},
 			buttons: [{
 				text: '确定',
@@ -188,11 +143,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							parent.$.modalDialog.handler.dialog('close');
 							$dg.datagrid('reload');
 				    	}
-						$.messager.show({
-							title :commonui.msg_title,
-							timeout : commonui.msg_timeout,
-							msg : result.msg
-						});
+						easyuiExt.showMsg(result.msg);
 					}, 'json');
 				}
 			},{
@@ -209,91 +160,68 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	// 打开修改对话框
 	function openEditDlg() {
 		var row = $dg.datagrid('getSelected');
-		if(row) {
-			parent.$.modalDialog({
-				title: "编辑",
-				href: 'views/uumc/user/userEdit.jsp',
-				onLoad:function(){
-					var editForm = parent.$.modalDialog.handler.find("#form_id");
-					$.initCombobox(editForm.find('input[name="userStatus"]'), {data: $arr_status, skipValues:[""], selectValues:[]});
-					$.initCombobox(editForm.find('input[name="acntStatus"]'), {data: $arr_status, skipValues:[""], selectValues:[]});
-					$.initCombobox(editForm.find('input[name="acntType"]'), {data: $arr_acntType, skipValues:[""], selectValues:['user']});
-					editForm.form("load", row);
-					editForm.find("input[name='userCode']").attr('readonly',true);
-					initCombotree(editForm.find('input[name="orgCode"]'), row.orgCode, $combotree_data_org);
-				},
-				buttons: [{
-					text: '确定',
-					iconCls: 'icon-ok',
-					handler: function() {
-						var editForm = parent.$.modalDialog.handler.find("#form_id");
-						var obj = utils.serializeObject(editForm);
-						$.post('uumc/user/update', obj, function(result) {
-							if("OK"==result.status) {
-								parent.$.modalDialog.handler.dialog('close');
-								$dg.datagrid('reload');
-					    	}
-							$.messager.show({
-								title :commonui.msg_title,
-								timeout : commonui.msg_timeout,
-								msg : result.msg
-							});
-						}, 'json');
-					}
-				},{
-					text: '取消',
-					iconCls: 'icon-cancel',
-					handler: function() {
-						parent.$.modalDialog.handler.dialog('destroy');
-						parent.$.modalDialog.handler = undefined;
-					}
-				}]
-			});
-		} else {
-			$.messager.show({
-				title :commonui.msg_title,
-				msg : "请选择一行记录!",
-				timeout : commonui.msg_timeout
-			});
+		if(!row) {
+			easyuiExt.showMsg('请选择一行记录!'); return;
 		}
+		parent.$.modalDialog({
+			title: "编辑",
+			href: 'views/uumc/user/userEdit.jsp',
+			onLoad:function(){
+				var editForm = parent.$.modalDialog.handler.find("#form_id");
+				editForm.find('input[name="userStatus"]').combobox({data: $combo_data[easyUtils.enums.status], all: false});
+				editForm.find('input[name="acntStatus"]').combobox({data: $combo_data[easyUtils.enums.status], all: false});
+				editForm.find('input[name="acntType"]').combobox({data: $combo_data[easyUtils.enums.acntType], all: false, selectValues:['user']});
+				editForm.form("load", row);
+				editForm.find("input[name='userCode']").attr('readonly',true);
+				editForm.find('input[name="orgCode"]').combotree({data: $combo_data[easyUtils.enums.org], value: row.orgCode});
+			},
+			buttons: [{
+				text: '确定',
+				iconCls: 'icon-ok',
+				handler: function() {
+					var editForm = parent.$.modalDialog.handler.find("#form_id");
+					var obj = utils.serializeObject(editForm);
+					$.post('uumc/user/update', obj, function(result) {
+						if("OK"==result.status) {
+							parent.$.modalDialog.handler.dialog('close');
+							$dg.datagrid('reload');
+				    	}
+						easyuiExt.showMsg(result.msg);
+					}, 'json');
+				}
+			},{
+				text: '取消',
+				iconCls: 'icon-cancel',
+				handler: function() {
+					parent.$.modalDialog.handler.dialog('destroy');
+					parent.$.modalDialog.handler = undefined;
+				}
+			}]
+		});
 	}
 	
 	// 删除
 	function removeFunc() {
 		var row = $dg.datagrid('getSelected');
-		if(row) {
-			parent.$.messager.confirm("提示","确定要删除记录吗?",function(r){  
-			    if(r) {
-			    	$.post("uumc/user/delByUserCode", {userCode: row.userCode}, function(result) {
-						if(result.status=='OK') {
-							var rowIndex = $dg.datagrid('getRowIndex', row);
-							$dg.datagrid('deleteRow', rowIndex);
-						}
-						$.messager.show({
-							title :commonui.msg_title,
-							timeout : commonui.msg_timeout,
-							msg : result.msg
-						});
-					}, "JSON").error(function() {
-						$.messager.show({
-							title :commonui.msg_title,
-							timeout : commonui.msg_timeout,
-							msg : result.msg
-						});
-					});
-			    }  
-			});
-		} else {
-			$.messager.show({
-				title :commonui.msg_title,
-				msg : "请选择一行记录!",
-				timeout : commonui.msg_timeout
-			});
+		if(!row) {
+			easyuiExt.showMsg('请选择一行记录!'); return;
 		}
+		parent.$.messager.confirm("提示","确定要删除记录吗?",function(r){  
+		    if(r) {
+		    	$.post("uumc/user/delByUserCode", {userCode: row.userCode}, function(result) {
+					if(result.status=='OK') {
+						var rowIndex = $dg.datagrid('getRowIndex', row);
+						$dg.datagrid('deleteRow', rowIndex);
+					}
+					easyuiExt.showMsg(result.msg);
+				}, "JSON");
+		    }  
+		});
 	}
 	// 查看详细
 	function findDetail(rowIndex, rowData) {
 		console.info(">>>>>>>>>>>>>")
+		easyuiExt.showMsg('尚未实现'); return;
 	}
 	
 	// 修改用户状态
@@ -314,17 +242,23 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </script>
 </head>
 <body class="easyui-layout">
-	<div data-options="region:'north',border:false,title:'高级查询',iconCls:'icon-search',collapsible:true" style="overflow:hidden;">
+	<div data-options="region:'north',border:false,title:'高级查询',iconCls:'icon-search'" style="overflow:hidden;">
+		<div class="badge-div" >
+			<span class="badge-title">提示</span>
+			<p style="margin:0px;padding:2px;">
+				<span class="badge-info"><strong>双击行</strong></span>查看详细信息！
+			</p>
+		</div>
 		<div class="form-div">
 			<form id="searchForm_id" >
 				<table>
-				<tr>
+					<tr>
 						<th>名称：</th>
 						<td><input name="userName" type="text" /></td>
 						<th>编号：</th>
 						<td><input name="userCode" type="text" /></td>
 						<th>状态：</th>
-						<td><input name="userStatus" type="text" /></td>
+						<td><input id="userStatus_id" name="userStatus" type="text" /></td>
 					</tr>
 					<tr>
 <!-- 						<th>创建时间：</th> -->
@@ -347,8 +281,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							<a href="javascript:void(0);" class="easyui-linkbutton" onclick="cleanSearch();">重置</a>
 						</td>
 					</tr>
-					<tr>
-					</tr>
+					<tr></tr>
 				</table>
 			</form>
 		</div>

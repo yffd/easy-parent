@@ -24,30 +24,25 @@
 		<artifactId>fastjson</artifactId>
 		<version>${fastjson.version}</version>
  	</dependency>
-	
+	<!-- apache start -->
 	<dependency>
 		<groupId>org.apache.commons</groupId>
 		<artifactId>commons-lang3</artifactId>
 		<version>${commons.lang3.version}</version>
 	</dependency>
+	<!-- apache end -->
   	<!-- Logging start -->
 	<dependency>
 		<groupId>org.slf4j</groupId>
 		<artifactId>slf4j-api</artifactId>
+		<scope>provided</scope>
 	</dependency>
 	<dependency>
 		<groupId>org.slf4j</groupId>
 		<artifactId>slf4j-log4j12</artifactId>
-	</dependency>
-	<!-- Logging end -->
-	
-	<!-- Servlet start -->
-	<dependency>
-		<groupId>javax.servlet</groupId>
-		<artifactId>javax.servlet-api</artifactId>
 		<scope>provided</scope>
 	</dependency>
-	<!-- Servlet end -->
+	<!-- Logging end -->
 	
     <dependency>
       <groupId>junit</groupId>

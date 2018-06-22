@@ -13,6 +13,7 @@
     <module>easy-framework-web</module>
     <module>easy-demo</module>
     <module>easy-uumc</module>
+    <module>easy-common-security</module>
   </modules>
 
 	<!-- 定义公共变量 -->

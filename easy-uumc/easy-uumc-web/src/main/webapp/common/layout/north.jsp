@@ -73,7 +73,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		});
 	}
 </script>
-<span style="padding-left:10px; font-size: 16px; "><img src="<%=basePath%>static/images/blocks.gif" width="20" height="20" /> 后台管理系统</span>
+<span style="padding-left:10px; font-size: 16px; "><img src="<%=basePath%>static/common/imgs/blocks.gif" width="20" height="20" /> 后台管理系统</span>
 <div style="position: absolute; right: 0px; bottom: 0px; ">
 	<a href="javascript:void(0);" class="easyui-menubutton" menu="#layout_north_kzmbMenu" iconCls="icon-help">控制面板</a> 
 <!-- 	<a href="javascript:void(0);" class="easyui-menubutton" menu="#layout_north_zxMenu" iconCls="icon-logout">注销</a> -->

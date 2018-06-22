@@ -1,21 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <script type="text/javascript">
-	var $arr_statusStyle = [ {id:"", text:"全部", "selected": true} ];
-	var $arr_rsType = [ {id:"", text:"全部", "selected": true} ];
 	var $openWindow = this;// 当前窗口
+	var $combo_data = {};
 	var $dg_left;
 	var $dg_right;
 	$(function() {
 		$dg_left = $('#dg_id_left');
 		// 初始化控件数据
 		$.post('/uumc/common/listComboboxData', 
-				{'keyCodes':[uidict.status,uidict.rsType].toString()},
+				{'keyCodes':[easyUtils.enums.status,easyUtils.enums.rsType].toString()},
 				function(result) {
 					if("OK"==result.status) {
 						var jsonData = result.data;
-						$arr_statusStyle = $arr_statusStyle.concat(jsonData[uidict.status]);
-						$arr_rsType = $arr_rsType.concat(jsonData[uidict.rsType]);
+						$combo_data[easyUtils.enums.status] = jsonData[easyUtils.enums.status];
+						$combo_data[easyUtils.enums.rsType] = jsonData[easyUtils.enums.rsType];
 						// 初始化datagrid组件
 						makegrid_left();	
 						makegrid_right();
@@ -44,21 +43,17 @@
 			url:'uumc/sys/application/listPage',
 		    width: 'auto',
 		    height: 'auto',
-		    fit:true, rownumbers: true, animate: true, collapsible: true, fitColumns: true,
+		    fit:true, rownumbers: true, animate: true, collapsible: false, fitColumns: true,
 			border: false, striped: true, singleSelect: true,
 			pagination: true,
-			pageSize: commonui.pageSize,
+			pageSize: easyuiExt.pageSize,
 			toolbar: '#tb_id_left',
 			idField: 'id',
 			loadFilter: function(result) {
 		    	if("OK"==result.status) {
 		    		return result.data || {'total':0, 'rows':[]};
 		    	} else {
-		    		$.messager.show({
-						title :commonui.msg_title,
-						timeout : commonui.msg_timeout,
-						msg : result.msg
-					});
+		    		easyuiExt.showMsg(result.msg);
 		    		return {'total':0, 'rows':[]};
 	    		}
 	    	},
@@ -76,9 +71,9 @@
 	function makegrid_right() {
 		$dg_right = $('#dg_id_right');
 		$dg_right.treegrid({
-		    width: '500',
+			width: 'auto',
 		    height: 'auto',
-			rownumbers: true, animate: true, collapsible: true, fitColumns: true,
+		    fit:true, rownumbers: true, animate: true, collapsible: false, fitColumns: true,
 			border: false, striped: true, singleSelect: false, cascadeCheck: true,
 			toolbar: '#tb_id_right',
 			idField: 'rsCode',
@@ -87,11 +82,7 @@
 		    	if("OK"==result.status) {
 		    		return result.data;
 		    	} else {
-		    		$.messager.show({
-						title :commonui.msg_title,
-						timeout : commonui.msg_timeout,
-						msg : result.msg
-					});
+		    		easyuiExt.showMsg(result.msg);
 		    		return [];
 	    		}
 	    	},
@@ -109,7 +100,7 @@
 						{field: 'rsCode', title: '编号', width: 200, align: 'left'},
 						{field: 'rsType', title: '类型', width: 100, align: 'left',
 							formatter: function(value, row) {
-								return uidict.fmtDict($arr_rsType, value);
+								return easyUtils.getText($combo_data[easyUtils.enums.rsType], value);
 							}	
 						},
 						{field: 'seqNo', title: '序号', width: 100, align: 'left'},
@@ -146,12 +137,7 @@
 	function havePms() {
 		var row_left = $dg_left.datagrid('getSelected');//获取选中的行-单行
 		if(!row_left) {
-			parent.$.messager.show({
-				title :commonui.msg_title,
-				timeout : commonui.msg_timeout,
-				msg : "请选择一行【系统应用】记录"
-			});
-			return;
+			easyuiExt.showMsg('请选择一行【系统应用】记录'); return;
 		}
 		$.post("uumc/permission/listHavePmsForRsCodes", {appCode:row_left.appCode}, function(result) {
 			if(result.status=='OK') {
@@ -163,18 +149,10 @@
 						if(row) $dg_right.treegrid('select', n);
 					});
 				} else {
-					$.messager.show({
-						title :commonui.msg_title,
-						timeout : commonui.msg_timeout,
-						msg : "未找到有效数据"
-					});
+					easyuiExt.showMsg('未找到有效数据');
 				}
 			} else {
-				$.messager.show({
-					title :commonui.msg_title,
-					timeout : commonui.msg_timeout,
-					msg : result.msg
-				});
+				easyuiExt.showMsg(result.msg);
 			}
 			
 		}, "json");
@@ -182,12 +160,7 @@
 	function savePms() {
 		var row_left = $dg_left.datagrid('getSelected');//获取选中的行-单行
 		if(!row_left) {
-			parent.$.messager.show({
-				title :commonui.msg_title,
-				timeout : commonui.msg_timeout,
-				msg : "请选择一行【系统应用】记录"
-			});
-			return;
+			easyuiExt.showMsg('请选择一行【系统应用】记录'); return;
 		}
 		var rows_right = $dg_right.treegrid('getSelections');//获取选中的行-多行
 		var rsCodeArr = [];
@@ -201,24 +174,14 @@
 				var appCode = row_left.appCode;
 				var data={"appCode":appCode, "rsCodes": JSON.stringify(rsCodeArr)};
 				$.post("uumc/permission/savePms", data, function(result) {
-					$.messager.show({
-						title :commonui.msg_title,
-						timeout : commonui.msg_timeout,
-						msg : result.msg
-					});
-				}, "JSON").error(function() {
-					$.messager.show({
-						title :commonui.msg_title,
-						timeout : commonui.msg_timeout,
-						msg : "分配失败！"
-					});
-				});
+					easyuiExt.showMsg(result.msg);
+				}, "JSON");
 			}
 		});
 	}
 </script>
-<div class="easyui-layout" data-options="fit:true,border:false" >
-	<div data-options="region:'west',title:'系统应用列表',split:true,border:true" style="width:500px;">
+<div class="easyui-layout" data-options="fit:true">
+	<div data-options="region:'west',title:'系统应用列表',split:true,border:true" style="overflow:hidden;width:500px;">
 		<table id="dg_id_left"></table>
 	    <div id="tb_id_left" style="background-color: #F5F5F5;padding-left:25px;">
 	    	<table cellpadding="0" cellspacing="0">

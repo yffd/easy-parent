@@ -25,7 +25,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			url: 'uumc/organization/listTree',
 		    width: 'auto',
 		    height: 'auto',
-			fit: true, rownumbers: true, animate: true, collapsible: true, fitColumns: true,
+			fit: true, rownumbers: true, animate: true, collapsible: false, fitColumns: true,
 			border: false, striped: true, singleSelect: true,
 			toolbar: '#tb_id',
 			idField: 'id',
@@ -34,11 +34,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		    	if("OK"==result.status) {
 		    		return result.data || [];
 		    	} else {
-		    		$.messager.show({
-						title :commonui.msg_title,
-						timeout : commonui.msg_timeout,
-						msg : result.msg
-					});
+		    		easyuiExt.showMsg(result.msg);
 		    		return [];
 	    		}
 	    	},
@@ -96,11 +92,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							parent.$.modalDialog.handler.dialog('close');
 							$dg.treegrid('reload');
 				    	}
-						$.messager.show({
-							title :commonui.msg_title,
-							timeout : commonui.msg_timeout,
-							msg : result.msg
-						});
+						easyuiExt.showMsg(result.msg);
 					}, 'json');
 				}
 			},{
@@ -117,63 +109,50 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	// 打开修改对话框
 	function openEditDlg() {
 		var row = $dg.treegrid('getSelected');
-		if(row) {
-			parent.$.modalDialog({
-				title: "编辑",
-				width: 800,
-				height: 400,
-				href: 'views/uumc/organization/organizationEdit.jsp',
-				onLoad:function(){
-					var editForm = parent.$.modalDialog.handler.find("#form_id");
-					editForm.form("load", row);
-					editForm.find('input[name="orgCode"]').attr('readonly',true);
-					if(!row.parentName) editForm.find('input[name="parentName"]').val("默认");
-				},
-				buttons: [{
-					text: '确定',
-					iconCls: 'icon-ok',
-					handler: function() {
-						var editForm = parent.$.modalDialog.handler.find("#form_id");
-						var obj = utils.serializeObject(editForm);
-						$.post('uumc/organization/update', obj, function(result) {
-							if("OK"==result.status) {
-								parent.$.modalDialog.handler.dialog('close');
-								$dg.treegrid('reload');
-					    	}
-							$.messager.show({
-								title :commonui.msg_title,
-								timeout : commonui.msg_timeout,
-								msg : result.msg
-							});
-						}, 'json');
-					}
-				},{
-					text: '取消',
-					iconCls: 'icon-cancel',
-					handler: function() {
-						parent.$.modalDialog.handler.dialog('destroy');
-						parent.$.modalDialog.handler = undefined;
-					}
-				}]
-			});
-		} else {
-			$.messager.show({
-				title :commonui.msg_title,
-				msg : "请选择一行记录!",
-				timeout : commonui.msg_timeout
-			});
+		if(!row) {
+			easyuiExt.showMsg('请选择一行记录!'); return;
 		}
+		parent.$.modalDialog({
+			title: "编辑",
+			width: 800,
+			height: 400,
+			href: 'views/uumc/organization/organizationEdit.jsp',
+			onLoad:function(){
+				var editForm = parent.$.modalDialog.handler.find("#form_id");
+				editForm.form("load", row);
+				editForm.find('input[name="orgCode"]').attr('readonly',true);
+				if(!row.parentName) editForm.find('input[name="parentName"]').val("默认");
+			},
+			buttons: [{
+				text: '确定',
+				iconCls: 'icon-ok',
+				handler: function() {
+					var editForm = parent.$.modalDialog.handler.find("#form_id");
+					var obj = utils.serializeObject(editForm);
+					$.post('uumc/organization/update', obj, function(result) {
+						if("OK"==result.status) {
+							parent.$.modalDialog.handler.dialog('close');
+							$dg.treegrid('reload');
+				    	}
+						easyuiExt.showMsg(result.msg);
+					}, 'json');
+				}
+			},{
+				text: '取消',
+				iconCls: 'icon-cancel',
+				handler: function() {
+					parent.$.modalDialog.handler.dialog('destroy');
+					parent.$.modalDialog.handler = undefined;
+				}
+			}]
+		});
 	}
 	
 	// 删除
 	function removeFunc() {
 		var row = $dg.treegrid('getSelected');
 		if(!row) {
-			$.messager.show({
-				title :commonui.msg_title,
-				msg : "请选择一行记录!",
-				timeout : commonui.msg_timeout
-			});
+			easyuiExt.showMsg('请选择一行记录!');
 			return;
 		}
 		parent.$.messager.confirm("提示","确定要删除该记录吗？如果该节点有子节点，将会级联删除其子节点。",function(r){  
@@ -183,11 +162,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					if(result.status=='OK') {
 						$dg.treegrid('remove', row.id);
 					}
-					$.messager.show({
-						title :commonui.msg_title,
-						timeout : commonui.msg_timeout,
-						msg : result.msg
-					});
+					easyuiExt.showMsg(result.msg);
 				}, "json");
 		    }  
 		});

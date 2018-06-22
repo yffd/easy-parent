@@ -18,16 +18,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/easyui/themes/<%=easyuiThemeName %>/easyui.css">
 <link rel="stylesheet" type="text/css" href="<%=basePath%>static/easyui/themes/icon.css">
-<link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/common.css">
-<link rel="stylesheet" type="text/css" href="<%=basePath%>static/css/icon.css">
-<script type="text/javascript" src="<%=basePath%>static/js/jquery-1.8.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/common/css/easy.css">
+<link rel="stylesheet" type="text/css" href="<%=basePath%>static/common/css/icon.css">
+<script type="text/javascript" src="<%=basePath%>static/jquery/jquery-1.8.0.min.js"></script>
 <!-- <script type="text/javascript" src="<%=basePath%>static/easyui/jquery.min.js"></script> -->
 <script type="text/javascript" src="<%=basePath%>static/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="<%=basePath%>static/easyui/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript" src="<%=basePath%>static/My97DatePicker/WdatePicker.js"></script>
-<script type="text/javascript" src="<%=basePath%>static/js/easy.common.ui.js"></script>
-<script type="text/javascript" src="<%=basePath%>static/js/easy.common.utils.js"></script>
-<script type="text/javascript" src="<%=basePath%>static/js/easy.common.dict.js"></script>
+<script type="text/javascript" src="<%=basePath%>static/common/js/easy-easyui-ext.js"></script>
+<script type="text/javascript" src="<%=basePath%>static/common/js/easy-utils.js"></script>
 
 <style type="text/css">
 	body {

@@ -59,8 +59,8 @@ public class UumcComboboxModelFactory {
 		EnumSet<UumcStatusEnum> enumSet = EnumSet.allOf(UumcStatusEnum.class);
 		for (UumcStatusEnum tmp : enumSet) {
 			ComboboxModel vo = new ComboboxModel();
-			vo.setLabel(tmp.getDesc());
 			vo.setValue(tmp.getCode());
+			vo.setText(tmp.getDesc());
 			list.add(vo);
 		}
 		return list;
@@ -72,8 +72,8 @@ public class UumcComboboxModelFactory {
 		EnumSet<UumcAccountTypeEnum> enumSet = EnumSet.allOf(UumcAccountTypeEnum.class);
 		for (UumcAccountTypeEnum tmp : enumSet) {
 			ComboboxModel vo = new ComboboxModel();
-			vo.setLabel(tmp.getDesc());
 			vo.setValue(tmp.getCode());
+			vo.setText(tmp.getDesc());
 			list.add(vo);
 		}
 		return list;
@@ -85,8 +85,8 @@ public class UumcComboboxModelFactory {
 		EnumSet<UumcAppSystemTypeEnum> enumSet = EnumSet.allOf(UumcAppSystemTypeEnum.class);
         for (UumcAppSystemTypeEnum tmp : enumSet) {
         	ComboboxModel vo = new ComboboxModel();
-        	vo.setLabel(tmp.getDesc());
         	vo.setValue(tmp.getCode());
+        	vo.setText(tmp.getDesc());
         	list.add(vo);
         }
         return list;
@@ -98,8 +98,8 @@ public class UumcComboboxModelFactory {
 		EnumSet<UumcResourceTypeEnum> enumSet = EnumSet.allOf(UumcResourceTypeEnum.class);
 		for (UumcResourceTypeEnum tmp : enumSet) {
 			ComboboxModel vo = new ComboboxModel();
-			vo.setLabel(tmp.getDesc());
 			vo.setValue(tmp.getCode());
+			vo.setText(tmp.getDesc());
 			list.add(vo);
 		}
 		return list;
@@ -111,8 +111,8 @@ public class UumcComboboxModelFactory {
 //			EnumSet<UumcTenantTypeEnum> enumSet = EnumSet.allOf(UumcTenantTypeEnum.class);
 //			for (UumcTenantTypeEnum tmp : enumSet) {
 //				ComboboxModel vo = new ComboboxModel();
-//				vo.setLabel(tmp.getDesc());
 //				vo.setValue(tmp.getCode());
+//				vo.setText(tmp.getDesc());
 //				list.add(vo);
 //			}
 //			return list;
@@ -124,8 +124,8 @@ public class UumcComboboxModelFactory {
 //			EnumSet<UumcTenantServeStatusEnum> enumSet = EnumSet.allOf(UumcTenantServeStatusEnum.class);
 //			for (UumcTenantServeStatusEnum tmp : enumSet) {
 //				ComboboxModel vo = new ComboboxModel();
-//				vo.setLabel(tmp.getDesc());
 //				vo.setValue(tmp.getCode());
+//				vo.setText(tmp.getDesc());
 //				list.add(vo);
 //			}
 //			return list;
@@ -137,8 +137,8 @@ public class UumcComboboxModelFactory {
 //			EnumSet<UumcTenantServeTypeEnum> enumSet = EnumSet.allOf(UumcTenantServeTypeEnum.class);
 //			for (UumcTenantServeTypeEnum tmp : enumSet) {
 //				ComboboxModel vo = new ComboboxModel();
-//				vo.setLabel(tmp.getDesc());
 //				vo.setValue(tmp.getCode());
+//				vo.setText(tmp.getDesc());
 //				list.add(vo);
 //			}
 //			return list;
