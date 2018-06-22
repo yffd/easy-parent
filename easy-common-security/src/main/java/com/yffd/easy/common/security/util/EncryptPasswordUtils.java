@@ -1,4 +1,4 @@
-package com.yffd.easy.common.security.shiro.cache;
+package com.yffd.easy.common.security.util;
 
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.codec.Hex;

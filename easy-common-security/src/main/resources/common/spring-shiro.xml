@@ -41,7 +41,7 @@
     <!-- ::安全数据源 -->
     <bean id="securityRealm" class="com.yffd.easy.demo.shiro.custom.realm.SecurityRealm">
     	<property name="securityService" ref="securityService"/>
-    	<!-- 指定密码匹配器 -->
+    	<!-- 指定凭证匹配器 -->
         <property name="credentialsMatcher" ref="credentialsMatcher"/>
     </bean>
     <!-- ::凭证匹配器 -->
@@ -83,25 +83,25 @@
         <!-- Shiro的核心安全接口，这个属性是必须的 -->
         <property name="securityManager" ref="securityManager"/>
         <!-- 要求登录时的链接(登录页面地址)，非必须的属性，默认会自动寻找Web工程根目录下的"/login.jsp"页面 -->
-        <property name="loginUrl" value="/login.html"/>
+        <property name="loginUrl" ref="loginUrl"/>
         <!-- 登录成功后要跳转的连接(本例中此属性用不到，因为登录成功后的处理逻辑在LoginController里硬编码) -->
-        <!-- <property name="successUrl" value="/" ></property> -->
+        <property name="successUrl" ref="successUrl"/>
         <!-- 用户访问未对其授权的资源时，所显示的连接 -->
-        <property name="unauthorizedUrl" value="/error/unauthorized"/>
+        <property name="unauthorizedUrl" ref="unauthorizedUrl"/>
         <!-- The 'filters' property is not necessary since any declared javax.servlet.Filter bean
              defined will be automatically acquired and available via its beanName in chain
              definitions, but you can perform overrides or parent/child consolidated configuration
              here if you like: -->
+       <property name="filters" ref="filters"/>
+       <property name="filterChainDefinitionMap" ref="filterChainDefinitionMap"/>
+        <!-- 
         <property name="filters">
            <util:map>
               <entry key="login" value-ref="loginPathMatchingFilter"/>
               <entry key="role" value-ref="rolePathMatchingFilter"/>
               <entry key="permission" value-ref="permissionPathMatchingFilter"/>
-<!--               <entry key="kickout" value-ref="kickoutSessionFilter"/> -->
            </util:map>
        </property>
-       <property name="filterChainDefinitionMap" ref="filterChainDefinitionMap"/>
-        <!-- 
         <property name="filterChainDefinitions">
             <value>
                 /favicon.ico = anon
@@ -116,10 +116,22 @@
         </property>
         -->
     </bean>
-	<!-- shiroFilter configuration -->
-    <bean id="filterChainDefinitionMapBuilder" class="com.atguigu.shiro.factory.FilterChainDefinitionMapBuilder"/>
+	<!-- shiroFilter configuration factory -->
+    <bean id="shiroConfigFactory" class="com.yffd.easy.common.security.shiro.config.ShiroConfigFactory"/>
+    <!-- shiroFilter configuration properties -->
+    <bean id="loginUrl" factory-bean="shiroConfigFactory" factory-method="createLoginUrl"/>
+    <bean id="successUrl" factory-bean="shiroConfigFactory" factory-method="createSuccessUrl"/>
+    <bean id="unauthorizedUrl" factory-bean="shiroConfigFactory" factory-method="createUnauthorizedUrl"/>
+    <bean id="filters" factory-bean="shiroConfigFactory" factory-method="createFilters"/>
+    <bean id="filterChainDefinitionMap" factory-bean="shiroConfigFactory" factory-method="createFilterChainDefinitionMap"/>
     
-	<!-- 配置一个 bean, 该 bean 实际上是一个 Map. 通过实例工厂方法的方式 -->
-    <bean id="filterChainDefinitionMap" factory-bean="filterChainDefinitionMapBuilder" factory-method="buildFilterChainDefinitionMap"/>
-    	
+    <!-- ::自定义shiro拦截器 -->
+	<bean id="loginPathMatchingFilter" class="com.yffd.easy.demo.shiro.custom.filter.LoginPathMatchingFilter"/>
+	<bean id="rolePathMatchingFilter" class="com.yffd.easy.demo.shiro.custom.filter.RolePathMatchingFilter"/>
+	<bean id="permissionPathMatchingFilter" class="com.yffd.easy.demo.shiro.custom.filter.PermissionPathMatchingFilter"/>
+	
+    <!-- =========================================================
+         Shiro Cache-Jedis integration
+         ========================================================= -->
+         
 </beans>
