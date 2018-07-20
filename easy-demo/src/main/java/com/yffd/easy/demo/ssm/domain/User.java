@@ -9,13 +9,14 @@ package com.yffd.easy.demo.ssm.domain;
  * @see 	 
  */
 public class User {
-	private String id;
+	private int id;
 	private String userCode;
 	private String userName;
-	public String getId() {
+	private String orgCode;
+	public int getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getUserCode() {
@@ -29,6 +30,12 @@ public class User {
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+	public String getOrgCode() {
+		return orgCode;
+	}
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
 	}
 	
 }

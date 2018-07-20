@@ -5,6 +5,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -23,10 +25,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 // 指定使用CGLIB代理，并开启
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 // 配置扫描包
+//@Import({OrmMybatisJavaConfig.class})
+@Import({DruidDataSourceJavaConfig.class})
 @ComponentScan(basePackages = "com.yffd.easy.demo.ssm")
-@Import({OrmMybatisJavaConfig.class})
-//@Import({DruidDataSourceJavaConfig.class})
-public class SpringJavaConfig {
+public class SpringApplicationContextJavaConfig {
 
 //	public @Bean UserDao userDao() {	// 方法名为该对象在spring容器中的bean名称
 //		return new UserDao();

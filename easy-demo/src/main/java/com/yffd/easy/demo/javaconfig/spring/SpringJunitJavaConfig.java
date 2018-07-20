@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 //指定测试类的运行者
 @RunWith(SpringJUnit4ClassRunner.class)
 //指定spring配置类
-@ContextConfiguration(classes={SpringJavaConfig.class})
+@ContextConfiguration(classes={SpringApplicationContextJavaConfig.class})
 //@WebAppConfiguration is a class-level annotation that is used to declare
 //that the ApplicationContext loaded for an integration test should be a WebApplicationContext.
 //@WebAppConfiguration

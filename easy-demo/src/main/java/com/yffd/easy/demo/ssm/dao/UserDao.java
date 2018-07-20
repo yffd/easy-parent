@@ -1,10 +1,12 @@
 package com.yffd.easy.demo.ssm.dao;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -24,22 +26,36 @@ public class UserDao {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
-	public User getUser(String userCode) {
-		String sql = "SELECT ID AS id, USER_CODE AS userCode, USER_NAME AS userName FROM uumc_user where USER_CODE=?";
-//		Map<String, Object> result = this.jdbcTemplate.queryForMap(sql, new Object[]{userCode});
-//		System.out.println(result);
+	public User select(String userCode) {
+		String sql = "select id, user_code, user_name, org_code from demo_user where user_code=?";
 		User user = this.jdbcTemplate.queryForObject(sql, new Object[]{userCode}, new RowMapper<User>() {
 			@Override
 			public User mapRow(ResultSet rs, int rowNum) throws SQLException {
 				User user = new User();
-				user.setId(rs.getString("id"));
-				user.setUserCode(rs.getString("userCode"));
-				user.setUserName(rs.getString("userName"));
+				user.setId(rs.getInt("id"));
+				user.setUserCode(rs.getString("user_code"));
+				user.setUserName(rs.getString("user_name"));
+				user.setOrgCode(rs.getString("org_code"));
 				return user;
 			}
 			
 		});
 		return user;
+	}
+	
+	public int insert(User user) {
+		String sql = "insert into demo_user(user_code, user_name, org_code) values (?,?,?)";
+		int rows = this.jdbcTemplate.update(sql, new PreparedStatementSetter() {
+
+			@Override
+			public void setValues(PreparedStatement ps) throws SQLException {
+				ps.setString(1, user.getUserCode());
+				ps.setString(2, user.getUserName());
+				ps.setString(3, user.getOrgCode());
+			}
+			
+		});
+		return rows;
 	}
 }
 

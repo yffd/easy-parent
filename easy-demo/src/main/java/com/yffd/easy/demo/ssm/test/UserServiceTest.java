@@ -26,9 +26,25 @@ public class UserServiceTest extends SpringJunitJavaConfig {
 //		ApplicationContext actx = new AnnotationConfigApplicationContext(SpringJavaConfig.class);
 //		UserService userService = actx.getBean(UserService.class);
 		
-		User u = userService.findUser("test");
+		User u = userService.findUser("zhangsan");
 		System.out.println(u.getId());
 		System.out.println(u.getUserName());
+		
+	}
+	
+	@Test
+	public void insertTwoTest() throws Exception {
+		User u1 = new User();
+		u1.setUserCode("lisi");
+		u1.setUserName("李四");
+		u1.setOrgCode("dept1");
+		
+		User u2 = new User();
+		u2.setUserCode("wangwu");
+		u2.setUserName("王五");
+		u2.setOrgCode("dept2");
+		
+		this.userService.insertTwo(u1, u2);
 		
 	}
 	

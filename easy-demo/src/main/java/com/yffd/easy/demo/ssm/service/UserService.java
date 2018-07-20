@@ -2,6 +2,7 @@ package com.yffd.easy.demo.ssm.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.yffd.easy.demo.ssm.dao.UserDao;
 import com.yffd.easy.demo.ssm.domain.User;
@@ -19,8 +20,19 @@ public class UserService {
 	@Autowired
 	private UserDao userDao;
 	
-	public User findUser(String id) {
-		return this.userDao.getUser(id);
+	public User findUser(String userCode) {
+		return this.userDao.select(userCode);
+	}
+	
+//	@Transactional(rollbackFor={Exception.class})
+	public void insertTwo(User first, User second) throws Exception {
+		int num1 = this.userDao.insert(first);
+		System.out.println("num1:" + num1);
+		
+		if(true) throw new Exception("事务测试异常");
+		
+		int num2 = this.userDao.insert(second);
+		System.out.println("num2:" + num2);
 	}
 }
 
