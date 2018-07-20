@@ -3,8 +3,8 @@ package com.yffd.easy.framework.common.pojo.factory;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.junit.Test;
+import org.springframework.beans.BeanUtils;
 
 import com.yffd.easy.framework.common.pojo.model.DemoPO;
 

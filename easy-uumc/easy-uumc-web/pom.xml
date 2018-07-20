@@ -16,6 +16,7 @@
   <properties>
     <easy.uumc.service.version>0.0.1</easy.uumc.service.version>
     <easy.framework.web.version>0.0.1</easy.framework.web.version>
+    <easy.common.shiro.version>0.0.1</easy.common.shiro.version>
   </properties>
   
   <dependencies>
@@ -28,6 +29,11 @@
   		<groupId>com.yffd.easy</groupId>
   		<artifactId>easy-framework-web</artifactId>
   		<version>${easy.framework.web.version}</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.yffd.easy</groupId>
+  		<artifactId>easy-common-shiro</artifactId>
+  		<version>${easy.common.shiro.version}</version>
   	</dependency>
   	<!-- Servlet start -->
 	<dependency>

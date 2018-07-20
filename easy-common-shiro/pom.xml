@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.yffd.easy</groupId>
+    <artifactId>easy-parent</artifactId>
+    <version>0.0.1</version>
+  </parent>
+  <groupId>com.yffd.easy</groupId>
+  <artifactId>easy-common-shiro</artifactId>
+  <version>0.0.1</version>
+  <name>easy-common-shiro</name>
+  <url>http://maven.apache.org</url>
+  <properties>
+	<easy.common.support.version>0.0.1</easy.common.support.version>
+    <!-- spring -->
+	<spring.version>4.2.6.RELEASE</spring.version>
+	<!-- aop -->
+	<aspectjweaver.version>1.8.0</aspectjweaver.version>
+    <!-- cache -->
+	<jedis.version>2.9.0</jedis.version>
+  	<!-- shiro -->
+	<shiro.version>1.2.5</shiro.version>
+	
+	<fastjson.version>1.1.39</fastjson.version>
+  </properties>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.yffd.easy</groupId>
+	  	<artifactId>easy-common-support</artifactId>
+	  	<version>${easy.common.support.version}</version>
+  	</dependency>
+    <!-- spring start -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-context</artifactId>
+		<version>${spring.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-context-support</artifactId>
+		<version>${spring.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-test</artifactId>
+		<version>${spring.version}</version>
+	</dependency>
+	<!-- Spring end -->
+	<!-- aop begin -->
+	<dependency>
+		<groupId>org.aspectj</groupId>
+		<artifactId>aspectjweaver</artifactId>
+		<version>${aspectjweaver.version}</version>
+	</dependency>
+	<!-- aop end -->
+	
+    <!-- cache start -->
+	<!-- jedis -->
+	<dependency>
+		<groupId>redis.clients</groupId>
+		<artifactId>jedis</artifactId>
+		<version>${jedis.version}</version>
+	</dependency>
+	<!-- cache end -->
+		
+	<!-- shiro start -->
+  	<dependency>
+		<groupId>org.apache.shiro</groupId>
+		<artifactId>shiro-core</artifactId>
+		<version>${shiro.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.shiro</groupId>
+		<artifactId>shiro-ehcache</artifactId>
+		<version>${shiro.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.shiro</groupId>
+		<artifactId>shiro-web</artifactId>
+		<version>${shiro.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.shiro</groupId>
+		<artifactId>shiro-spring</artifactId>
+		<version>${shiro.version}</version>
+	</dependency>
+	<dependency>  
+	     <groupId>org.apache.shiro</groupId>  
+	     <artifactId>shiro-quartz</artifactId>  
+	     <version>1.2.2</version>  
+	</dependency>
+	<dependency>
+		<groupId>net.sf.ehcache</groupId>
+      	<artifactId>ehcache-core</artifactId>
+      	<version>2.6.9</version>
+    </dependency>
+	<!-- shiro end -->
+	
+	<dependency>
+ 		<groupId>com.alibaba</groupId>
+		<artifactId>fastjson</artifactId>
+		<version>${fastjson.version}</version>
+ 	</dependency>
+ 	
+	<!-- Logging start -->
+	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-api</artifactId>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-log4j12</artifactId>
+		<scope>provided</scope>
+	</dependency>
+	<!-- Logging end -->
+	
+	<!-- Servlet start -->
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>javax.servlet-api</artifactId>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>javax.servlet.jsp</groupId>
+		<artifactId>jsp-api</artifactId>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>jstl</artifactId>
+		<scope>provided</scope>
+	</dependency>
+	<!-- Servlet end -->
+	
+	<dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

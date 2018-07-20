@@ -26,8 +26,6 @@
 	<!-- DataSource -->
 	<mysql.connector.java.version>5.1.30</mysql.connector.java.version>
 	<druid.version>1.0.5</druid.version>
-	<!-- other -->
-	<commons.beanutils.version>1.9.3</commons.beanutils.version>
   </properties>
   
   <dependencies>
@@ -107,12 +105,16 @@
 		<version>${druid.version}</version>
 	</dependency>
 	<!-- DataSource end -->
-	<!-- other -->
+	<!-- Logging start -->
 	<dependency>
-		<groupId>commons-beanutils</groupId>
-		<artifactId>commons-beanutils</artifactId>
-		<version>${commons.beanutils.version}</version>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-api</artifactId>
 	</dependency>
+	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-log4j12</artifactId>
+	</dependency>
+	<!-- Logging end -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

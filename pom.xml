@@ -8,17 +8,24 @@
 
   <modules>
   	<module>easy-common-core</module>
+    <module>easy-common-support</module>
     <module>easy-framework-pojo</module>
     <module>easy-framework-common</module>
     <module>easy-framework-web</module>
+    <module>easy-common-shiro</module>
+    <module>easy-common-shiro-web</module>
     <module>easy-demo</module>
-    <module>easy-uumc</module>
-    <module>easy-common-security</module>
+    <module>easy-bcap</module>
   </modules>
 
 	<!-- 定义公共变量 -->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- apache -->
+		<commons.io.version>2.5</commons.io.version>
+		<!-- dataSource -->
+		<mysql.connector.java.version>5.1.30</mysql.connector.java.version>
+    	<druid.version>1.0.5</druid.version>
 		<!-- log -->
 		<slf4j.log4j12.version>1.6.2</slf4j.log4j12.version>
 		<slf4j.api.version>1.6.2</slf4j.api.version>
@@ -44,6 +51,25 @@
 	<!-- 依赖管理 -->
 	<dependencyManagement>
 		<dependencies>
+			<!-- apache start -->
+			<dependency>
+	    		<groupId>commons-io</groupId>
+    			<artifactId>commons-io</artifactId>
+	    		<version>${commons.io.version}</version>
+			</dependency>
+			<!-- apache end -->
+			<!-- DataSource start -->
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>${mysql.connector.java.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>druid</artifactId>
+				<version>${druid.version}</version>
+			</dependency>
+			<!-- DataSource end -->
 			<!-- Logging start -->
 			<dependency>
 				<groupId>org.slf4j</groupId>

@@ -11,7 +11,6 @@ import java.util.Properties;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
-import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
@@ -28,10 +27,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.yffd.easy.common.core.db.dialect.IDialect;
-import com.yffd.easy.common.core.db.dialect.MySql5Dialect;
 import com.yffd.easy.common.core.log.EasyCommonLogFormat;
-import com.yffd.easy.common.core.util.CommonUtils;
 import com.yffd.easy.framework.pojo.page.PageParam;
 
 /**

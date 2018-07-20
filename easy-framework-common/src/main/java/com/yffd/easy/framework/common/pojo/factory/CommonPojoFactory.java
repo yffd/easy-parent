@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.beans.BeanUtils;
 
 import com.yffd.easy.common.core.exception.EasyCommonException;
 import com.yffd.easy.common.core.util.EasyNamingFormatUtils;
@@ -210,7 +210,7 @@ public class CommonPojoFactory {
 			Object obj = destBeanClazz.newInstance();
 			BeanUtils.copyProperties(obj, orig);
 			return (T) obj;
-		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+		} catch (InstantiationException | IllegalAccessException e) {
 			throw new EasyCommonException("反射复制属性值失败["+orig.getClass()+" -> "+destBeanClazz.getName()+"]", e);
 		}
 	}

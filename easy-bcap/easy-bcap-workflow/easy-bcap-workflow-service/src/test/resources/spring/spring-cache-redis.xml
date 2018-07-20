@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+    http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-4.2.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+    ">
+    
+    <!-- 引入属性文件 -->
+<!-- 	<context:property-placeholder location="classpath:redis.properties" ignore-unresolvable="true" /> -->
+	
+    <!--Jedis连接池的相关配置-->
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="${redis.pool.maxTotal}"/>
+        <property name="maxIdle" value="${redis.pool.maxIdle}"/>
+        <property name="minIdle" value="${redis.pool.minIdle}"/>  
+        <property name="maxWaitMillis" value="${redis.pool.maxWaitMillis}"/>
+        <property name="testOnBorrow" value="${redis.pool.testOnBorrow}"/>
+        <property name="testOnReturn" value="${redis.pool.testOnReturn}"/>
+    </bean>
+	
+	<!-- jedis客户端单机版 -->
+    <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+      <constructor-arg index="0" name="poolConfig" ref="jedisPoolConfig"/>
+      <constructor-arg index="1" name="host" value="${redis.host}"/>
+      <constructor-arg index="2" name="port" value="${redis.port}"/>
+      <constructor-arg index="3" name="timeout" value="${redis.timeout}"/>
+      <constructor-arg index="4" name="password" value="${redis.password}"/>
+      <constructor-arg index="5" name="database" value="${redis.database}"/>
+    </bean>
+    
+    <!-- jedis客户端集群版 -->
+<!--     <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool" scope="singleton"> -->
+<!--         <constructor-arg index="0" ref="jedisPoolConfig" /> -->
+<!--         <constructor-arg index="1"> -->
+<!--             <list> -->
+<!--                 <bean class="redis.clients.jedis.JedisShardInfo"> -->
+<!--                     <constructor-arg name="host" value="${redis.uri}" /> -->
+<!--                 </bean> -->
+<!--             </list> -->
+<!--         </constructor-arg> -->
+<!--     </bean> -->
+	<!-- jedis客户端集群版 -->
+<!-- 	<bean id="redisClient" class="redis.clients.jedis.JedisCluster"> -->
+<!--         <constructor-arg name="nodes"> -->
+<!--             <set> -->
+<!--                 <bean class="redis.clients.jedis.HostAndPort"> -->
+<!--                     <constructor-arg name="host" value="127.0.0.1"/> -->
+<!--                     <constructor-arg name="port" value="7001"/> -->
+<!--                 </bean> -->
+<!--                 <bean class="redis.clients.jedis.HostAndPort"/> -->
+<!--                     <constructor-arg name="host" value="127.0.0.1"/> -->
+<!--                     <constructor-arg name="port" value="7002"/> -->
+<!--                 </bean> -->
+<!--                 <bean class="redis.clients.jedis.HostAndPort"> -->
+<!--                     <constructor-arg name="host" value="127.0.0.1"/> -->
+<!--                     <constructor-arg name="port" value="7003"/> -->
+<!--                 </bean> -->
+<!--                 <bean class="redis.clients.jedis.HostAndPort"> -->
+<!--                     <constructor-arg name="host" value="127.0.0.1"/> -->
+<!--                     <constructor-arg name="port" value="7004"/> -->
+<!--                 </bean> -->
+<!--                 <bean class="redis.clients.jedis.HostAndPort"> -->
+<!--                     <constructor-arg name="host" value="127.0.0.1"/> -->
+<!--                     <constructor-arg name="port" value="7005"/> -->
+<!--                 </bean> -->
+<!--                 <bean class="redis.clients.jedis.HostAndPort"> -->
+<!--                     <constructor-arg name="host" value="127.0.0.1"/> -->
+<!--                     <constructor-arg name="port" value="7006"/> -->
+<!--                 </bean> -->
+<!--             </set> -->
+<!--         </constructor-arg> -->
+<!--     </bean> -->
+    
+	<!-- 
+	使用Jedis连接Redis服务器有三种方式:Jedis/JedisPool,ShardedJedis/ShardedJedisPool,JedisCluster,分别对应了服务器的不同部署方式.
+	1.使用Jedis/JedisPool连接
+		这种方式针对单个Redis服务器建立连接,Jedis是单个连接,JedisPool即Jedis连接池,为了优化连接性能而生.
+	2.使用ShardedJedis/ShardedJedisPool连接
+		这种方式可以连接互不相通的一组Redis服务器.即Redis服务器因为数据量太大在数据上进行了水平拆分,但是服务器间并不通信,也没有副本备份.
+		同样的道理,ShardedJedisPool是针对ShardedJedis单个连接所做的优化.
+	3.使用JedisCluster连接
+		使用这种方式时,默认Redis已经进行了集群处理,JedisCluster即针对整个集群的连接.
+	 -->
+</beans>

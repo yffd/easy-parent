@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+    http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-4.2.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+    http://www.springframework.org/schema/util 
+    http://www.springframework.org/schema/util/spring-util-4.2.xsd
+    ">
+    
+    <!-- =========================================================
+         Shiro Core Components - Not Spring Specific
+         ========================================================= -->
+    <!-- Shiro's main business-tier object for web-enabled applications
+    (use DefaultSecurityManager instead when there is no web environment)-->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="cacheManager" ref="customCacheManager"/>
+        <property name="sessionManager" ref="sessionManager"/>
+        <property name="rememberMeManager" ref="customRememberMeManager"/>
+        <!-- Single realm app.  If you have multiple realms, use the 'realms' property instead. -->
+        <property name="realm" ref="customSecurityRealm"/>
+    </bean>
+    <!-- Let's use some enterprise caching support for better performance.  You can replace this with any enterprise
+         caching framework implementation that you like (Terracotta+Ehcache, Coherence, GigaSpaces, etc -->
+    <!-- ::缓存管理器 jedis实现 -->
+	<bean id="customCacheManager" class="com.yffd.easy.common.shiro.custom.cache.mgt.CustomCacheManager">
+		<property name="customCacheHandler" ref="jedisCacheHandler"/>
+	</bean>
+
+    <!-- Used by the SecurityManager to access security data (users, roles, etc).
+         Many other realm implementations can be used too (PropertiesRealm,
+         LdapRealm, etc. -->
+    <!-- ::安全数据源 -->
+    <bean id="customSecurityRealm" class="com.yffd.easy.common.shiro.custom.realm.CustomSecurityRealm">
+    	<!-- 指定凭证匹配器 -->
+        <property name="credentialsMatcher" ref="customCredentialsMatcher"/>
+    	<property name="customConfigManager" ref="customConfigManager"/>
+    </bean>
+    <!-- ::凭证匹配器 -->
+    <bean id="customCredentialsMatcher" class="com.yffd.easy.common.shiro.custom.credential.CustomHashedCredentialsMatcher"/>
+	<!-- ::认证策略 -->
+	<bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+    	<property name="authenticationStrategy">
+    		<bean class="org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy"/>
+    	</property>
+    </bean>
+    
+    <!-- 会话管理器-->
+	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<property name="globalSessionTimeout" ref="sessionTimeout"/>
+		<property name="deleteInvalidSessions" value="true"/>
+		<property name="sessionValidationSchedulerEnabled" value="true"/>
+		<property name="sessionValidationInterval" ref="sessionValidationInterval"/>
+		<property name="sessionDAO" ref="customSessionDao"/>
+	   <property name="sessionListeners">
+	       <list>
+	           <ref bean="customSessionListener"/>
+	       </list>
+	   </property>
+	</bean>
+	
+	<!-- Session listener -->
+	<bean id="customSessionListener" class="com.yffd.easy.common.shiro.custom.session.CustomSessionListener">
+		<property name="customSessionHandler" ref="jedisSessionHandler"/>
+	</bean>
+	
+	<!-- Session DAO -->
+	<bean id="customSessionDao" class="com.yffd.easy.common.shiro.custom.session.CustomSessionDao">
+		<property name="sessionIdGenerator" ref="sessionIdGenerator"/>
+		<property name="customSessionHandler" ref="jedisSessionHandler"/>
+	</bean>
+	
+	<!-- Session ID 生成器-->
+	<bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
+	
+	<!-- rememberMe管理器-->
+	<bean id="customRememberMeManager" class="com.yffd.easy.common.shiro.custom.cookie.mgt.CustomCookieRememberMeManager">
+		<property name="cookieCipher" ref="cookieCipher"/>
+		<property name="cookieName" ref="cookieName"/>
+		<property name="cookieMaxAge" ref="cookieMaxAge"/>
+	</bean>
+	
+	
+    
+    <!-- =========================================================
+         Shiro Spring-specific integration
+         ========================================================= -->
+    <!-- Post processor that automatically invokes init() and destroy() methods
+         for Spring-configured Shiro objects so you don't have to
+         1) specify an init-method and destroy-method attributes for every bean
+            definition and
+         2) even know which Shiro objects require these methods to be
+            called. -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <!-- Enable Shiro Annotations for Spring-configured beans.  Only run after
+         the lifecycleBeanProcessor has run: -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
+    <!-- Define the Shiro Filter here (as a FactoryBean) instead of directly in web.xml -
+         web.xml uses the DelegatingFilterProxy to access this bean.  This allows us
+         to wire things with more control as well utilize nice Spring things such as
+         PropertiesPlaceholderConfigurer and abstract beans or anything else we might need: -->
+    <!-- 对应于web.xml中配置的那个shiroFilter名称 -->
+	<!-- 1、先执行Shiro自己的Filter链；2、再执行Servlet容器的Filter链（即原始的Filter）-->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <!-- Shiro的核心安全接口，这个属性是必须的 -->
+        <property name="securityManager" ref="securityManager"/>
+        <!-- 要求登录时的链接(登录页面地址)，非必须的属性，默认会自动寻找Web工程根目录下的"/login.jsp"页面 -->
+        <property name="loginUrl" ref="loginUrl"/>
+        <!-- 登录成功后要跳转的连接(本例中此属性用不到，因为登录成功后的处理逻辑在LoginController里硬编码) -->
+        <property name="successUrl" ref="successUrl"/>
+        <!-- 用户访问未对其授权的资源时，所显示的连接 -->
+        <property name="unauthorizedUrl" ref="unauthorizedUrl"/>
+        <!-- The 'filters' property is not necessary since any declared javax.servlet.Filter bean
+             defined will be automatically acquired and available via its beanName in chain
+             definitions, but you can perform overrides or parent/child consolidated configuration
+             here if you like: -->
+       <property name="filters">
+           <util:map>
+              <entry key="login" value-ref="customLoginFilter"/>
+              <entry key="role" value-ref="customRoleFilter"/>
+              <entry key="pms" value-ref="customPermissionFilter"/>
+              <entry key="captcha" value-ref="captchaValidateFilter"/>
+              <entry key="kickout" value-ref="kickoutSessionFilter"/>
+           </util:map>
+       </property>
+       
+       <property name="filterChainDefinitionMap" ref="filterChainDefinitionMap"/>
+       <!--  
+       <property name="filterChainDefinitions">
+            <value>
+                /*.jar = anon
+                /favicon.ico = anon
+                /Kaptcha.jpg = anon
+                /views/shiro/login.jsp = anon
+                /shiro/login = captcha
+                /views/shiro/withPms.jsp = pms[sys:add,sys:edit]
+                /views/shiro/withRole.jsp = role[admin,gaokai]
+                /views/shiro/user.jsp = user
+                /** = kickout,authc
+            </value>
+        </property>
+        -->
+    </bean>
+    
+    <bean id="customLoginFilter" class="com.yffd.easy.common.shiro.custom.filter.CustomLoginFilter"/>
+    <bean id="customRoleFilter" class="com.yffd.easy.common.shiro.custom.filter.CustomRoleFilter">
+    	<property name="customConfigManager" ref="customConfigManager"/>
+    </bean>
+    <bean id="customPermissionFilter" class="com.yffd.easy.common.shiro.custom.filter.CustomPermissionFilter">
+    	<property name="customConfigManager" ref="customConfigManager"/>
+    </bean>
+    <bean id="captchaValidateFilter" class="com.yffd.easy.common.shiro.custom.filter.CustomCaptchaValidateFilter"/>
+    
+    <bean id="kickoutSessionFilter" class="com.yffd.easy.common.shiro.custom.filter.CustomKickoutSessionFilter">
+    	<property name="sessionManager" ref="sessionManager"/>
+    	<property name="customKickoutSessionHandler" ref="jedisKickoutSessionHandler"/>
+        <property name="kickoutAfter" ref="kickoutAfter"/>
+        <property name="maxSession" ref="maxSession"/>
+        <property name="kickoutUrl" ref="kickoutUrl"/>
+    </bean>
+    
+    <!-- shiroFilter configuration properties bean factory -->
+    <bean id="filterChainDefinitionMap" factory-bean="customConfigManager" factory-method="getFilterChainDefinitionMap"/>
+    <bean id="loginUrl" factory-bean="customConfigManager" factory-method="getLoginUrl"/>
+    <bean id="successUrl" factory-bean="customConfigManager" factory-method="getSuccessUrl"/>
+    <bean id="unauthorizedUrl" factory-bean="customConfigManager" factory-method="getUnauthorizedUrl"/>
+    <bean id="sessionTimeout" factory-bean="customConfigManager" factory-method="getSessionTimeout"/>
+    <bean id="sessionValidationInterval" factory-bean="customConfigManager" factory-method="getSessionValidationInterval"/>
+    
+    <bean id="cookieCipher" factory-bean="customConfigManager" factory-method="getCookieCipher"/>
+    <bean id="cookieName" factory-bean="customConfigManager" factory-method="getCookieName"/>
+    <bean id="cookieMaxAge" factory-bean="customConfigManager" factory-method="getCookieMaxAge"/>
+    
+    <bean id="kickoutAfter" factory-bean="customConfigManager" factory-method="kickoutAfter"/>
+    <bean id="maxSession" factory-bean="customConfigManager" factory-method="getMaxSession"/>
+    <bean id="kickoutUrl" factory-bean="customConfigManager" factory-method="getKickoutUrl"/>
+    
+    <bean id="dbNum" factory-bean="customConfigManager" factory-method="getDbNum"/>
+   
+   
+    <!-- =========================================================
+         Shiro Cache-Jedis integration
+         ========================================================= -->
+    <bean id="jedisCacheHandler" class="com.yffd.easy.common.shiro.jedis.JedisSingleShiroCacheHandler">
+    	<property name="jedisPool" ref="jedisPool"/>
+    	<property name="dbNum" value="5"/>
+    </bean>
+    
+    <bean id="jedisSessionHandler" class="com.yffd.easy.common.shiro.jedis.JedisSingleShiroSessionHandler">
+    	<property name="jedisPool" ref="jedisPool"/>
+    	<property name="dbNum" ref="dbNum"/>
+    	<property name="cacheName" value="shiro-session"/>
+    </bean>
+    
+    <bean id="jedisKickoutSessionHandler" class="com.yffd.easy.common.shiro.jedis.JedisSingleKickoutSessionHandler">
+    	<property name="jedisPool" ref="jedisPool"/>
+    	<property name="dbNum" ref="dbNum"/>
+    	<property name="cacheName" value="shiro-current-user"/>
+    </bean>
+    
+</beans>
