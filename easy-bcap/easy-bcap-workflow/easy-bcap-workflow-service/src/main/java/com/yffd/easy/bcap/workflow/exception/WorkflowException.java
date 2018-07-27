@@ -27,5 +27,8 @@ public class WorkflowException extends RuntimeException {
         super(message, cause);
     }
     
+    public static WorkflowException PARAM_ERROR(String msg) {
+    	return new WorkflowException("参数错误：" + msg);
+    }
 }
 

@@ -30,8 +30,8 @@
 		<slf4j.log4j12.version>1.6.2</slf4j.log4j12.version>
 		<slf4j.api.version>1.6.2</slf4j.api.version>
 		<!-- servlet -->
-		<javax.servlet.api.version>3.0.1</javax.servlet.api.version>
-		<jsp.api.version>2.1</jsp.api.version>
+		<javax.servlet.api.version>3.1.0</javax.servlet.api.version>
+		<jsp.api.version>2.2</jsp.api.version>
 		<jstl.version>1.2</jstl.version>
 		<!-- jdk -->
 		<jdk.version>1.7</jdk.version>
@@ -45,7 +45,7 @@
 		<maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
 		<maven.install.plugin.version>2.3.1</maven.install.plugin.version>
 		<maven.deploy.plugin.version>2.7</maven.deploy.plugin.version>
-		<maven.jetty.plugin.version>6.1.26</maven.jetty.plugin.version>
+		<jetty.maven.plugin.version>8.1.16.v20140903</jetty.maven.plugin.version>
 	</properties>
 
 	<!-- 依赖管理 -->
@@ -212,17 +212,25 @@
 				<plugin>
 					<!-- jetty插件 -->
 					<groupId>org.mortbay.jetty</groupId>
-					<artifactId>maven-jetty-plugin</artifactId>
-					<version>${maven.jetty.plugin.version}</version>
+		    		<artifactId>jetty-maven-plugin</artifactId>
+		    		<version>${jetty.maven.plugin.version}</version>
 					<configuration>
-						<contextPath>/</contextPath>
 						<scanIntervalSeconds>10</scanIntervalSeconds>
-						<connectors>
-							<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-								<port>8088</port>
-								<maxIdleTime>60000</maxIdleTime>
-							</connector>
-						</connectors>
+		                <scanTargetPatterns>
+		               	    <scanTargetPattern>
+		               	   	  <directory>src/main/resources</directory>
+		               	    </scanTargetPattern>
+		                </scanTargetPatterns>
+		                <webApp>
+		                	<contextPath>/</contextPath>
+					    </webApp>
+					    <connectors>
+					    	<!-- implementation="org.mortbay.jetty.nio.SelectChannelConnector" jetty7以下 -->
+					    	<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+					    		<port>8080</port>
+					    		<maxIdleTime>60000</maxIdleTime>
+					    	</connector>
+					    </connectors>
 					</configuration>
 				</plugin>
 			</plugins>

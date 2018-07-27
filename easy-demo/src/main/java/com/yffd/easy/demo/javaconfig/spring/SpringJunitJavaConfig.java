@@ -3,8 +3,6 @@ package com.yffd.easy.demo.javaconfig.spring;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @Description  简单描述该类的功能（可选）.
@@ -21,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 //@WebAppConfiguration is a class-level annotation that is used to declare
 //that the ApplicationContext loaded for an integration test should be a WebApplicationContext.
 //@WebAppConfiguration
-//@Transactional
 public class SpringJunitJavaConfig {
 
 }

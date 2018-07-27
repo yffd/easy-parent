@@ -9,6 +9,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -21,8 +22,9 @@ import org.springframework.core.io.support.ResourcePatternResolver;
  * @since		 JDK 1.7+
  * @see 	 
  */
+@Configuration
 @Import({DruidDataSourceJavaConfig.class})
-@MapperScan(basePackages = {"com.yffd.easy.demo.javaconfig.mapper"})
+@MapperScan(basePackages = {"com.yffd.easy.demo.ssm.mapper"})
 public class OrmMybatisJavaConfig {
 	private static final Logger LOG = LoggerFactory.getLogger(OrmMybatisJavaConfig.class);
 

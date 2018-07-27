@@ -24,7 +24,7 @@ public class UserService {
 		return this.userDao.select(userCode);
 	}
 	
-//	@Transactional(rollbackFor={Exception.class})
+	@Transactional(rollbackFor={Exception.class})
 	public void insertTwo(User first, User second) throws Exception {
 		int num1 = this.userDao.insert(first);
 		System.out.println("num1:" + num1);

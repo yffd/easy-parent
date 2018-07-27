@@ -14,6 +14,8 @@
   <url>http://maven.apache.org</url>
   <properties>
     <activiti.engine.version>5.22.0</activiti.engine.version>
+    <!-- aop -->
+	<aspectjweaver.version>1.8.0</aspectjweaver.version>
   </properties>
   <dependencies>
   	<dependency>
@@ -21,6 +23,18 @@
   		<artifactId>activiti-engine</artifactId>
   		<version>${activiti.engine.version}</version>
   	</dependency>
+  	<dependency>
+  		<groupId>org.activiti</groupId>
+  		<artifactId>activiti-spring</artifactId>
+  		<version>${activiti.engine.version}</version>
+  	</dependency>
+  	<!-- aop begin -->
+	<dependency>
+		<groupId>org.aspectj</groupId>
+		<artifactId>aspectjweaver</artifactId>
+		<version>${aspectjweaver.version}</version>
+	</dependency>
+	<!-- aop end -->
   	<dependency>
 	    <groupId>commons-io</groupId>
     	<artifactId>commons-io</artifactId>

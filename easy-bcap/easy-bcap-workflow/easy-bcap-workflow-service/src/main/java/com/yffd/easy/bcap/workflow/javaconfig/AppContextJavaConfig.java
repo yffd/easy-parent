@@ -1,33 +1,24 @@
-package com.yffd.easy.demo.javaconfig.spring;
+package com.yffd.easy.bcap.workflow.javaconfig;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * @Description  简单描述该类的功能（可选）.
- * @Date		 2018年7月20日 上午9:39:08 <br/>
+ * @Date		 2018年7月23日 下午5:09:16 <br/>
  * @author       zhangST
  * @version		 1.0
  * @since		 JDK 1.7+
  * @see 	 
  */
-// 说明类为IoC容器
 @Configuration
-// 配置扫描包
-//@Import({OrmMybatisJavaConfig.class})
-@Import({DruidDataSourceJavaConfig.class, SpringTransactionManagerJavaConfig.class})
-@ComponentScan(basePackages = "com.yffd.easy.demo.ssm")
-public class SpringApplicationContextJavaConfig {
+@Import({AppDataSourceJavaConfig.class, AppTransactionManagerJavaConfig.class, AppBeansJavaConfig.class})
+@ComponentScan(basePackages = "com.yffd.easy.bcap.workflow.service")
+public class AppContextJavaConfig {
 
-//	public @Bean UserDao userDao() {	// 方法名为该对象在spring容器中的bean名称
-//		return new UserDao();
-//	}
-	
 	/** 用${}占位符注入属性 */
 	public @Bean static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
 		return new PropertySourcesPlaceholderConfigurer();

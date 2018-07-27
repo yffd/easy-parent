@@ -29,8 +29,6 @@ import com.alibaba.druid.pool.DruidDataSource;
  * @see 	 
  */
 @Configuration
-// 开启注解式事务的支持
-@EnableTransactionManagement
 //@PropertySources({@PropertySource("classpath:/properties/jdbc.properties")})
 @PropertySource("classpath:/properties/jdbc.properties")
 public class DruidDataSourceJavaConfig {
@@ -144,32 +142,37 @@ public class DruidDataSourceJavaConfig {
 	}
 	
 	/** 声明式事务拦截器 */
-	@Bean(name = "transactionInterceptor")
-	public TransactionInterceptor transactionInterceptor() {
-		TransactionInterceptor transactionInterceptor = new TransactionInterceptor();
-		transactionInterceptor.setTransactionManager(dataSourceTransactionManager());
-		
-		Properties transactionAttributes = new Properties();
-		transactionAttributes.setProperty("save*", "PROPAGATION_REQUIRED");
-		transactionAttributes.setProperty("insert*", "PROPAGATION_REQUIRED");
-		transactionAttributes.setProperty("del*", "PROPAGATION_REQUIRED");
-		transactionAttributes.setProperty("update*", "PROPAGATION_REQUIRED");
-		transactionAttributes.setProperty("get*", "PROPAGATION_REQUIRED, readOnly");
-		transactionAttributes.setProperty("find*", "PROPAGATION_REQUIRED, readOnly");
-		transactionAttributes.setProperty("*", "PROPAGATION_REQUIRED");
-		
-		transactionInterceptor.setTransactionAttributes(transactionAttributes);
-		
-        return transactionInterceptor;
-	}
-	
-    public @Bean BeanNameAutoProxyCreator proxycreate(){
-        BeanNameAutoProxyCreator proxycreate = new BeanNameAutoProxyCreator();
-        proxycreate.setProxyTargetClass(true);
-//        proxycreate.setBeanNames("*service");
-        proxycreate.setBeanNames("* com.yffd.easy.**.service.*(..)");
-        proxycreate.setInterceptorNames("transactionInterceptor");
-        return proxycreate;
-    }
+//	@Bean(name = "transactionInterceptor")
+//	public TransactionInterceptor transactionInterceptor() {
+//		Properties transactionAttributes = new Properties();
+//		transactionAttributes.setProperty("get*", "PROPAGATION_NOT_SUPPORTED, readOnly");
+//		transactionAttributes.setProperty("find*", "PROPAGATION_REQUIRED, readOnly");
+//		transactionAttributes.setProperty("load*", "PROPAGATION_REQUIRED, readOnly");
+//		transactionAttributes.setProperty("query*", "PROPAGATION_REQUIRED, readOnly");
+//		transactionAttributes.setProperty("read*", "PROPAGATION_REQUIRED, readOnly");
+//		transactionAttributes.setProperty("save*", "PROPAGATION_REQUIRED, -Exception");
+//		transactionAttributes.setProperty("add*", "PROPAGATION_REQUIRED, -Exception");
+//		transactionAttributes.setProperty("create*", "PROPAGATION_REQUIRED, -Exception");
+//		transactionAttributes.setProperty("insert*", "PROPAGATION_REQUIRED, -Exception");
+//		transactionAttributes.setProperty("update*", "PROPAGATION_REQUIRED, -Exception");
+//		transactionAttributes.setProperty("modify*", "PROPAGATION_REQUIRED, -Exception");
+//		transactionAttributes.setProperty("change*", "PROPAGATION_REQUIRED, -Exception");
+//		transactionAttributes.setProperty("del*", "PROPAGATION_REQUIRED, -Exception");
+//		transactionAttributes.setProperty("remove*", "PROPAGATION_REQUIRED, -Exception");
+//		transactionAttributes.setProperty("*", "PROPAGATION_REQUIRED, -Exception");
+//		
+//		TransactionInterceptor transactionInterceptor = new TransactionInterceptor();
+//		transactionInterceptor.setTransactionManager(dataSourceTransactionManager());
+//		transactionInterceptor.setTransactionAttributes(transactionAttributes);
+//        return transactionInterceptor;
+//	}
+//	
+//    public @Bean BeanNameAutoProxyCreator proxyCreator(){
+//        BeanNameAutoProxyCreator proxyCreator = new BeanNameAutoProxyCreator();
+//        proxyCreator.setProxyTargetClass(true);
+//        proxyCreator.setInterceptorNames("transactionInterceptor");
+//        proxyCreator.setBeanNames("*Service", "*ServiceImpl");
+//        return proxyCreator;
+//    }
 }
 
